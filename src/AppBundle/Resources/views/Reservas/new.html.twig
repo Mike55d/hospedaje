@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block css %}
+<link href="{{ asset ('ample/bower_components/multiselect/css/multi-select.css')}}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+	<div class="white-box">
+		<h3 class="m-b-0 box-title">Multiple Select</h3>
+		<p class="text-muted m-b-30"> Use a <code>select multiple</code> as your input element.</p>
+		<div class="row">
+			<div class="col-md-4 ">
+				<h5 class="box-title">Pre-selected options</h5>
+				<form method="post">
+					<select name="personas[]" id='pre-selected-options' multiple=>
+					{% for persona in personas %}
+					    <option value="{{persona.id}}">{{persona.nombre}}</option>
+					{% endfor %}
+				</select>
+				<br>
+				<div class="text-right">
+					<button class="btn btn-primary ">Enviar Lista</button>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript" src="{{ asset ('ample/bower_components/multiselect/js/jquery.multi-select.js')}}"></script>
+<script>
+// For multiselect
+$('#pre-selected-options').multiSelect();
+$('#pre-selected-options').change(function(){
+	console.log($('#pre-selected-options').val());
+	if ($('#pre-selected-options').val().length > 6 ) {
+		alert('demasiadas personas :(');
+	}
+});
+</script>
+{% endblock %}

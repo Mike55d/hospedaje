@@ -1,0 +1,25 @@
+{% extends "::base.html.twig" %}
+{% form_theme form 'theme/themeForm.html.twig' %}
+
+{% block title %}Reservas{% endblock %}
+
+{% block body %}
+<div class="col-md-4 col-md-offset-4">
+	<div class="white-box">
+		<div class="panel-body">
+			{{form_start(form)}}
+			{{form_widget(form)}}
+			<button class="btn btn-success">Enviar</button>
+			{{form_end(form)}}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  // For select 2
+  $("#appbundle_reserva_comidas").removeClass('form-control form-control-sm');
+  $("#appbundle_reserva_comidas").select2();
+</script>
+{% endblock %}

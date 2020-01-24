@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Grupos{% endblock %}
+
+{% block body %}
+{% for flash_message in app.session.flashbag.get('notice') %}
+    <div class="flash-notice">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+<div class="col-md-10 col-md-offset-1">
+	<div class="white-box">
+		<a href="{{ path ('grupo_new')}}" class="btn btn-success">Nuevo</a>
+		<div class="panel-body">
+			<table class="myTable">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Nombre</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for grupo in grupos %}
+					<tr>
+						<td>{{grupo.id}}</td>
+						<td>{{grupo.nombre}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "::base.html.twig" %}
+{% block title %}Mi Grupo{% endblock %}
+
+{% block body %}
+{% for flash_message in app.session.flashbag.get('notice') %}
+    <div class="flash-notice">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+	<div class="white-box">
+		<a href="{{ path ('personas_new')}}" class="btn btn-success">Nuevo</a>
+		<div class="panel-body">
+			<table class="myTable">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Tratamiento</th>
+						<th>Nombre</th>
+						<th>Grupo</th>
+						<th>fechaNacimiento</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for persona in personas %}
+					<tr>
+						<td>{{persona.id}}</td>
+						<td>{{persona.tratamiento}}</td>
+						<td>{{persona.nombre}}</td>
+						<td>{{persona.grupo.nombre}}</td>
+						<td>{{persona.fechaNacimiento|date('d-m-Y')}}</td>
+						<td>
+							<a href="{{ path ('personas_edit',{'id': persona.id})}}" class="btn btn-warning">Editar</a>
+							<a href="{{ path ('personas_del',{'id': persona.id})}}" class="btn btn-danger">Eliminar</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+{% endblock %}
