@@ -1,0 +1,30 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Pregunta Nueva {% endblock %}
+
+{% block body %}
+    <a href="/faqs">Atras</a>
+<h1>Faq</h1>
+    <div class="tab-container">
+        {{form_start(form)}}
+            <div>
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            {{form_row(form.pregunta)}}
+                            <!--input type="text" class="form-control" id="name" placeholder="Name"-->
+                        </div>
+                        <div class="form-group col-md-6">
+                            <!--input type="email" class="form-control" id="email" placeholder="Email"-->
+                            {{form_row(form.respuesta)}}
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="form-group col-md-12">
+                    <button class="btn btn-info waves-effect waves-light">Add</button>
+                </div>
+            </div>
+        {{form_end(form)}}
+      </div>
+{% endblock %}

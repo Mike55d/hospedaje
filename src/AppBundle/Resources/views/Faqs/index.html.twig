@@ -1,0 +1,42 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Faqs{% endblock %}
+{% block body %}
+<h1>Faqs</h1>
+
+    <div class="white-box">
+        <a href="{{ path ('faqs')}}" class="btn btn-success">Nueva</a>
+        <div class="panel-body">
+            <table class="myTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Pregunta</th>
+                        <th>Respuesta</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fq in faqs %}
+                    <tr>
+                        <td>{{fq.id}}</td>
+                        <td>{{fq.pregunta}}</td>
+                        <td>{{fq.respuesta}}</td>
+                        <td>
+                            <a href="{{ path ('edita_Faq',{'id': fq.id})}}" class="btn btn-warning">Editar</a>
+                            <a href="{{ path ('elimina_faq',{'id': fq.id})}}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+{% endblock %}
