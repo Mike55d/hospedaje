@@ -32,3 +32,9 @@
         {{form_end(form)}}
       </div>
 {% endblock %}
+{% block javascripts %}
+<script>
+    var t = {{datos.tipo}}-1;
+    document.getElementById('appbundle_Servicios_tipo').selectedIndex=t;
+</script>
+{% endblock %}
