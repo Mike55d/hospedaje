@@ -1,0 +1,170 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Reservas{% endblock %}
+
+{% block body %}
+{% for flash_message in app.session.flashbag.get('notice') %}
+<div class="flash-notice">
+	{{ flash_message }}
+</div>
+{% endfor %}
+<div class="white-box">
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+					<tr>
+						<th></th>
+						<th ></th>
+						<th >Lunes</th>
+						<th ></th>
+
+						<th ></th>
+						<th >Martes</th>
+						<th ></th>
+
+						<th ></th>
+						<th >Miercoles</th>
+						<th ></th>
+
+						<th ></th>
+						<th >Jueves</th>
+						<th ></th>
+
+						<th ></th>
+						<th >Viernes</th>
+						<th ></th>
+
+						<th ></th>
+						<th >Sabado</th>
+						<th ></th>
+
+						<th ></th>
+						<th >Domingo</th>
+						<th ></th>
+
+						<!--th>Comida</th>
+						<th>Desayuno</th>
+						<th>Cena</th-->
+					</tr>
+					<tr>
+						<th>Grupos </th>
+					
+						<th class="bg-danger">Comida</th>
+						<th class="bg-danger">Desayuno</th>
+						<th class="bg-danger">Cena</th>
+
+						<th class="bg-warning">Comida</th>
+						<th class="bg-warning">Desayuno</th>
+						<th class="bg-warning">Cena</th>
+
+						<th class="bg-success">Comida</th>
+						<th class="bg-success">Desayuno</th>
+						<th class="bg-success">Cena</th>
+
+						<th class="bg-info">Comida</th>
+						<th class="bg-info">Desayuno</th>
+						<th class="bg-info">Cena</th>
+
+						<th class="bg-warning">Comida</th>
+						<th class="bg-warning">Desayuno</th>
+						<th class="bg-warning">Cena</th>
+
+						<th class="bg-success">Comida</th>
+						<th class="bg-success">Desayuno</th>
+						<th class="bg-success">Cena</th>
+
+						<th class="bg-info">Comida</th>
+						<th class="bg-info">Desayuno</th>
+						<th class="bg-info">Cena</th>
+					</tr>
+			</thead>
+			<tbody style="text-align:center;">
+				
+
+				<tr class="center">
+					<td>Grupo 1</td>
+					<td>11</td>
+					<td>6</td>
+					<td>4</td>
+					<td>8</td>
+					<td>5</td>
+					<td>11</td>
+					<td>5</td>
+					<td>2</td>
+					<td>9</td>
+					<td>11</td>
+					<td>6</td>
+					<td>4</td>
+					<td>8</td>
+					<td>5</td>
+					<td>11</td>
+					<td>5</td>
+					<td>2</td>
+					<td>9</td>
+					<td>11</td>
+					<td>6</td>
+					<td>4</td>
+
+				</tr>
+				<tr>
+					<td>Grupo 2</td>
+					<td>5</td>
+					<td>2</td>
+					<td>9</td>
+					<td>8</td>
+					<td>5</td>
+					<td>11</td>
+					<td>11</td>
+					<td>6</td>
+					<td>4</td>
+					<td>5</td>
+					<td>2</td>
+					<td>9</td>
+					<td>8</td>
+					<td>5</td>
+					<td>11</td>
+					<td>11</td>
+					<td>6</td>
+					<td>4</td>
+					<td>5</td>
+					<td>2</td>
+					<td>9</td>
+				</tr>
+				<tr>
+					<td>Grupo 3</td>
+					<td>8</td>
+					<td>5</td>
+					<td>11</td>
+					<td>11</td>
+					<td>6</td>
+					<td>4</td>
+					<td>5</td>
+					<td>2</td>
+					<td>9</td>
+					<td>8</td>
+					<td>5</td>
+					<td>11</td>
+					<td>11</td>
+					<td>6</td>
+					<td>4</td>
+					<td>5</td>
+					<td>2</td>
+					<td>9</td>
+					<td>8</td>
+					<td>5</td>
+					<td>11</td>
+				</tr>
+				{% if app.user.rola == 'USER' %}
+				{% endif %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+//$('.myTable').DataTable();
+</script>
+{% endblock %}
