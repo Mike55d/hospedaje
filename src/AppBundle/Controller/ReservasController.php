@@ -81,4 +81,14 @@ class ReservasController extends Controller
         ));
     }
 
+    /**
+     * @Route("/comidas" , name= "reservas_comidas")
+     */
+    public function comidasAction()
+    {
+        return $this->render('AppBundle:Reservas:comidas.html.twig', array(
+         'reservas' => ''
+        ));
+    }
+
 }
