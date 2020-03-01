@@ -4,8 +4,9 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Crawler;   
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Form\ServiciosType;
 use AppBundle\Entity\Servicios;
 
@@ -106,6 +107,20 @@ class ServiciosController extends Controller
 
             return $this->redirectToRoute('index',);
         
+    }
+
+    /**
+     * @Route("/servicios/ver/{id}", name="serviciosVer")
+     */
+    public function verAction($id )
+    {
+        $msg = 'Ok' ;
+        $em =$this->getDoctrine()->getManager();        
+        #$ser = $em->getRepository('AppBundle:Servicios')->findBy(['tipo' => 3],Doctrine_Core::HYDRATE_ARRAY);
+        $ser = $em->createQuery('SELECT s.id,s.servicio from AppBundle\Entity\Servicios as s where s.tipo = :t')
+        ->setParameter('t',$id)->execute();
+        
+        return new Response(json_encode($ser));
     }
     
 }

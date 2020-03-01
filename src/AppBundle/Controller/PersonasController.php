@@ -61,6 +61,7 @@ class PersonasController extends Controller
      $em =$this->getDoctrine()->getManager();
      $form = $this->createForm(PersonaType::class, $persona);
      $form->handleRequest($request);
+     $rol = $this->get('security.token_storage')->getToken()->getUser()->getRola();
      if ($form->isSubmitted() && $form->isValid()) {
         $em->persist($persona);
         $em->flush();
@@ -68,10 +69,19 @@ class PersonasController extends Controller
             'notice',
             'Your changes were saved!'
         );
-        return $this->redirectToRoute('personas_index');
+        $direct = ($rol == 'ADMIN') ? 'personas_todas' : 'personas_index';
+        return $this->redirectToRoute($direct);
     }
+    $serv = [];
+        if($rol === 'ADMIN'){
+            $serv = $em->createQuery('SELECT s.servicio,s.costo from AppBundle\Entity\Servicios as s LEFT JOIN AppBundle\Entity\ServiciosUs as u WITH s.id = u.idServicio where u.idUsuario = :i')->setParameter('i',$persona->getId())
+            ->getArrayResult();
+        }
+    
     return $this->render('AppBundle:Personas:edit.html.twig', array(
-        'form' => $form->createView()
+        'form' => $form->createView(),  
+        'serv' => $serv,
+        'idU' => $persona->getId()
     ));
 }
 
@@ -88,6 +98,23 @@ class PersonasController extends Controller
             'Your changes were saved!'
         );
         return $this->redirectToRoute('personas_index');
+    }
+
+     /**
+     * @Route("/todas" , name="personas_todas")
+     */
+    public function personasAction()
+    {
+        $em =$this->getDoctrine()->getManager(); 
+        $us = $this->get('security.token_storage')->getToken()->getUser()->getRola();
+        $personas = [];
+        if($us === 'ADMIN'){
+            $personas = $em->getRepository('AppBundle:Persona')->findAll(); 
+        }
+
+        return $this->render('AppBundle:Personas:personas.html.twig', array(
+            'personas' => $personas
+        ));
     }
 
 }

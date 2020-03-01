@@ -4,15 +4,96 @@
 {% block title %}Editar persona{% endblock %}
 
 {% block body %}
+
 <div class="col-md-4 col-md-offset-4">
+	<a href="{{ path ('personas_todas')}}">Atras</a>
 	<div class="white-box">
 		<div class="panel-body">
 			{{form_start(form)}}
 			{{form_widget(form)}}
 			<button class="btn btn-warning">Guardar</button>
+			<hr>
+			{% if app.user.rola == 'ADMIN' %}
+    
+				<h4>Servicios</h4>
+				<select id="menu" class="form-control form-control-sm">
+				  <option value="">--Servicio--</option>
+				  <option value="1">Lavanderia</option>
+				  <option value="2">Tienda</option>
+				  <option value="3">Materia Roto</option>
+				</select>
+				<select id="servicio" class="form-control form-control-sm">
+				</select>
+				<br>
+				<a class="btn btn-info" id="vamonos" disabled="true">Agregar</a>
+				<hr>
+            	<table class="myTabla">
+				<thead>
+					<tr>
+						<th>Gasto</th>
+						<th>Costo</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for persona in serv %}
+					<tr>
+						<td>{{persona.servicio}}</td>
+						<td>{{persona.costo}}</td>
+						<td>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>          
+            {% endif %}		
+			
 			{{form_end(form)}}
 
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTabla').DataTable();
+</script>
+<script type="text/javascript">
+var btnV = document.getElementById('vamonos');
+$('#menu').change(function(){
+	console.log($(this).val());
+	$.ajax({
+		type:'GET',
+		url : '/servicios/ver/'+ $(this).val(),
+		success: function(data){
+			var d = JSON.parse(data);
+			var infos ;
+			infos = document.getElementById('servicio');
+			infos.innerHTML = '' ;
+			for(let e of d){
+				var op = document.createElement('option');
+				op.appendChild(document.createTextNode(e.servicio));
+				op.value = e.id ;
+				infos.appendChild(op);
+			}
+			btnV.removeAttribute('disabled');
+		}
+	});
+});
+
+btnV.addEventListener('click', event =>{
+	$.ajax({
+		type:'POST',
+		data:JSON.stringify({
+			'idUsuario' : '{{idU}}',
+			'idServicio': $('#servicio').val()
+		}),
+		url: '/serviciosUs/nuevo',
+		success:function(data){
+			window.location.reload();
+		}
+
+	});	
+});
+</script>
 {% endblock %}
