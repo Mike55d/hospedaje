@@ -79,7 +79,8 @@ class PersonasController extends Controller
         }
     
     return $this->render('AppBundle:Personas:edit.html.twig', array(
-        'form' => $form->createView(),  
+        'form' => $form->createView(),
+        'info' => $persona->getUser()->getId(), 
         'serv' => $serv,
         'idU' => $persona->getId()
     ));
@@ -111,7 +112,6 @@ class PersonasController extends Controller
         if($us === 'ADMIN'){
             $personas = $em->getRepository('AppBundle:Persona')->findAll(); 
         }
-
         return $this->render('AppBundle:Personas:personas.html.twig', array(
             'personas' => $personas
         ));

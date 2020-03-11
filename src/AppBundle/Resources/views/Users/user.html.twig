@@ -1,0 +1,52 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Editar user{% endblock %}
+
+{% block body %}
+
+<div class="col-md-4 ">
+	<a href="{{ path ('users_all')}}">Atras</a>
+	<div class="white-box">
+		<div class="panel-body">
+			Nombre<h3>{{form.name}}</h3>
+			Usuario<h3>{{form.username}}</h3>
+			Telefono<h3>{{form.phone}}</h3>
+		</div>
+	</div>
+</div>
+<div class="col-md-8 ">
+	<div class="panel-body">
+			<table class="myTable">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Nombre</th>
+						<th>Grupo</th>
+						<th>fechaNacimiento</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for persona in personas %}
+					<tr>
+						<td>{{persona.id}}</td>
+						<td>{{persona.nombre}}</td>
+						<td>{{persona.grupo.nombre}}</td>
+						<td>{{persona.fechaNacimiento|date('d-m-Y')}}</td>
+						<td>
+							<a href="{{ path ('personas_edit',{'id': persona.id})}}" class="btn btn-warning">Ver</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+
+{% endblock %}

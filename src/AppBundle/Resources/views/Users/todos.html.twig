@@ -1,0 +1,45 @@
+{% extends "::base.html.twig" %}
+{% block title %}Mi Grupo{% endblock %}
+
+{% block body %}
+{% for flash_message in app.session.flashbag.get('notice') %}
+    <div class="flash-notice">
+        {{ flash_message }}
+    </div>
+{% endfor %}
+
+	<div class="white-box">
+		<div class="panel-body">
+			<table class="myTable">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Nombre</th>
+						<th>Usuario</th>
+						<th>Telefono</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for user in users %}
+					<tr>
+						<td>{{user.id}}</td>
+						<td>{{user.name}}</td>
+						<td>{{user.username}}</td>
+						<td>{{user.phone}}</td>
+						<td>
+							<a href="{{ path ('users_edit',{'id': user.id})}}" class="btn btn-warning">Ver</a>
+						</td>
+					</tr>
+					{% endfor %}	
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+{% endblock %}

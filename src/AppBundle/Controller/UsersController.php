@@ -31,12 +31,23 @@ class UsersController extends Controller
     }
 
     /**
-     * @Route("/users/edit" , name="users_edit")
+     * @Route("/{id}/edit" , name="users_edit")
      */
-    public function editAction()
+    public function editAction(User $user, Request $request)
     {
-        return $this->render('AppBundle:Users:edit.html.twig', array(
-            // ...
+        $em =$this->getDoctrine()->getManager();
+
+        
+        $rol = $this->get('security.token_storage')->getToken()->getUser()->getRola();
+        
+        $per = [];
+        if($rol === 'ADMIN'){
+            $per = $em->getRepository('AppBundle:Persona')->findBy(['user' => $user->getId()]);
+        }
+        return $this->render('AppBundle:Users:user.html.twig', array(
+            'form' => $user ,  
+            'personas' => $per,
+            'idU' => $user->getId()
         ));
     }
 
@@ -76,6 +87,22 @@ class UsersController extends Controller
         }
         return $this->render('AppBundle:Users:register.html.twig', array(
            'form'=>$form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/users/todos" , name="users_all")
+     */
+    public function todosAction()
+    {
+        $em =$this->getDoctrine()->getManager(); 
+        $us = $this->get('security.token_storage')->getToken()->getUser()->getRola();
+        $users = [];
+        if($us === 'ADMIN'){
+            $users = $em->getRepository('AppBundle:User')->findAll(); 
+        }
+        return $this->render('AppBundle:Users:todos.html.twig', array(
+            'users' => $users
         ));
     }
 
