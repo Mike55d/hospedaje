@@ -1,0 +1,65 @@
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Opera and Firefox */
+  }
+
+  .cube {
+
+    background: red;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 10px;
+  }
+
+  .cards{
+
+    position: absolute;
+  }
+
+  #calendar-container{
+
+    position: relative;
+    max-height: 500px;
+    background: green;
+    padding: 30px 0 0 0;
+  }
+
+  .card-left-btn {
+
+    background: pink;
+    width: 7px;
+    height: 7px;
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    transform: translate(0, -50%);
+  }
+
+  .card-right-btn {
+
+    background: orange;
+    width: 7px;
+    height: 7px;
+    position: absolute;
+    top: 50%;
+    right: 0px;
+    transform: translate(0, -50%);
+  }
+
+  .controls {
+
+    background: red;
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    top: 0px;
+    transform: translate(-50%, 0);
+    z-index: 99;
+  }

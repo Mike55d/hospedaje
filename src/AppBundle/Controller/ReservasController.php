@@ -29,7 +29,7 @@ class ReservasController extends Controller
      ));
     }
 
-        /**
+    /**
      * @Route("/{id}/new" , name= "reservas_new")
      */
     public function newAction(Reserva $reserva ,Request $request)

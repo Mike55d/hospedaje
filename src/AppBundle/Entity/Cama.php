@@ -1,0 +1,95 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Cama
+ *
+ * @ORM\Table(name="cama")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CamaRepository")
+ */
+class Cama
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numero", type="string", length=255)
+     */
+    private $numero;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Cuarto")
+    * @ORM\JoinColumn(name="cuarto", referencedColumnName="id")
+    */
+    private $cuarto;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set numero
+     *
+     * @param string $numero
+     *
+     * @return Cama
+     */
+    public function setNumero($numero)
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    /**
+     * Get numero
+     *
+     * @return string
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * Set cuarto
+     *
+     * @param \AppBundle\Entity\Cuarto $cuarto
+     *
+     * @return Cama
+     */
+    public function setCuarto(\AppBundle\Entity\Cuarto $cuarto = null)
+    {
+        $this->cuarto = $cuarto;
+
+        return $this;
+    }
+
+    /**
+     * Get cuarto
+     *
+     * @return \AppBundle\Entity\Cuarto
+     */
+    public function getCuarto()
+    {
+        return $this->cuarto;
+    }
+}

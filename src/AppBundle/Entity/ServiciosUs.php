@@ -22,18 +22,18 @@ class ServiciosUs
     private $id;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="idUsuario", type="integer")
-     */
-    private $idUsuario;
+    * @ORM\ManyToOne(targetEntity="Persona")
+    * @ORM\JoinColumn(name="persona", referencedColumnName="id")
+    */
+    private $persona;
+
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="idServicio", type="integer")
-     */
-    private $idServicio;
+    * @ORM\ManyToOne(targetEntity="Servicios")
+    * @ORM\JoinColumn(name="servicio", referencedColumnName="id")
+    */
+
+    private $servicio;
 
 
     /**
@@ -46,52 +46,53 @@ class ServiciosUs
         return $this->id;
     }
 
+   
+
     /**
-     * Set idUsuario
+     * Set persona
      *
-     * @param integer $idUsuario
+     * @param \AppBundle\Entity\Persona $persona
      *
      * @return ServiciosUs
      */
-    public function setIdUsuario($idUsuario)
+    public function setPersona(\AppBundle\Entity\Persona $persona = null)
     {
-        $this->idUsuario = $idUsuario;
+        $this->persona = $persona;
 
         return $this;
     }
 
     /**
-     * Get idUsuario
+     * Get persona
      *
-     * @return int
+     * @return \AppBundle\Entity\Persona
      */
-    public function getIdUsuario()
+    public function getPersona()
     {
-        return $this->idUsuario;
+        return $this->persona;
     }
 
     /**
-     * Set idServicio
+     * Set servicio
      *
-     * @param integer $idServicio
+     * @param \AppBundle\Entity\Servicios $servicio
      *
      * @return ServiciosUs
      */
-    public function setIdServicio($idServicio)
+    public function setServicio(\AppBundle\Entity\Servicios $servicio = null)
     {
-        $this->idServicio = $idServicio;
+        $this->servicio = $servicio;
 
         return $this;
     }
 
     /**
-     * Get idServicio
+     * Get servicio
      *
-     * @return int
+     * @return \AppBundle\Entity\Servicios
      */
-    public function getIdServicio()
+    public function getServicio()
     {
-        return $this->idServicio;
+        return $this->servicio;
     }
 }
-

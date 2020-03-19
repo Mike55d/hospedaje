@@ -11,6 +11,7 @@
 		<div class="panel-body">
 			{{form_start(form)}}
 			{{form_widget(form)}}
+			{{form_end(form)}}
 			<button class="btn btn-warning">Guardar</button>
 			<hr>
 			{% if app.user.rola == 'ADMIN' %}
@@ -34,20 +35,17 @@
 						<th>Costo</th>
 					</tr>
 				</thead>
-				<tbody>
-					{% for persona in serv %}
+				<tbody id="table">
+					{% for servicio in servicios %}
 					<tr>
-						<td>{{persona.servicio}}</td>
-						<td>{{persona.costo}}</td>
-						<td>
-						</td>
+						<td>{{servicio.servicio.servicio}}</td>
+						<td>{{servicio.servicio.costo}}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
 			</table>          
             {% endif %}		
 			
-			{{form_end(form)}}
 
 		</div>
 	</div>
@@ -90,7 +88,9 @@ btnV.addEventListener('click', event =>{
 		}),
 		url: '/serviciosUs/nuevo',
 		success:function(data){
-			window.location.reload();
+			console.log(data)
+			$('#table').load(' #table')
+			// window.location.reload();
 		}
 
 	});	

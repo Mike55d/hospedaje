@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 #use AppBundle\Form\ServiciosUsType;
 use AppBundle\Entity\ServiciosUs;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class ServiciosUsController extends Controller
@@ -20,21 +21,18 @@ class ServiciosUsController extends Controller
      */
     public function nuevoAction(Request $request )
     {
-        $msg = 'Ok' ;
         $em =$this->getDoctrine()->getManager(); 
         $ServiciosUs = new ServiciosUs();
         $post = json_decode($request->getContent());
         $idU = $post->idUsuario;
         $idS = $post->idServicio;
-        if ($em->getRepository('AppBundle:User')->findBy(['id' => $idU])&$em->getRepository('AppBundle:Servicios')->findBy(['id' => $idS])) {
-            $ServiciosUs->setIdUsuario($idU);
-            $ServiciosUs->setIdServicio($idS);
-            $em->persist($ServiciosUs);
-            $em->flush();
-        } else {
-            $msg = 'No Existe el registro';
-        }
-        return new Response(json_encode(['msg'=>$msg]));
+        $persona = $em->getRepository('AppBundle:Persona')->find($idU);
+        $servicio =$em->getRepository('AppBundle:Servicios')->find($idS);
+        $ServiciosUs->setPersona($persona);
+        $ServiciosUs->setServicio($servicio);
+        $em->persist($ServiciosUs);
+        $em->flush();
+        return new JsonResponse(1);
     }
     
 }
