@@ -1,0 +1,57 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Reservas{% endblock %}
+
+{% block body %}
+{% for flash_message in app.session.flashbag.get('notice') %}
+<div class="flash-notice">
+	{{ flash_message }}
+</div>
+{% endfor %}
+<div class="white-box">
+	<div class="panel-body">
+		<h3>Camas Asignadas</h3>
+		<table class="myTable">
+			<thead>
+				<tr>
+					<th class="text-center">Tratamiento</th>
+					<th class="text-center">Nombre</th>
+					<th class="text-center">Fecha Llegada</th>
+					<th class="text-center">Fecha Salida</th>
+					<th class="text-center">Cama</th>
+					<th class="text-center">Cuarto</th>
+					<th class="text-center">Baño</th>
+				</tr>
+			</thead>
+			<tbody style="text-align:center;">
+				{% for camaPersona in camasPersonas %}
+				<tr>
+					<td>{{camaPersona.persona.tratamiento}}</td>
+					<td>{{camaPersona.persona.nombre}}</td>
+					{% if camaPersona.reservacion %}
+					<td>{{camaPersona.reservacion.fechaInicio|date('d-m-Y')}}</td>
+					<td>{{camaPersona.reservacion.fechaFin|date('d-m-Y')}}</td>
+					<td>{{camaPersona.reservacion.cama.numero}}</td>
+					<td>{{camaPersona.reservacion.cama.cuarto.numero}}</td>
+					<td>10</td>
+					{% else %}
+					<td>ninguna</td>
+					<td>ninguna</td>
+					<td>Asignando cama</td>
+					<td>Asignando cuarto</td>
+					<td>Asignando baño</td>
+					{% endif %}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+{% endblock %}

@@ -56,13 +56,20 @@ class Reserva
      */
     private $salida;
 
-    /**
+            /**
      * @var string
      *
-     * @ORM\Column(name="comidas", type="json_array")
+     * @ORM\Column(name="primeraComida", type="string", length=255)
      */
-    private $comidas;
+    private $primeraComida;
 
+            /**
+     * @var string
+     *
+     * @ORM\Column(name="ultimaComida", type="string", length=255)
+     */
+    private $ultimaComida;
+    
         /**
      * @var string
      *
@@ -256,28 +263,53 @@ class Reserva
     {
         return $this->user;
     }
+    
 
     /**
-     * Set comidas
+     * Set primeraComida
      *
-     * @param array $comidas
+     * @param string $primeraComida
      *
      * @return Reserva
      */
-    public function setComidas($comidas)
+    public function setPrimeraComida($primeraComida)
     {
-        $this->comidas = $comidas;
+        $this->primeraComida = $primeraComida;
 
         return $this;
     }
 
     /**
-     * Get comidas
+     * Get primeraComida
      *
-     * @return array
+     * @return string
      */
-    public function getComidas()
+    public function getPrimeraComida()
     {
-        return $this->comidas;
+        return $this->primeraComida;
+    }
+
+    /**
+     * Set ultimaComida
+     *
+     * @param string $ultimaComida
+     *
+     * @return Reserva
+     */
+    public function setUltimaComida($ultimaComida)
+    {
+        $this->ultimaComida = $ultimaComida;
+
+        return $this;
+    }
+
+    /**
+     * Get ultimaComida
+     *
+     * @return string
+     */
+    public function getUltimaComida()
+    {
+        return $this->ultimaComida;
     }
 }

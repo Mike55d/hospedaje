@@ -28,6 +28,12 @@ class Reservacion
     private $persona;
 
     /**
+    * @ORM\ManyToOne(targetEntity="Reserva")
+    * @ORM\JoinColumn(name="reserva", referencedColumnName="id")
+    */
+    private $reserva;
+
+    /**
     * @ORM\ManyToOne(targetEntity="Cama")
     * @ORM\JoinColumn(name="cama", referencedColumnName="id")
     */
@@ -105,5 +111,52 @@ class Reservacion
     {
         return $this->fechaFin;
     }
-}
 
+    /**
+     * Set persona
+     *
+     * @param \AppBundle\Entity\Persona $persona
+     *
+     * @return Reservacion
+     */
+    public function setPersona(\AppBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \AppBundle\Entity\Persona
+     */
+    public function getPersona()
+    {
+        return $this->persona;
+    }
+
+    /**
+     * Set cama
+     *
+     * @param \AppBundle\Entity\Cama $cama
+     *
+     * @return Reservacion
+     */
+    public function setCama(\AppBundle\Entity\Cama $cama = null)
+    {
+        $this->cama = $cama;
+
+        return $this;
+    }
+
+    /**
+     * Get cama
+     *
+     * @return \AppBundle\Entity\Cama
+     */
+    public function getCama()
+    {
+        return $this->cama;
+    }
+}

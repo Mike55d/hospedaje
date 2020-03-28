@@ -56,13 +56,20 @@ class Reserva
      */
     private $salida;
 
-    /**
+            /**
      * @var string
      *
-     * @ORM\Column(name="comidas", type="json_array")
+     * @ORM\Column(name="primeraComida", type="string", length=255)
      */
-    private $comidas;
+    private $primeraComida;
 
+            /**
+     * @var string
+     *
+     * @ORM\Column(name="ultimaComida", type="string", length=255)
+     */
+    private $ultimaComida;
+    
         /**
      * @var string
      *
@@ -256,4 +263,5 @@ class Reserva
     {
         return $this->user;
     }
+    
 }

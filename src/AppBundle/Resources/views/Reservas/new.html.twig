@@ -7,22 +7,39 @@
 {% block body %}
 <div class="col-md-12">
 	<div class="white-box">
-		<h3 class="m-b-0 box-title">Multiple Select</h3>
-		<p class="text-muted m-b-30"> Use a <code>select multiple</code> as your input element.</p>
+		<h3 class="m-b-0 box-title">Completar reserva</h3>
+		<p class="text-muted m-b-30">Por favor asigne las personas que van a ser hospedadas en esta reserva</p>
+		<h3 class="m-b-0 box-title text-primary">Cantidad Minima 1</h3>
+		<h3 class="m-b-0 box-title text-info">Cantidad Maxima {{ reserva.menor + reserva.adulto}}</h3>
+		<h3 class="m-b-0 box-title text-success">Seleccionados <span id="Seleccionados">0</span></h3><br><br>
+
+
 		<div class="row">
-			<div class="col-md-4 ">
-				<h5 class="box-title">Pre-selected options</h5>
-				<form method="post">
-					<select name="personas[]" id='pre-selected-options' multiple=>
-					{% for persona in personas %}
-					    <option value="{{persona.id}}">{{persona.nombre}}</option>
-					{% endfor %}
-				</select>
-				<br>
-				<div class="text-right">
-					<button class="btn btn-primary ">Enviar Lista</button>
-				</div>
+			<div class="col-md-12">
+				<table class="myTable">
+					<thead>
+						<tr >
+							<th class="text-center">Nombre</th>
+							<th class="text-center">Tratamiento</th>
+							<th class="text-center">Fecha de salida</th>
+							<th class="text-center">Incluir</th>
+						</tr>
+					</thead>
+					<tbody class="text-center">
+						{% for persona in personas %}
+						<tr>
+							<td>{{persona.nombre}}</td>
+							<td>{{persona.tratamiento}}</td>
+							<td><input type="date" id="fecha{{persona.id}}" value="{{reserva.salida|date('Y-m-d')}}" class="form-control"></td>
+							<td><input  type="checkbox" onclick="switchPersona({{persona.id}})" class="form-control check"></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<form action="" id="form" method="post">
+					<input type="hidden" id="data" name="data" >
 				</form>
+				<button id="send" class="btn btn-success">Completar</button>
 			</div>
 		</div>
 	</div>
@@ -32,13 +49,41 @@
 {% block javascripts %}
 <script type="text/javascript" src="{{ asset ('ample/bower_components/multiselect/js/jquery.multi-select.js')}}"></script>
 <script>
-// For multiselect
-$('#pre-selected-options').multiSelect();
-$('#pre-selected-options').change(function(){
-	console.log($('#pre-selected-options').val());
-	if ($('#pre-selected-options').val().length > 6 ) {
-		alert('demasiadas personas :(');
+$('.myTable').DataTable();
+
+personas = [];
+function switchPersona(id){
+	exist =	personas.findIndex(persona => persona.id == id);
+	if (exist == -1) {
+		console.log('blue')
+		personas.push({
+			id:id,
+			fecha:$('#fecha'+id).val()
+		})
 	}
-});
+	else{
+		personas.splice(exist,1);
+	}
+	if ($('#fecha'+id).attr('disabled')) {
+		$('#fecha'+id).attr('disabled',false)
+	}else{
+		$('#fecha'+id).attr('disabled',true)
+	}
+	console.log(personas);
+	$('#Seleccionados').text(personas.length);
+}
+
+$('#send').click(function(){
+	console.log('click');
+	if (personas.length < 1) {
+		alert('muy pocas personas asignadas ala reserva');
+	}else if (personas.length > "{{ reserva.menor + reserva.adulto}}"){
+		alert('demasiadas personas asignadas ala reserva');
+	}else{
+		$('#data').val(JSON.stringify(personas));
+		$('#form').submit();
+	}
+})
+;
 </script>
 {% endblock %}

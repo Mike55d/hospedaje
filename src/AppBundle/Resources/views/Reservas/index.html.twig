@@ -9,7 +9,7 @@
 </div>
 {% endfor %}
 <div class="white-box">
-	<a href="{{ path ('solicitudes_new')}}" class="btn btn-success">Nuevo</a>
+	<a href="{{ path ('solicitudes_new')}}" class="btn btn-success">Nueva Solicitud</a>
 	<div class="panel-body">
 		<table class="myTable">
 			<thead>
@@ -41,6 +41,9 @@
 						{% endif %}
 						{% if app.user.rola == 'USER' and reserva.status == 'Aprobada' %}
 						<a class="btn btn-success" href="{{ path ('reservas_new',{'id':reserva.id})}}">Completar</a>
+						{% endif %}
+						{% if reserva.status == 'Reservado' %}
+						<a href="{{ path ('camas_index',{'id':reserva.id})}}" class="btn btn-warning">Camas</a>
 						{% endif %}
 					</td>
 				</tr>

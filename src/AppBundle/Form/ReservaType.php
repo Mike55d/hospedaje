@@ -33,16 +33,28 @@ class ReservaType extends AbstractType
             'label' => 'Fecha de salida',
             'widget'=> 'single_text',   
         ])
-        ->add('comidas', ChoiceType::class,[
-            'label'=>'comidas',
+        ->add('primeraComida', ChoiceType::class,[
+            'label'=>'primeraComida',
             'choices' =>
             [
             'desayuno'=>'desayuno',
             'almuerzo'=> 'almuerzo',
             'cena'=>'cena',
             ],
-            'multiple'=> true,
-        ]);
+            'multiple'=> false,
+        ])
+        ->add('ultimaComida', ChoiceType::class,[
+            'label'=>'ultimaComida',
+            'choices' =>
+            [
+            'desayuno'=>'desayuno',
+            'almuerzo'=> 'almuerzo',
+            'cena'=>'cena',
+            ],
+            'multiple'=> false,
+            
+        ])
+        ;
     }/**
      * {@inheritdoc}
      */

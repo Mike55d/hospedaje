@@ -138,31 +138,13 @@
                 <ul class="nav" id="side-menu">
                     <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
                     </li>
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="index.html"><i class=" fa-fw">1</i><span class="hide-menu">Dashboard 1</span></a> </li>
-                            <li> <a href="index2.html"><i class=" fa-fw">2</i><span class="hide-menu">Dashboard 2</span></a> </li>
-                            <li> <a href="index3.html"><i class=" fa-fw">3</i><span class="hide-menu">Dashboard 3</span></a> </li>
-                        </ul>
-                    </li>
-
                     {% if app.user.rola == 'USER' %}
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Solicitudes <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="{{ path ('solicitudes_misSolicitudes',{'status':'todas'})}}"><i class=" fa-fw"></i><span class="hide-menu">Mis solicitudes </span></a> </li>
-                            <li> <a href="{{ path ('solicitudes_misSolicitudes',{'status':'pendiente'})}}"><i class=" fa-fw"></i><span class="hide-menu">Solicitudes Pendientes</span></a> </li>
-                            <li> <a href="{{ path ('solicitudes_misSolicitudes',{'status':'aprobada'})}}"><i class=" fa-fw"></i><span class="hide-menu">Solicitudes Aprobadas</span></a> </li>
-                            <li> <a href="{{ path ('solicitudes_misSolicitudes',{'status':'rechazada'})}}"><i class=" fa-fw"></i><span class="hide-menu">Solicitudes Rechazadas</span></a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Reservas <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="{{ path ('reservas_misReservas')}}"><i class=" fa-fw">1</i><span class="hide-menu">Mis reservas </span></a> </li>
-                            <!-- <li> <a href="index3.html"><i class=" fa-fw">3</i><span class="hide-menu">Reservas pendientes</span></a> </li>
-                            <li> <a href="index3.html"><i class=" fa-fw">3</i><span class="hide-menu">Reservas finalizadas</span></a> </li> -->
-                        </ul>
-                    </li>
-                     <li> <a href="{{ path ('personas_index')}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Mi Grupo</span></a> </li>
+
+                    <li> <a href="{{ path ('solicitudes_misSolicitudes',{'status':'todas'})}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Solicitudes</span></a> </li>
+
+                    <li> <a href="{{ path ('reservas_misReservas')}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Reservas</span></a> </li>
+
+                    <li> <a href="{{ path ('personas_index')}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Mi Grupo</span></a> </li>
                     {% endif %}
 
                     {% if app.user.rola == 'ADMIN' %}
@@ -214,12 +196,7 @@
                         
                     {% endif %}
                     <li class="devider"></li>
-                    <li> <a href="map-google.html" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Google Map</span></a> </li>
-                    <li><a href="login.html" class="waves-effect"><i class="mdi mdi-logout fa-fw"></i> <span class="hide-menu">Log out</span></a></li>
-                    <li class="devider"></li>
-                    <li><a href="documentation.html" class="waves-effect"><i class="fa fa-circle-o text-danger"></i> <span class="hide-menu">Documentation</span></a></li>
-                    <li><a href="gallery.html" class="waves-effect"><i class="fa fa-circle-o text-info"></i> <span class="hide-menu">Gallery</span></a></li>
-                    <li><a href="faq.html" class="waves-effect"><i class="fa fa-circle-o text-success"></i> <span class="hide-menu">Faqs</span></a></li>
+                    <li><a href="{{ path ('logout')}}" class="waves-effect"><i class="mdi mdi-logout fa-fw"></i> <span class="hide-menu">Log out</span></a></li>
                 </ul>
             </div>
         </div>
