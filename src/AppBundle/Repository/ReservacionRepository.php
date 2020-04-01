@@ -10,4 +10,16 @@ namespace AppBundle\Repository;
  */
 class ReservacionRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function buscarFecha($mes,$año){
+		$em = $this->getEntityManager(); 
+		$qb = $em->createQueryBuilder();
+		$qb->select('r')
+		->from('AppBundle:Reservacion', 'r')
+		->where('MONTH(r.fechaInicio) = :mes AND YEAR(r.fechaInicio) = :anio')
+		->andWhere('MONTH(r.fechaFin) = :mes AND YEAR(r.fechaFin) = :anio')
+		->setParameter('mes',$mes)
+		->setParameter('anio',$año);
+		$query = $qb->getQuery();
+		return $query->getResult();
+	}
 }
