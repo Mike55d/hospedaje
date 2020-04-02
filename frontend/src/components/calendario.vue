@@ -179,7 +179,7 @@ export default {
 
 			this.setCardDimentions(cardDimentions);
 
-			let itemRows = document.getElementsByClassName('item-row');
+			let itemRows = [...document.getElementsByClassName('item-row')];
 			itemRows.forEach((itemRow, index) => {
 
 				this.items[index].top = (itemRow.getBoundingClientRect().top - this.container.offsetTop) + this.scrollPos.y + window.scrollY;
