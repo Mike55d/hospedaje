@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 export default {
 
   watch: {
@@ -11,11 +9,14 @@ export default {
         //Move
         if(this.dragingObject != null){
 
+          let dragingObject = this.dragingObject;
           this.moveDragingObject({
             left: this.destiny.left,
             top: this.destiny.top,
             itemIndex: this.destiny.itemIndex
           });
+
+          this.$emit('move', dragingObject);
         }
 
         //Extend
@@ -31,12 +32,14 @@ export default {
             left = lastLeftPos - (daysToExtend * this.cardDimentions.width);
           }
 
-          console.log(daysToExtend);
+          let extendingObject = this.extendingObject.object;
           this.extendObject({
             width: newCardLength * this.cardDimentions.width,
             lengthCard: newCardLength,
             left
           });
+
+          this.$emit('extend', extendingObject)
         }
       }
 
@@ -58,24 +61,25 @@ export default {
 
         let rect = dayRef.object.getBoundingClientRect();
 
-        this.cards.push({
-          id: this.cards.length + 1,
+        let newCard = {
           name: 'Card x' + this.cards.length,
           lengthCard: this.lengthCard,
           background: 'blue',
           width: this.cardDimentions.width * this.lengthCard,
           left: rect.left - this.container.offsetLeft + this.scrollPos.x,
-          top: rect.top - this.container.offsetTop + this.scrollPos.y,
+          top: rect.top - this.container.offsetTop + this.scrollPos.y + window.scrollY,
           opacity: 1,
-          itemIndex: this.startDay.day.itemIndex
-        });
+          itemIndex: this.startDay.day.itemIndex,
+          initDate: `${this.date.year}-${this.date.month + 1}-${this.startDay.day.day}`,
+          endDay: `${this.date.year}-${this.date.month + 1}-${this.endDay.day.day}`
+        };
+
+        this.cards.push(newCard);
+        this.$emit('create', newCard);
 
         this.lengthCard = 0;
         this.startDay = null;
         this.endDay = null;
-
-        $('#exampleModal').modal('show');
-
       }
     },
     mousePos(){
@@ -125,6 +129,7 @@ export default {
 
                 colorearIndex = dayIndex;
                 this.destiny.left = day.left;
+                this.destiny.day = day;
               }
 
               if(colorearIndex != null){
@@ -158,6 +163,7 @@ export default {
         let item = this.items[extendingObject.itemIndex];
         let mouseBoxPos = (extendingObject.left + extendingObject.width);
         let daysExtend = 0;
+        let initDay = null;
 
         switch(this.extendingObject.direction){
 
@@ -174,6 +180,10 @@ export default {
 
                 day.background = 'yellow';
                 daysExtend++;
+                if(initDay == null) {
+
+                  initDay = day;
+                }
               }
             });
             this.setLastMousePos(mousePos);
@@ -195,12 +205,18 @@ export default {
 
                 day.background = 'yellow';
                 daysExtend++;
+                if(initDay == null) {
+
+                  initDay = day;
+                }
               }
             });
             this.setLastMousePos(mousePos);
             this.daysExtend = daysExtend;
             break;
         }
+
+        this.extendingObject.initDay = initDay;
       }
     }
   }

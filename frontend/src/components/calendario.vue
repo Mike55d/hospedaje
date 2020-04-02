@@ -1,54 +1,62 @@
 <template>
 <div class="calendario">
+	<div class="controls-container">
+		<controls></controls>
+	</div>
+	<div @mousemove="mouseMove" @scroll="onScroll" id="calendar-container">
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>items</th>
+					<th v-for="day of date.monthDays" :key="'day-' + day">{{ day }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr @mouseleave="itemRowMouseOut" class="item-row" v-for="(item, index) of items" :key="'item-' + index">
+					<td :style="{'white-space': 'nowrap'}">{{ item.name }}</td>
+					<td class="noselect day" v-for="(day, index) of item.days" :key="'item-day-' + index" 
+						@mousedown="dayMouseDown($event, day)"
+						@mouseenter="dayMouseEnter($event, day)"
+						:style="{
+							background: day.background,
+						}"><span style="visibility: hidden">pop</span></td>
+				</tr>
+			</tbody>
+		</table>
+		<card
+			v-for="(card, index) of cards"
+			:card="card"
+			:key="'card-' + index"></card>
+	</div>
 
-  <div @mousemove="mouseMove" @scroll="onScroll" id="calendar-container" class="container table-responsive">
-    <controls></controls>
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>items</th>
-          <th v-for="day of date.monthDays" :key="'day-' + day">{{ day }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr @mouseleave="itemRowMouseOut" class="item-row" v-for="(item, index) of items" :key="'item-' + index">
-          <td>{{ item.name }}</td>
-          <td class="noselect day" v-for="(day, index) of item.days" :key="'item-day-' + index" 
-            @mousedown="dayMouseDown($event, day)"
-            @mouseenter="dayMouseEnter($event, day)"
-            :style="{
-              background: day.background
-            }">pop</td>
-        </tr>
-      </tbody>
-    </table>
-    <card
-      v-for="(card, index) of cards"
-      :card="card"
-      :key="'card-' + index"></card>
-  </div>
+	<!-- <div class="cube" @mousedown="boxDragStart"></div> -->
 
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <input type="color" v-model="cardColor" @change="changeCardColor">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="modal fade bs-example-modal-lg" id="my-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+		aria-hidden="true" style="display: none;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" id="close-modal" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myLargeModalLabel">Large modal</h4>
+				</div>
+				<div class="modal-body">
+					<h4>Overflowing text to show scroll behavior</h4>
+					<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
+						laoreet rutrum faucibus dolor auctor.</p>
+					<p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
+						consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Close</button>
+					<button @click="closeModal">Close modal</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
 
-  <!-- <div class="cube" @mousedown="boxDragStart"></div> -->
+	<button class="btn btn-default" id="open-modal" :style="{display: 'none'}" data-toggle="modal" data-target=".bs-example-modal-lg">test</button>
 </div>
 </template>
 
@@ -56,210 +64,221 @@
 
 import storeFunctions from './storeFunctions';
 import mouseEventListeners from './mouseEventListeners';
+import $ from 'jquery';
+// import 'bootstrap';
 
 export default {
-  mixins: [
-    storeFunctions,
-    mouseEventListeners
-  ],
-  components: {
-    'card': require('./card.vue').default,
-    'controls': require('./controls.vue').default
-  },
-  data: function(){
+	mixins: [
+		storeFunctions,
+		mouseEventListeners
+	],
+	components: {
+		'card': require('./card.vue').default,
+		'controls': require('./controls.vue').default
+	},
+	data: function(){
 
-    return {
-      dragStart: false,
-      lengthCard: 0,
-      startCard: null,
-      endCard: null,
-      startDay: null,
-      endDay: null,
-      daysExtend: 0,
-      cards: [],
-      isMounted: false,
-      cardColor: ''
-    }
-  },
-  beforeMount(){
+		return {
+			dragStart: false,
+			lengthCard: 0,
+			startCard: null,
+			endCard: null,
+			startDay: null,
+			endDay: null,
+			daysExtend: 0,
+			cards: [],
+			isMounted: false
+		}
+	},
+	beforeMount(){
 
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = date.getMonth();
-    let monthDays = new Date(year, month +1, 0).getDate();
+		let date = new Date();
+		let year = date.getFullYear();
+		let month = date.getMonth();
+		let monthDays = new Date(year, month +1, 0).getDate();
 
-    this.setDate({
-      month,
-      monthDays,
-      year
-    });
+		this.setDate({
+			month,
+			monthDays,
+			year
+		});
 
-    this.setItemDays();
-  },
-  mounted(){
+		this.setItemDays();
+	},
+	mounted(){
 
-    console.log('mounted');
+		console.log('mounted');
+		this.openModal();
 
-    this.setContainer(document.getElementById('calendar-container'))
-    document.body.addEventListener('mousedown', (e) => {
+		this.setContainer(document.getElementById('calendar-container'));
 
-      this.setMouseDown(true);
-    });
+		this.setScrollPos({
+			x: this.container.scrollLeft,
+			y: this.container.scrollTop
+		});
+		document.body.addEventListener('mousedown', (e) => {
 
-    document.body.addEventListener('mouseup', (e) => {
+			this.setMouseDown(true);
+		});
 
-      this.setMouseDown(false);
-    });
+		document.body.addEventListener('mouseup', (e) => {
 
-    document.addEventListener('mouseleave', (e) => {
+			this.setMouseDown(false);
+		});
 
-      this.setDragingObject(null);
-    });
+		document.addEventListener('mouseleave', (e) => {
 
-    this.initItemDays();
-    this.isMounted = true;
+			this.setDragingObject(null);
+		});
 
-  },
-  methods: {
+		this.initItemDays();
+		this.isMounted = true;
 
-    setItemDays(){
+	},
+	methods: {
 
-      this.items.forEach((item, index) => {
+		openModal(){
 
-        let days = [];
+			let btnModal = document.getElementById('open-modal');
+			btnModal.click();
+		},
 
-        for(let i=0; i<this.date.monthDays; i++){
+		closeModal(){
 
-          days.push({
-            day: i+1,
-            itemIndex: index,
-            background: 'auto',
-            selected: false,
-            left: 0,
-            extend: true
-          });
-        }
-        item.days = days;
-      });
-    },
-    initItemDays(){
+			let btnModal = document.getElementById('close-modal');
+			btnModal.click();
+		},
+		setItemDays(){
 
-      let daysObjects = [...document.getElementsByClassName('day')].slice(0, this.date.monthDays);
+			this.items.forEach((item, index) => {
 
-      let cardDimentions = {
-        width: daysObjects[0].offsetWidth,
-        height: daysObjects[0].offsetHeight
-      }
+				let days = [];
 
-      this.setCardDimentions(cardDimentions);
+				for(let i=0; i<this.date.monthDays; i++){
 
-      let itemRows = document.getElementsByClassName('item-row');
-      itemRows = [...itemRows].slice(0, itemRows.length);
+					days.push({
+						day: i+1,
+						itemIndex: index,
+						background: 'auto',
+						selected: false,
+						left: 0,
+						extend: true
+					});
+				}
+				item.days = days;
+			});
+		},
+		initItemDays(){
 
-      itemRows.forEach((itemRow, index) => {
+			let daysObjects = [...document.getElementsByClassName('day')].slice(0, this.date.monthDays);
 
-        this.items[index].top = (itemRow.getBoundingClientRect().top - this.container.offsetTop) + this.scrollPos.y;
-        this.items[index].days.forEach((day, index) => {
+			let cardDimentions = {
+				width: daysObjects[0].offsetWidth,
+				height: daysObjects[0].offsetHeight
+			}
 
-          day.left = (daysObjects[index].getBoundingClientRect().left + this.scrollPos.x) - this.container.offsetLeft;
-        });
-      });
-    },
-    onScroll(event){
+			this.setCardDimentions(cardDimentions);
 
-      let container = event.target;
-      this.setScrollPos({
-        x: container.scrollLeft,
-        y: container.scrollTop
-      });
-    },
-    mouseMove(event){
+			let itemRows = document.getElementsByClassName('item-row');
+			itemRows.forEach((itemRow, index) => {
 
-      this.setMousePos({
-        x: (event.pageX - this.container.offsetLeft) + this.scrollPos.x,
-        y: (event.pageY - this.container.offsetTop) + this.scrollPos.y
-      });
-    },
-    dayMouseDown(e, day){
+				this.items[index].top = (itemRow.getBoundingClientRect().top - this.container.offsetTop) + this.scrollPos.y + window.scrollY;
+				this.items[index].days.forEach((day, index) => {
 
-      this.lengthCard = 1;
-      day.background = 'yellow';
-      day.selected = true;
-      this.startDay = {
-        day,
-        object: e.target
-      };
-      this.endDay = {
-        day,
-        object: e.target
-      };
+					day.left = (daysObjects[index].getBoundingClientRect().left + this.scrollPos.x) - this.container.offsetLeft;
+				});
+			});
+		},
+		onScroll(event){
 
-    },
-    dayMouseEnter(e, day){
+			let container = event.target;
+			this.setScrollPos({
+				x: container.scrollLeft,
+				y: container.scrollTop
+			});
+		},
+		mouseMove(event){
 
-      if(this.mouseDown && this.startDay != null && this.startDay.day.itemIndex == day.itemIndex){
+			this.setMousePos({
+				x: (event.pageX - this.container.offsetLeft) + this.scrollPos.x,
+				y: (event.pageY - this.container.offsetTop) + this.scrollPos.y
+			});
+		},
+		dayMouseDown(e, day){
 
-        if(day.selected){
+			this.lengthCard = 1;
+			day.background = 'yellow';
+			day.selected = true;
+			this.startDay = {
+				day,
+				object: e.target
+			};
+			this.endDay = {
+				day,
+				object: e.target
+			};
 
-          let item = this.items[day.itemIndex];
-          let dayIndex = item.days.indexOf(day);
-          let startDayIndex = item.days.indexOf(this.startDay.day);
-          let endDayIndex = item.days.indexOf(this.endDay.day);
-          let nextDay = startDayIndex > endDayIndex
-            ? item.days[dayIndex - 1] : item.days[dayIndex + 1];
+		},
+		dayMouseEnter(e, day){
 
-          nextDay.background = 'none';
-          nextDay.selected = false;
-          this.lengthCard--;
+			if(this.mouseDown && this.startDay != null && this.startDay.day.itemIndex == day.itemIndex){
 
-          this.endDay = {
-            day,
-            object: e.target
-          }
-          return;
-        }
+				if(day.selected){
 
-        day.background = 'yellow';
-        day.selected = true;
-        this.lengthCard++;
+					let item = this.items[day.itemIndex];
+					let dayIndex = item.days.indexOf(day);
+					let startDayIndex = item.days.indexOf(this.startDay.day);
+					let endDayIndex = item.days.indexOf(this.endDay.day);
+					let nextDay = startDayIndex > endDayIndex
+						? item.days[dayIndex - 1] : item.days[dayIndex + 1];
 
-        this.endDay = {
-          day,
-          object: e.target
-        }
-        return;
-      }
-    },
-    itemRowMouseOut(e){
+					nextDay.background = 'none';
+					nextDay.selected = false;
+					this.lengthCard--;
 
-      if(this.dragingObject == null && this.extendingObject == null){
+					this.endDay = {
+						day,
+						object: e.target
+					}
+					return;
+				}
 
-        this.setMouseDown(false);
-      }
-    },
-    changeCardColor(){
+				day.background = 'yellow';
+				day.selected = true;
+				this.lengthCard++;
 
-      console.log(this.cardColor);
-      this.cards[this.cards.length - 1].background = this.cardColor;
-    }
-  },
-  watch:{
+				this.endDay = {
+					day,
+					object: e.target
+				}
+				return;
+			}
+		},
+		itemRowMouseOut(e){
 
-    date(){
+			if(this.dragingObject == null && this.extendingObject == null){
 
-      if(this.isMounted){
+				this.setMouseDown(false);
+			}
+		}
+	},
+	watch:{
 
-        this.setItemDays();
-        this.initItemDays();
-      }
-    }
-  }
+		date(){
+
+			if(this.isMounted){
+
+				this.setItemDays();
+				this.initItemDays();
+			}
+		}
+	}
 }
 </script>
 
 <style lang="scss">
 
-@import 'bootstrap';
+// @import 'bootstrap';
 @import './calendario';
 
 </style>

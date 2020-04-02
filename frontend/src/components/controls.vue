@@ -1,8 +1,8 @@
 <template>
   <div class="controls">
-    <button type="button" class="btn-prev-month" @click="previusMonth">&lt;</button>
-    Year {{ date.year }}, Month {{ date.month }}, MonthDays {{ date.monthDays }}
-    <button type="button" class="btn-next-month">&gt;</button>
+    <button class="btn btn-primary btn-prev-month" type="button" @click="previusMonth">&lt;</button>
+    <h3 class="date">Year {{ date.year }}, Month {{ date.month }}, MonthDays {{ date.monthDays }}</h3>
+    <button class="btn btn-primary btn-next-month" type="button" @click="nextMonth">&gt;</button>
   </div>
 </template>
 
@@ -22,7 +22,6 @@ export default {
       let month = this.date.month;
       let monthDays;
 
-      console.log('prev');
       if(this.date.month == 0){
 
         year -= 1;
@@ -30,6 +29,28 @@ export default {
       }else{
 
         month -= 1
+      }
+
+      monthDays = new Date(year, month + 1, 0).getDate();
+      this.setDate({
+        year,
+        month,
+        monthDays
+      });
+    },
+    nextMonth() {
+
+      let year = this.date.year;
+      let month = this.date.month;
+      let monthDays;
+
+      if(this.date.month == 11){
+
+        month = 1;
+        year += 1;
+      }else{
+
+        month += 1
       }
 
       monthDays = new Date(year, month + 1, 0).getDate();

@@ -23,7 +23,8 @@ export default new Vuex.Store({
     extendingObject: {
       object: null,
       direction: null,
-      lastLeftPos: null
+      lastLeftPos: null,
+      initDay: null
     },
     mouseBox: {
       top: 0,
@@ -142,14 +143,19 @@ export default new Vuex.Store({
       state.dragingObject.left = payload.left;
       state.dragingObject.top = payload.top;
       state.dragingObject.itemIndex = payload.itemIndex;
+      state.dragingObject.initDate = `${state.date.year}-${state.date.month + 1}-${state.destiny.day.day}`;
+      state.dragingObject.endDay = `${state.date.year}-${state.date.month + 1}-${(state.dragingObject.lengthCard -1) + state.destiny.day.day}`;
       state.dragingObject = null;
     },
     extendObject(state, payload){
 
       let object = state.extendingObject.object;
+
       object.width = payload.width;
       object.left = payload.left;
       object.lengthCard = payload.lengthCard;
+      object.initDate = `${state.date.year}-${state.date.month + 1}-${state.extendingObject.initDay.day}`;
+      object.endDay = `${state.date.year}-${state.date.month + 1}-${(object.lengthCard -1) + state.extendingObject.initDay.day}`;
       state.extendingObject.object = null;
     }
   }

@@ -27,8 +27,13 @@
 
     position: relative;
     max-height: 500px;
-    background: green;
-    padding: 30px 0 0 0;
+    padding: 50px 0 0 0;
+    overflow: auto;
+  }
+
+  .controls-container{
+
+    position: relative;
   }
 
   .card-left-btn {
@@ -55,11 +60,16 @@
 
   .controls {
 
-    background: red;
     text-align: center;
-    position: fixed;
+    position: absolute;
     left: 50%;
     top: 0px;
     transform: translate(-50%, 0);
     z-index: 99;
+  }
+
+  .date{
+
+    display: inline;
+    padding: 0 10px;
   }
