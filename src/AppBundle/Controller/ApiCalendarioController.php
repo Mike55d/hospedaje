@@ -16,14 +16,24 @@ class ApiCalendarioController extends AbstractFOSRestController
 	/**
 * @Route("/reservaciones")
 */
-	public function reservacionesAction(Request $request)
-	{
-		$em =$this->getDoctrine()->getManager(); 
+public function reservacionesAction(Request $request)
+{
+	$em =$this->getDoctrine()->getManager(); 
 		// $data = json_decode($request->getContent(),true);
 		// $camas = $em->getRepository('AppBundle:Cama')->findAll();
-		$reservaciones = $em->getRepository('AppBundle:Reservacion')
-		->buscarFecha($request->get('mes'),$request->get('año'));
-		$view = $this->view($reservaciones,200);
-		return $this->handleView($view);
+	$camas = $em->getRepository('AppBundle:Cama')->findAll();
+	$cuartos = $em->getRepository('AppBundle:Cuarto')->findAll();
+	$cuartoCamasReservas = [];
+	foreach ($cuartos as $cuarto) {
+	$camasReservas = [];
+		foreach ($camas as $cama) {
+			$reservaciones = $em->getRepository('AppBundle:Reservacion')
+			->buscarFecha($request->get('mes'),$request->get('año'),$cama->getId());
+			$camasReservas[] = ['cama'=>$cama ,'reservaciones'=> $reservaciones];
+		}
+		$cuartoCamasReservas[]=['cuarto'=> $cuarto ,'camas'=>$camasReservas];
 	}
+	$view = $this->view($cuartoCamasReservas,200);
+	return $this->handleView($view);
+}
 }
