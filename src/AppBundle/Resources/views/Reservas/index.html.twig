@@ -3,14 +3,10 @@
 {% block title %}Reservas{% endblock %}
 
 {% block body %}
-{% for flash_message in app.session.flashbag.get('notice') %}
-<div class="flash-notice">
-	{{ flash_message }}
-</div>
-{% endfor %}
-<div class="white-box">
-	<a href="{{ path ('solicitudes_new')}}" class="btn btn-success">Nueva Solicitud</a>
-	<div class="panel-body">
+<div class="col-md-10 col-md-offset-1">
+	<div class="white-box">
+	<h1 class="font-bold ml-5">Solicitudes</h1>
+		<a href="{{ path ('solicitudes_new')}}" class="btn btn-success mb-3">Nueva Solicitud</a><br><br>
 		<table class="myTable">
 			<thead>
 				<tr>
@@ -36,14 +32,14 @@
 					<td>{{reserva.status}}</td>
 					<td>
 						{% if app.user.rola == 'ADMIN' and reserva.status == 'Pendiente' %}
-							<a class="btn btn-success" href="{{ path ('solicitudes_changeStatus',{'id':reserva.id ,'status':'Aprobada','statusRedirect':statusRedirect})}}">Aprobar</a>
-							<a class="btn btn-danger" href="{{ path ('solicitudes_changeStatus',{'id':reserva.id ,'status':'Rechazada','statusRedirect':statusRedirect})}}">Rechazar</a>
+						<a class="btn btn-sm btn-success" href="{{ path ('solicitudes_changeStatus',{'id':reserva.id ,'status':'Aprobada','statusRedirect':statusRedirect})}}">Aprobar</a>
+						<a class="btn btn-sm btn-danger" href="{{ path ('solicitudes_changeStatus',{'id':reserva.id ,'status':'Rechazada','statusRedirect':statusRedirect})}}">Rechazar</a>
 						{% endif %}
 						{% if app.user.rola == 'USER' and reserva.status == 'Aprobada' %}
-						<a class="btn btn-success" href="{{ path ('reservas_new',{'id':reserva.id})}}">Completar</a>
+						<a class="btn btn-sm btn-success" href="{{ path ('reservas_new',{'id':reserva.id})}}">Completar</a>
 						{% endif %}
 						{% if reserva.status == 'Reservado' %}
-						<a href="{{ path ('camas_index',{'id':reserva.id})}}" class="btn btn-warning">Camas</a>
+						<a href="{{ path ('camas_index',{'id':reserva.id})}}" class="btn btn-sm btn-warning">Camas</a>
 						{% endif %}
 					</td>
 				</tr>

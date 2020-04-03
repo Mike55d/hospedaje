@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>{% block title %}App Blue{% endblock %}</title>
+    <title>{% block title %}Hospedaje{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset ('ample/images/favicon.png')}}">
     <!-- Bootstrap Core CSS -->
@@ -22,21 +22,13 @@
 </head>
 
 <body class="fix-header">
-    <!-- ============================================================== -->
-    <!-- Preloader -->
-    <!-- ============================================================== -->
+
     <div class="preloader">
         <svg class="circular" viewBox="25 25 50 50">
             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
         </svg>
     </div>
-    <!-- ============================================================== -->
-    <!-- Wrapper -->
-    <!-- ============================================================== -->
     <div id="wrapper">
-        <!-- ============================================================== -->
-        <!-- Topbar header - style you can find in pages.scss -->
-        <!-- ============================================================== -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header">
                 <div class="top-left-part">
@@ -53,48 +45,6 @@
                 <!-- Search input and Toggle icon -->
                 <ul class="nav navbar-top-links navbar-left">
                     <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>
-                            <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
-                        </a>
-                        <ul class="dropdown-menu mailbox animated bounceInDown">
-                            <li>
-                                <div class="drop-title">You have 4 new messages</div>
-                            </li>
-                            <li>
-                                <div class="message-center">
-                                    <a href="#">
-                                        <div class="user-img"> <img src="../images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
-                                        <div class="mail-contnet">
-                                            <h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:30 AM</span> </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="user-img"> <img src="../images/users/sonu.jpg" alt="user" class="img-circle"> <span class="profile-status busy pull-right"></span> </div>
-                                        <div class="mail-contnet">
-                                            <h5>Sonu Nigam</h5> <span class="mail-desc">I've sung a song! See you at</span> <span class="time">9:10 AM</span> </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="user-img"> <img src="../images/users/arijit.jpg" alt="user" class="img-circle"> <span class="profile-status away pull-right"></span> </div>
-                                        <div class="mail-contnet">
-                                            <h5>Arijit Sinh</h5> <span class="mail-desc">I am a singer!</span> <span class="time">9:08 AM</span> </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="user-img"> <img src="../images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status offline pull-right"></span> </div>
-                                        <div class="mail-contnet">
-                                            <h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:02 AM</span> </div>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="text-center" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="fa fa-angle-right"></i> </a>
-                            </li>
-                        </ul>
-                        <!-- /.dropdown-messages -->
-                    </li>
-                    
-                    <!-- .Megamenu -->
-                   
-                    <!-- /.Megamenu -->
                 </ul>
                 <ul class="nav navbar-top-links navbar-right pull-right">
                     <li>
@@ -106,30 +56,19 @@
                                 <div class="dw-user-box">
                                     <div class="u-img"><img src="{{ asset ('ample/images/users/varun.jpg')}}" alt="user" /></div>
                                     <div class="u-text">
-                                        <h4>Steave Jobs</h4>
-                                        <p class="text-muted">varun@gmail.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+                                    <h4>{{app.user.username|upper}}</h4>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#"><i class="ti-user"></i> My Profile</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>
+                            <li><a href="#"><i class="ti-user"></i>Mi Perfil</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="{{ path ('logout')}}"><i class="fa fa-power-off"></i> Logout</a></li>
                         </ul>
-                        <!-- /.dropdown-user -->
                     </li>
-                    <!-- /.dropdown -->
                 </ul>
             </div>
-            <!-- /.navbar-header -->
-            <!-- /.navbar-top-links -->
-            <!-- /.navbar-static-side -->
+
         </nav>
-        <!-- End Top Navigation -->
-        <!-- ============================================================== -->
-        <!-- Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav slimscrollsidebar">
                 <div class="sidebar-head">
@@ -138,8 +77,8 @@
                 <ul class="nav" id="side-menu">
                     <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
                     </li>
+                    <li> <a href="{{ path ('homepage')}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Inicio</span></a> </li>
                     {% if app.user.rola == 'USER' %}
-
                     <li> <a href="{{ path ('solicitudes_misSolicitudes',{'status':'todas'})}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Solicitudes</span></a> </li>
 
                     <li> <a href="{{ path ('reservas_misReservas')}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Reservas</span></a> </li>
@@ -147,85 +86,41 @@
                     <li> <a href="{{ path ('personas_index')}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Mi Grupo</span></a> </li>
                     {% endif %}
 
+
                     {% if app.user.rola == 'ADMIN' %}
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Usuarios <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="index.html"><i class=" fa-fw">1</i><span class="hide-menu">Nuevo usuario </span></a> </li>
-                            <li> <a href="{{ path ('users_all')}}"><i class=" fa-fw">3</i><span class="hide-menu">Usuarios</span></a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Solicitudes <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="{{ path ('solicitudes_indexAdmin',{'status':'todas'})}}"><i class=" fa-fw">1</i><span class="hide-menu">Solicitudes </span></a> </li>
-                            <li> <a href="{{ path ('solicitudes_indexAdmin',{'status':'pendiente'})}}"><i class=" fa-fw">3</i><span class="hide-menu">Solicitudes Pendientes</span></a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Reservas <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="index.html"><i class=" fa-fw">1</i><span class="hide-menu">Eventos</span></a> </li>
-                            <li> <a href="/faqs"><i class=" fa-fw">2</i><span class="hide-menu">Preguntas frecuentes</span></a> </li>
-                            <li> <a href="index3.html"><i class=" fa-fw">3</i><span class="hide-menu">Disponibilidad de vagas</span></a> </li>
-                            <li> <a href="index3.html"><i class=" fa-fw">4</i><span class="hide-menu">Confirmar reservas</span></a> </li>
-                        </ul>
-                    </li>
-                   <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Hospedaje <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="index.html"><i class=" fa-fw">1</i><span class="hide-menu">Calendario</span></a> </li>
-                            <li> <a href="index3.html"><i class=" fa-fw">3</i><span class="hide-menu">Mapa de ocupaciones</span></a> </li>
-                            <li> <a href="index3.html"><i class=" fa-fw">3</i><span class="hide-menu">Hospedar pedidos</span></a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Comidas <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="/reservas/comidas"><i class=" fa-fw">1</i><span class="hide-menu">Generar lista</span></a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Servicios <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="/servicios"><i class=" fa-fw">1</i><span class="hide-menu">Servicios</span></a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="index.html" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Contabilidad  <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="index.html"><i class=" fa-fw">1</i><span class="hide-menu">CheckOut</span></a> </li>
-                            <li> <a href="index3.html"><i class=" fa-fw">3</i><span class="hide-menu">Generar lista de entrada</span></a> </li>
-                        </ul>
-                    </li>
+                    <li> <a href="{{ path ('users_all')}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Usuarios</span></a> </li>
+
+                    <li> <a href="{{ path ('solicitudes_indexAdmin',{'status':'todas'})}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Solicitudes</span></a> </li>
+
+                    <li> <a href="/servicios" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Servicios</span></a> </li>
+
+                     <!-- <li> <a href="{{ path ('solicitudes_indexAdmin',{'status':'todas'})}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Reservas</span></a> </li> -->
+                     
+                    <!-- <li> <a href="{{ path ('solicitudes_indexAdmin',{'status':'todas'})}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Reportes</span></a> </li> -->
                     {% endif %}
-                    {% if app.user.rola == 'WEBMASTER' %}
-                        
-                    {% endif %}
-                    <li class="devider"></li>
+
                     <li><a href="{{ path ('logout')}}" class="waves-effect"><i class="mdi mdi-logout fa-fw"></i> <span class="hide-menu">Log out</span></a></li>
                 </ul>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Page Content -->
-        <!-- ============================================================== -->
+
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row bg-title">
-                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Starter Page</h4> </div>
-                    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-                        <ol class="breadcrumb">
-                            <li><a href="#">Dashboard</a></li>
-                            <li class="active">Starter Page</li>
-                        </ol>
-                    </div>
-                    <!-- /.col-lg-12 -->
                 </div>
                 <div class="row">
+                    {% for flash_message in app.session.flashbag.get('notice') %}
+                        <div class="alert alert-success" role="alert">
+                        <h2 class=" text-white font-bold">{{ flash_message }}</h2>
+                        </div>
+                    {% endfor %}
+                    {% for flash_message in app.session.flashbag.get('error') %}
+                        <div class="alert alert-danger" role="alert">
+                        <h2 class=" text-white font-bold">{{ flash_message }}</h2>
+                        </div>
+                    {% endfor %}
                     {% block body %}{% endblock %}
                 </div>
-                <!-- ============================================================== -->
-                <!-- Right sidebar -->
-                <!-- ============================================================== -->
-                <!-- .right-sidebar -->
                 <div class="right-sidebar">
                     <div class="slimscrollright">
                         <div class="rpanel-title"> Service Panel <span><i class="ti-close right-side-toggle"></i></span> </div>

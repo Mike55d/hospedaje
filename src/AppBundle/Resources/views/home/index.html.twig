@@ -1,4 +1,96 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <h3 class="box-title">Blank Starter page</h3>
+{% if app.user.rola == 'ADMIN' %}
+<div class="white-box bg-primary">
+<h1 class="font-bold ml-5 text-white">Bienvenido</h1>
+	
+</div>
+<div class="col-md-5">
+	<div class="row">
+		<div class="col-lg-6 col-sm-6 col-xs-12">
+			<div class="white-box">
+				<h3 class="box-title">Usuarios registrados</h3>
+				<ul class="list-inline m-t-30 p-t-10 two-part">
+					<li><i class="icon-people text-info"></i></li>
+					<li class="text-right"><span class="counter">{{users|length}}</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-lg-6 col-sm-6 col-xs-12">
+			<div class="white-box">
+				<h3 class="box-title">Reservaciones</h3>
+				<ul class="list-inline m-t-30 p-t-10 two-part">
+					<li><i class="icon-folder text-purple"></i></li>
+					<li class="text-right"><span class="counter">{{reservas|length}}</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-lg-6 col-sm-6 col-xs-12">
+			<div class="white-box">
+				<h3 class="box-title">Solicitudes pendientes</h3>
+				<ul class="list-inline m-t-30 p-t-10 two-part">
+					<li><i class="icon-folder-alt text-danger"></i></li>
+					<li class="text-right"><span class="">{{solicitudes|length}}</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-lg-6 col-sm-6 col-xs-12">
+			<div class="white-box">
+				<h3 class="box-title">Huespedes</h3>
+				<ul class="list-inline m-t-30 p-t-10 two-part">
+					<li><i class="ti-wallet text-success"></i></li>
+					<li class="text-right"><span class="">11</span></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col-md-7">
+	<div class="white-box">
+		<h2 class="font-bold">Solicitudes Pendientes</h2>
+		<table class="myTable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>fecha</th>
+					<th>llegada</th>
+					<th>Salida</th>
+					<th>Menores</th>
+					<th>Adultos</th>
+					<th>Status</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody style="text-align:center;">
+				{% for solicitud in solicitudes %}
+				<tr>
+					<td>{{solicitud.id}}</td>
+					<td>{{solicitud.fecha|date('d-m-y')}}</td>
+					<td>{{solicitud.llegada|date('d-m-y')}}</td>
+					<td>{{solicitud.salida|date('d-m-y')}}</td>
+					<td>{{solicitud.menor}}</td>
+					<td>{{solicitud.adulto}}</td>
+					<td>{{solicitud.status}}</td>
+					<td>
+						{% if solicitud.status == 'Pendiente' %}
+						<a class="btn btn-success btn-sm mb-2" href="{{ path ('solicitudes_changeStatusHome',{'id':solicitud.id ,'status':'Aprobada'})}}">Aprobar</a>
+						<a class="btn btn-danger btn-sm" href="{{ path ('solicitudes_changeStatusHome',{'id':solicitud.id , 'status':'Rechazada'})}}">Rechazar</a>
+						{% endif %}
+					</td>
+				</tr>
+				{% endfor %}
+				{% if app.user.rola == 'USER' %}
+				{% endif %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
 {% endblock %}

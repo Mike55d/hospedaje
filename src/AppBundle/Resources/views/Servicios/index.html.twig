@@ -1,99 +1,106 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}AppBundle:Users:index{% endblock %}
 {% block body %}
-<h1>Servicios</h1>
-<button class="dataTables_filter btn btn-success waves-effect waves-light btn-rouned col align-self-end"><a href="/servicios/nuevo" style="color:white; margin-botom : 5px ;">Nuevo</a></button>
 
-<div class="tab-container">
-    <ul class="nav nav-tabs nav-tabs-classic" role="tablist">
-      <li class="nav-item active"><a class="nav-link active show" href="#classic_lav" data-toggle="tab" role="tab" aria-selected="true">Lavanderia</a></li>
-      <li class="nav-item"><a class="nav-link" href="#classic_tie" data-toggle="tab" role="tab" aria-selected="false">Tienda</a></li>
-      <li class="nav-item"><a class="nav-link" href="#classic_rot" data-toggle="tab" role="tab" aria-selected="false">Material Roto</a></li>
-    </ul>
-    <div class="tab-content tabcontent-border mb-4 p-4">
+
+<div class="col-md-8 col-md-offset-2">
+  <div class="white-box">
+    <h1 class="font-bold display-5">Servicios</h1>
+    <a class="btn btn-success mb-5" href="/servicios/nuevo" >Nuevo</a>
+    <div class="tab-container">
+      <ul class="nav nav-tabs nav-tabs-classic" role="tablist">
+        <li class="nav-item active"><a class="nav-link active show" href="#classic_lav" data-toggle="tab" role="tab" aria-selected="true">Lavanderia</a></li>
+        <li class="nav-item"><a class="nav-link" href="#classic_tie" data-toggle="tab" role="tab" aria-selected="false">Tienda</a></li>
+        <li class="nav-item"><a class="nav-link" href="#classic_rot" data-toggle="tab" role="tab" aria-selected="false">Material Roto</a></li>
+      </ul>
+      <div class="tab-content tabcontent-border mb-4 p-4">
         <div class="tab-pane active" id="classic_lav" role="tabpanel">
-           <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Servicio</th>
-                                <th scope="col">Costo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           {% for lavanderia in servicios.uno %}
-                                <tr>
-                                    <td>{{ lavanderia.servicio }}</td>
-                                    <td>{{ lavanderia.costo }}</td>
-                                    <td>
-                                        <button class="btn btn-info waves-effect waves-light btn-rouned"><a href="{{ path('edita_servicio', { 'id' : lavanderia.id })}}" style="color:white;">Ver</a></button>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger waves-effect waves-light btn-rouned"><a href="{{ path('elimina_servicio', { 'id' : lavanderia.id })}}" style="color:white;">Eliminar</a></button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div> 
-        </div>
-            <div class="tab-pane" id="classic_tie" role="tabpanel">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Servicio</th>
-                                <th scope="col">Costo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           {% for tienda in servicios.dos %}
-                                <tr>
-                                    <td>{{ tienda.servicio }}</td>
-                                    <td>{{ tienda.costo }}</td>
-                                     <td>
-                                        <button class="btn btn-info waves-effect waves-light btn-rouned"><a href="{{ path('edita_servicio', { 'id' : tienda.id })}}" style="color:white;">Ver</a></button>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger waves-effect waves-light btn-rouned"><a href="{{ path('elimina_servicio', { 'id' : tienda.id })}}" style="color:white;">Eliminar</a></button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-            </div>
-            <div class="tab-pane" id="classic_rot" role="tabpanel">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Servicio</th>
-                                    <th scope="col">Costo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                               {% for roto in servicios.tre %}
-                                    <tr>
-                                        <td>{{ roto.servicio }}</td>
-                                        <td>{{ roto.costo }}</td>
-                                         <td>
-                                        <button class="btn btn-info waves-effect waves-light btn-rouned"><a href="{{ path('edita_servicio', { 'id' : roto.id })}}" style="color:white;">Ver</a></button>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger waves-effect waves-light btn-rouned"><a href="{{ path('elimina_servicio', { 'id' : roto.id })}}" style="color:white;">Eliminar</a></button>
-                                    </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-        </div>
+         <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Servicio</th>
+                <th>Costo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+             {% for lavanderia in servicios.uno %}
+             <tr>
+              <td>{{lavanderia.id}}</td>
+              <td>{{ lavanderia.servicio }}</td>
+              <td>{{ lavanderia.costo }}</td>
+              <td>
+                <a class="btn btn-sm btn-warning" href="{{ path('edita_servicio', { 'id' : lavanderia.id })}}" style="color:white;">Editar</a>
+                <a class="btn btn-sm btn-danger" href="{{ path('elimina_servicio', { 'id' : lavanderia.id })}}" style="color:white;">Eliminar</a>
+              </td>
+              <td>
+
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div> 
+    </div>
+    <div class="tab-pane" id="classic_tie" role="tabpanel">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Servicio</th>
+              <th scope="col">Costo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+           {% for tienda in servicios.dos %}
+           <tr>
+            <td>{{ tienda.id}}</td>
+            <td>{{ tienda.servicio }}</td>
+            <td>{{ tienda.costo }}</td>
+            <td>
+              <a class="btn btn-sm btn-warning" href="{{ path('edita_servicio', { 'id' : tienda.id })}}" style="color:white;">Editar</a>
+              <a class="btn btn-sm btn-danger" href="{{ path('elimina_servicio', { 'id' : tienda.id })}}" style="color:white;">Eliminar</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <div class="tab-pane" id="classic_rot" role="tabpanel">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Servicio</th>
+            <th scope="col">Costo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+         {% for roto in servicios.tre %}
+         <tr>
+          <td>{{ roto.id }}</td>
+          <td>{{ roto.servicio }}</td>
+          <td>{{ roto.costo }}</td>
+          <td>
+            <a class="btn btn-sm btn-warning" href="{{ path('edita_servicio', { 'id' : roto.id })}}" style="color:white;">Editar</a>
+            <a class="btn btn-sm btn-danger" href="{{ path('elimina_servicio', { 'id' : roto.id })}}" style="color:white;">Eliminar</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+</div>
+</div>
 {% endblock %}
 

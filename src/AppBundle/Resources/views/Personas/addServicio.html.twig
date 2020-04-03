@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="col-md-4">
+	<div class="white-box">
+		<div class="panel-body">
+			<h2>Tratamiento : <span class="font-bold">{{persona.tratamiento}}</span></h2>
+			<h2>Nombre : <span class="font-bold">{{persona.nombre}}</span></h2>
+			<h2>Usuario : <span class="font-bold">{{persona.user.name}}</span></h2>
+		</div>
+	</div>
+</div>
+
+<div class="col-md-8 ">
+	<div class="white-box">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<h2 class="font-bold">Servicios</h2>
+				<label for="">Tipo</label>
+				<select id="menu" class="form-control form-control-sm">
+					<option value="">Seleccione un tipo de servicio</option>
+					<option value="1">Lavanderia</option>
+					<option value="2">Tienda</option>
+					<option value="3">Materia Roto</option>
+				</select>
+				<br>
+				<label for="">Servicio</label>
+				<select id="servicio" class="form-control form-control-sm">
+				</select>
+				<br>
+				<a class="btn btn-info" id="vamonos" disabled="true">Agregar</a>
+				<hr>
+				<table class="myTable">
+					<thead>
+						<tr>
+							<th>Servicio</th>
+							<th>Costo</th>
+						</tr>
+					</thead>
+					<tbody id="table">
+						{% for servicio in servicios %}
+						<tr>
+							<td>{{servicio.servicio.servicio}}</td>
+							<td>{{servicio.servicio.costo}}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>    
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script >
+
+var tabla = $('.myTable').DataTable({
+	"ajax":{
+		"url": '/api/getServicios',
+		"type": "POST",
+		"data": "{{persona.id}}"
+	},
+	'ordering':false,
+});
+
+var btnV = document.getElementById('vamonos');
+$('#menu').change(function(){
+	console.log($(this).val());
+	$.ajax({
+		type:'GET',
+		url : '/servicios/ver/'+ $(this).val(),
+		success: function(data){
+			var d = JSON.parse(data);
+			var infos ;
+			infos = document.getElementById('servicio');
+			infos.innerHTML = '' ;
+			for(let e of d){
+				var op = document.createElement('option');
+				op.appendChild(document.createTextNode(e.servicio));
+				op.value = e.id ;
+				infos.appendChild(op);
+			}
+			btnV.removeAttribute('disabled');
+		}
+	});
+});
+
+btnV.addEventListener('click', event =>{
+
+	$.ajax({
+		type:'POST',
+		data:JSON.stringify({
+			'idUsuario' : '{{persona.id}}',
+			'idServicio': $('#servicio').val()
+		}),
+		url: '/api/serviciosUs/nuevo',
+		success:function(data){
+			console.log(data)
+			tabla.ajax.reload(null,false);
+		}
+
+	});	
+});
+</script>
+{% endblock %}

@@ -1,40 +1,44 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}Editar user{% endblock %}
-
 {% block body %}
-
-<div class="col-md-4 ">
-	<a href="{{ path ('users_all')}}">Atras</a>
+<div class="col-md-12">
+	<a class="btn btn-info right mb-3" href="{{ path ('users_all')}}">Atras</a>
+</div>
+<div class="col-md-4">
 	<div class="white-box">
 		<div class="panel-body">
-			Nombre<h3>{{form.name}}</h3>
-			Usuario<h3>{{form.username}}</h3>
-			Telefono<h3>{{form.phone}}</h3>
+			<h2>Nombre : <span class="font-bold">{{form.name}}</span></h2>
+			<h2>Usuario : <span class="font-bold">{{form.username}}</span></h2>
+			<h2>Telefono : <span class="font-bold">{{form.phone}}</span></h2>
 		</div>
 	</div>
 </div>
+
 <div class="col-md-8 ">
-	<div class="panel-body">
+	<div class="white-box">
+	<h3 class="font-bold mb-3">Personas del usuario</h3>
 			<table class="myTable">
 				<thead>
-					<tr>
+					<tr >
 						<th>Id</th>
 						<th>Nombre</th>
 						<th>Grupo</th>
+						<th>Hospedado</th>
 						<th>fechaNacimiento</th>
 						<th>Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for persona in personas %}
-					<tr>
+					<tr class="text-center">
 						<td>{{persona.id}}</td>
 						<td>{{persona.nombre}}</td>
 						<td>{{persona.grupo.nombre}}</td>
+						<td>{% if persona.huesped %}Si {% else %}No{% endif %}</td>
 						<td>{{persona.fechaNacimiento|date('d-m-Y')}}</td>
 						<td>
-							<a href="{{ path ('personas_edit',{'id': persona.id})}}" class="btn btn-warning">Ver</a>
+							<a href="{{ path ('personas_edit',{'id': persona.id})}}" class="btn btn-sm btn-warning">Editar</a>
+							<a href="{{ path ('personas_servicios',{'id': persona.id})}}" class="btn btn-sm btn-primary">Servicios</a>
 						</td>
 					</tr>
 					{% endfor %}

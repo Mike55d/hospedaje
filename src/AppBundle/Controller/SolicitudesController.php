@@ -9,45 +9,47 @@ use AppBundle\Entity\Reserva;
 use AppBundle\Form\ReservaType;
 
 /**
-     * @Route("Solicitudes")
-     */
+* @Route("Solicitudes")
+*/
 class SolicitudesController extends Controller
 {
-	 /**
-     * @Route("/{status}/misSolicitudes" , name= "solicitudes_misSolicitudes")
-     */
-  public function indexAction($status)
-  {
-    $em =$this->getDoctrine()->getManager(); 
-    $user = $this->get('security.token_storage')
-    ->getToken()->getUser();
-     if ($status != 'todas') {
-      $reservas = $em->getRepository('AppBundle:Reserva')
-      ->findBy(['user'=>$user,'status' => $status]);
-    }else{
-       $reservas = $em->getRepository('AppBundle:Reserva')
-      ->findBy(['user'=>$user]); 
-    }
-    return $this->render('AppBundle:Reservas:index.html.twig', array(
-     'reservas' => $reservas,
-     'statusRedirect' => $status,
-   ));
-  }
-
-  /**
-     * @Route("/{status}/Solicitudes" , name= "solicitudes_indexAdmin")
-     */
-  public function indexAdminAction($status)
-  {
+	/**
+  * @Route("/{status}/misSolicitudes" , name= "solicitudes_misSolicitudes")
+  */
+   public function indexAction($status)
+   {
     $em =$this->getDoctrine()->getManager(); 
     $user = $this->get('security.token_storage')
     ->getToken()->getUser();
     if ($status != 'todas') {
       $reservas = $em->getRepository('AppBundle:Reserva')
-      ->findBy(['status' => $status]); 
+      ->findBy(['user'=>$user,'status' => $status]);
     }else{
-      $reservas = $em->getRepository('AppBundle:Reserva')
-      ->findAll(); 
+     $reservas = $em->getRepository('AppBundle:Reserva')
+     ->findBy(['user'=>$user]); 
+   }
+   return $this->render('AppBundle:Reservas:index.html.twig', array(
+     'reservas' => $reservas,
+     'statusRedirect' => $status,
+   ));
+ }
+
+  /**
+  * @Route("/{status}/Solicitudes" , name= "solicitudes_indexAdmin")
+  */
+  public function indexAdminAction($status)
+  {
+    $em =$this->getDoctrine()->getManager(); 
+    $user = $this->get('security.token_storage')
+    ->getToken()->getUser();
+    if ($user->getRola() == 'ADMIN') {
+      if ($status != 'todas') {
+        $reservas = $em->getRepository('AppBundle:Reserva')
+        ->findBy(['status' => $status]); 
+      }else{
+        $reservas = $em->getRepository('AppBundle:Reserva')
+        ->findAll(); 
+      }
     }
     return $this->render('AppBundle:Reservas:index.html.twig', array(
      'reservas' => $reservas,
@@ -56,8 +58,8 @@ class SolicitudesController extends Controller
   }
 
   /**
- * @Route("/new" , name= "solicitudes_new")
- */
+  * @Route("/new" , name= "solicitudes_new")
+  */
   public function newAction( Request $request)
   {
   	$em = $this->getDoctrine()->getManager();
@@ -74,7 +76,7 @@ class SolicitudesController extends Controller
   		$em->flush();
   		$this->addFlash(
   			'notice',
-  			'Your changes were saved!'
+  			'Nueva solicitud enviada satisfactoriamente'
   		);
   		return $this->redirectToRoute('solicitudes_misSolicitudes',['status'=>'pendiente']);
   	}
@@ -84,16 +86,37 @@ class SolicitudesController extends Controller
 
   }
 
-   /**
-     * @Route("/{id}/{status}/{statusRedirect}/changeStatus" , name= "solicitudes_changeStatus")
-     */
-  public function changeStatusAction(Reserva $reserva,$status,$statusRedirect)
-  {
+    /**
+    * @Route("/{id}/{status}/{statusRedirect}/changeStatus" , name= "solicitudes_changeStatus")
+    */
+   public function changeStatusAction(Reserva $reserva,$status,$statusRedirect)
+   {
     $em =$this->getDoctrine()->getManager(); 
     $user = $this->get('security.token_storage')
     ->getToken()->getUser();
     $reserva->setStatus($status);
     $em->flush();
+    $this->addFlash(
+        'notice',
+        'Status cambiado satisfactoriamente'
+      );
     return $this->redirectToRoute('solicitudes_indexAdmin',['status'=> $statusRedirect]);
+  }
+
+    /**
+    * @Route("/{id}/{status}/changeStatus" , name= "solicitudes_changeStatusHome")
+    */
+   public function changeStatusHomeAction(Reserva $reserva , $status)
+   {
+    $em =$this->getDoctrine()->getManager(); 
+    $user = $this->get('security.token_storage')
+    ->getToken()->getUser();
+    $reserva->setStatus($status);
+    $em->flush();
+    $this->addFlash(
+        'notice',
+        'Status Cambiado satisfactoriamente'
+      );
+    return $this->redirectToRoute('homepage');
   }
 }

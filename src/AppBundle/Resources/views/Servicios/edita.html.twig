@@ -1,40 +1,40 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}AppBundle:Users:index{% endblock %}
-
 {% block body %}
-    <a href="/servicios">Atras</a>
-<h1>Servicios</h1>
+<div class="col-md-8 col-md-offset-2">
+  <div class="white-box">
+    <a class="btn btn-info" href="/servicios">Atras</a>
+    <h1 class="font-bold">Servicios</h1>
     <div class="tab-container">
-        {{form_start(form)}}
-            <div data-repeater-list="">
-                <div data-repeater-item="">
-                    
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            {{ form_row(form.tipo, {'value': 1 } ) }}
-                            <!--input type="text" class="form-control" id="name" placeholder="Name"-->
-                        </div>
-                        <div class="form-group col-md-3">
-                            {{form_row(form.servicio, { 'attr': {'value': datos.servicio  } })}}
-                            <!--input type="text" class="form-control" id="name" placeholder="Name"-->
-                        </div>
-                        <div class="form-group col-md-3">
-                            <!--input type="email" class="form-control" id="email" placeholder="Email"-->
-                            {{form_row(form.costo, { 'attr': {'value': datos.costo  } })  }}
-                        </div>
-                    </div>
-                    <hr>
-                </div>
+      {{form_start(form)}}
+      <div data-repeater-list="">
+        <div data-repeater-item="">
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              {{ form_row(form.tipo, {'value': 1 } ) }}
+              <!--input type="text" class="form-control" id="name" placeholder="Name"-->
             </div>
-            <button data-repeater-create="" class="btn btn-info waves-effect waves-light">Editar
-            </button>
-        {{form_end(form)}}
+            <div class="form-group col-md-3">
+              {{form_row(form.servicio, { 'attr': {'value': datos.servicio  } })}}
+              <!--input type="text" class="form-control" id="name" placeholder="Name"-->
+            </div>
+            <div class="form-group col-md-3">
+              <!--input type="email" class="form-control" id="email" placeholder="Email"-->
+              {{form_row(form.costo, { 'attr': {'value': datos.costo  } })  }}
+            </div>
+          </div>
+          <hr>
+        </div>
       </div>
+      <button data-repeater-create="" class="btn btn-success">Guardar</button>
+      {{form_end(form)}}
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block javascripts %}
 <script>
-    var t = {{datos.tipo}}-1;
-    document.getElementById('appbundle_Servicios_tipo').selectedIndex=t;
+var t = {{datos.tipo}}-1;
+document.getElementById('appbundle_Servicios_tipo').selectedIndex=t;
 </script>
 {% endblock %}

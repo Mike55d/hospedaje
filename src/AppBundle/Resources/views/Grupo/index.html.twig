@@ -3,11 +3,6 @@
 {% block title %}Grupos{% endblock %}
 
 {% block body %}
-{% for flash_message in app.session.flashbag.get('notice') %}
-    <div class="flash-notice">
-        {{ flash_message }}
-    </div>
-{% endfor %}
 <div class="col-md-10 col-md-offset-1">
 	<div class="white-box">
 		<a href="{{ path ('grupo_new')}}" class="btn btn-success">Nuevo</a>

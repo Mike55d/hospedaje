@@ -42,7 +42,7 @@ class FaqsController extends Controller
             $em->flush();
             $this->addFlash(
                 'notice',
-                'Your changes were saved!'
+                'Nueva FAQ creada'
             );
             return $this->redirectToRoute('faqs_index',);
         }
@@ -70,7 +70,7 @@ class FaqsController extends Controller
             $em->flush();
             $this->addFlash(
                 'notice',
-                'Your changes were saved!'
+                'FAQ editada'
             );
             return $this->redirectToRoute('faqs_index',);
         }
@@ -94,7 +94,7 @@ class FaqsController extends Controller
                 $em->flush();
                 $this->addFlash(
                     'notice',
-                    'Your changes were saved!'
+                    'FAQ eliminada'
             );
             }
 

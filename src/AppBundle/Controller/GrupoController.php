@@ -39,7 +39,7 @@ class GrupoController extends Controller
             $em->flush();
             $this->addFlash(
                 'notice',
-                'Your changes were saved!'
+                'Nuevo grupo creado'
             );
             return $this->redirectToRoute('grupo_index');
         }

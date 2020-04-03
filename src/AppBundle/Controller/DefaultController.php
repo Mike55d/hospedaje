@@ -9,22 +9,28 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-    /**
-     * @Route("/dashboard", name="homepage")
-     */
-    public function indexAction(Request $request)
-    {
-        // replace this example code with whatever you need
-        return $this->render('AppBundle:Home:index.html.twig',[
+  /**
+  * @Route("/dashboard", name="homepage")
+  */
+  public function indexAction(Request $request)
+  {
+    $em =$this->getDoctrine()->getManager(); 
+    $solicitudes = $em->getRepository('AppBundle:Reserva')
+    ->findBy(['status' => 'pendiente']); 
+    $users = $em->getRepository('AppBundle:User')->findByRola('USER'); 
+    $reservaciones = $em->getRepository('AppBundle:Reserva')->findBy(['status' => 'reservado']); 
+    return $this->render('AppBundle:Home:index.html.twig',[
+      'solicitudes'=> $solicitudes,
+      'users' => $users,
+      'reservas' => $reservaciones
+    ]);
+  }
 
-        ]);
-    }
-
-    /**
-     * @Route("/", name="dash")
-     */
-    public function dashboardAction(Request $request)
-    {
-        return $this->redirectToRoute('homepage');
-    }
+  /**
+  * @Route("/", name="dash")
+  */
+  public function dashboardAction(Request $request)
+  {
+    return $this->redirectToRoute('homepage');
+  }
 }

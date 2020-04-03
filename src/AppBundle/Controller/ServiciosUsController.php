@@ -7,17 +7,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-#use AppBundle\Form\ServiciosUsType;
 use AppBundle\Entity\ServiciosUs;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 
 
-class ServiciosUsController extends Controller
+
+class ServiciosUsController extends AbstractFOSRestController
 {
-   
+
     /**
-     * @Route("/serviciosUs/nuevo", name="serviciosUs")
+     * @Route("api/serviciosUs/nuevo", name="serviciosUs")
      */
     public function nuevoAction(Request $request )
     {
@@ -32,7 +32,25 @@ class ServiciosUsController extends Controller
         $ServiciosUs->setServicio($servicio);
         $em->persist($ServiciosUs);
         $em->flush();
-        return new JsonResponse(1);
+        $view = $this->view($ServiciosUs,200);
+        return $this->handleView($view);
     }
-    
+
+    /**
+     * @Route("/api/getServicios", name="getServicios")
+     */
+    public function getServiciosAction(Request $request )
+    {
+        $em =$this->getDoctrine()->getManager(); 
+        $ServiciosUs = new ServiciosUs();
+        $persona = $em->getRepository('AppBundle:Persona')->find(1);
+        $servicios = $em->getRepository('AppBundle:ServiciosUs')->findByPersona($persona);
+        $serviciosJson=['data'=>[]];
+        foreach ($servicios as $servicio) {
+            array_push($serviciosJson['data'], [$servicio->getServicio()->getServicio(),$servicio->getServicio()->getCosto()]);
+        }
+        $view = $this->view($serviciosJson,200);
+        return $this->handleView($view);
+    }
+
 }

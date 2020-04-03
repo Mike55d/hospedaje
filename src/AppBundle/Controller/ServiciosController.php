@@ -47,7 +47,7 @@ class ServiciosController extends Controller
             $em->flush();
             $this->addFlash(
                 'notice',
-                'Your changes were saved!'
+                'Nuevo servicio creado satisfactoriamente'
             );
             return $this->redirectToRoute('index',);
         }
@@ -77,7 +77,7 @@ class ServiciosController extends Controller
             $em->flush();
             $this->addFlash(
                 'notice',
-                'Your changes were saved!'
+                'Servicio editado satisfactoriamente'
             );
             return $this->redirectToRoute('index',);
         }
@@ -101,7 +101,7 @@ class ServiciosController extends Controller
                 $em->flush();
                 $this->addFlash(
                     'notice',
-                    'Your changes were saved!'
+                    'Servicio eliminado satisfactoriamente'
             );
             }
 
