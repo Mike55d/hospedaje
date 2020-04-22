@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ReservaPersona
+ *
+ * @ORM\Table(name="reserva_persona")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ReservaPersonaRepository")
+ */
+class ReservaPersona
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="entrada", type="datetime" , nullable = true)
+     */
+    private $entrada;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="salida", type="datetime" , nullable = true)
+     */
+    private $salida;
+    /**
+    * @ORM\ManyToOne(targetEntity="Reserva")
+    * @ORM\JoinColumn(name="reserva", referencedColumnName="id" , nullable=true)
+    */
+    private $reserva;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Persona")
+    * @ORM\JoinColumn(name="persona", referencedColumnName="id")
+    */
+    private $persona;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

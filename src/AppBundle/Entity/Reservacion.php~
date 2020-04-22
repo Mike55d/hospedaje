@@ -40,7 +40,7 @@ class Reservacion
     private $cama;
 
     /**
-     * @var string
+     * @var DateTime
      *
      * @ORM\Column(name="fechaInicio", type="datetime")
      */
@@ -52,6 +52,21 @@ class Reservacion
      * @ORM\Column(name="fechaFin", type="datetime")
      */
     private $fechaFin;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string")
+     */
+    private $status;
+
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Factura")
+    * @ORM\JoinColumn(name="factura", referencedColumnName="id" , nullable=true)
+    */
+    private $factura;
 
 
     /**
@@ -158,5 +173,53 @@ class Reservacion
     public function getCama()
     {
         return $this->cama;
+    }
+
+    /**
+     * Set reserva
+     *
+     * @param \AppBundle\Entity\Reserva $reserva
+     *
+     * @return Reservacion
+     */
+    public function setReserva(\AppBundle\Entity\Reserva $reserva = null)
+    {
+        $this->reserva = $reserva;
+
+        return $this;
+    }
+
+    /**
+     * Get reserva
+     *
+     * @return \AppBundle\Entity\Reserva
+     */
+    public function getReserva()
+    {
+        return $this->reserva;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return Reservacion
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

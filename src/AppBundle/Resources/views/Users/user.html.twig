@@ -1,15 +1,28 @@
 {% extends "::base.html.twig" %}
 
 {% block body %}
+<div class="white-box ">
+<h1 class="font-bold ml-5">Detalles de Usuario</h1>
 <div class="col-md-12">
-	<a class="btn btn-info right mb-3" href="{{ path ('users_all')}}">Atras</a>
+	{% if app.user.rola == 'ADMIN' %}
+	<a class="btn btn-info right mb-3" href="{{ path ('reservas_admin')}}">Atras</a>
+	{% else %}
+	<a class="btn btn-info right mb-3" href="{{ path ('reservas_misReservas')}}">Atras</a>
+	{% endif %}
+</div>
 </div>
 <div class="col-md-4">
 	<div class="white-box">
 		<div class="panel-body">
-			<h2>Nombre : <span class="font-bold">{{form.name}}</span></h2>
-			<h2>Usuario : <span class="font-bold">{{form.username}}</span></h2>
-			<h2>Telefono : <span class="font-bold">{{form.phone}}</span></h2>
+			<h5>Nombre : <span class="font-bold">{{form.name}}</span></h5>
+			<h5>Usuario : <span class="font-bold">{{form.username}}</span></h5>
+			<h5>Telefono : <span class="font-bold">{{form.phone}}</span></h5>
+			<hr>
+			<h5>Personas registradas : <span class="font-bold">{{personas|length}}</span></h5>
+			<h5>Reservaciones : <span class="font-bold">{{reservasUser|length}}</span></h5>
+			<h5>Solicitudes pendientes : <span class="font-bold">{{solicitudesUser|length}}</span></h5>
+			<h5>Solicitudes Aprobadas : <span class="font-bold">{{aprobadasUser|length}}</span></h5>
+
 		</div>
 	</div>
 </div>
@@ -38,7 +51,9 @@
 						<td>{{persona.fechaNacimiento|date('d-m-Y')}}</td>
 						<td>
 							<a href="{{ path ('personas_edit',{'id': persona.id})}}" class="btn btn-sm btn-warning">Editar</a>
+							{#
 							<a href="{{ path ('personas_servicios',{'id': persona.id})}}" class="btn btn-sm btn-primary">Servicios</a>
+								#}
 						</td>
 					</tr>
 					{% endfor %}

@@ -1,0 +1,91 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+<div class="white-box ">
+	<h1 class="font-bold ml-5">Detalles de Reserva {{reserva.id}}</h1>
+	<div class="col-md-12">
+		{% if app.user.rola == 'USER' %}
+		<a class="btn btn-info right mb-3" href="{{ path ('reservas_misReservas')}}">Atras</a>
+		{% else %}
+		<a class="btn btn-info right mb-3" href="{{ path ('reservas_admin')}}">Atras</a>
+		{% endif %}
+	</div>
+</div>
+<div class="col-md-4">
+	<div class="white-box">
+		<div class="panel-body">
+			<h5>Nombre : <span class="font-bold">{{user.name}}</span></h5>
+			<h5>Usuario : <span class="font-bold">{{user.username}}</span></h5>
+			<h5>Telefono : <span class="font-bold">{{user.phone}}</span></h5>
+			<hr>
+			<h5>Adultos : <span class="font-bold">{{mayores}}</span></h5>
+			<h5>Menores : <span class="font-bold">{{menores}}</span></h5>
+			<h5>Total personas <span class="font-bold">{{mayores + menores}}</span></h5>
+			<hr>
+			<h5>Fecha de llegada : <span class="font-bold">{{reserva.llegada|date('d-m-Y')}}</span></h5>
+			<h5>Fecha de salida : <span class="font-bold">{{reserva.salida|date('d-m-Y')}}</span></h5>
+			<h5>Fecha de Solicitud : <span class="font-bold">{{reserva.fecha|date('d-m-Y')}}</span></h5>
+			<hr>
+			<h5>Primera comida : <span class="font-bold">{{reserva.primeraComida}}</span></h5>
+			<h5>Ultima comida : <span class="font-bold">{{reserva.ultimaComida}}</span></h5>
+			<hr>
+			<h5>Total Lavanderia : <span class="font-bold">{{totalLavanderia}}</span><span class="font-bold">$</span></h5>
+			<h5>Total Material roto : <span class="font-bold">{{totalRoto}}</span><span class="font-bold">$</span></h5>
+			<h5>Total Tienda : <span class="font-bold">{{totalTienda}}</span><span class="font-bold">$</span></h5>
+			<hr>
+			<h3>Total Servicios : <span class="font-bold">{{totalLavanderia + totalRoto + totalTienda}}</span><span class="font-bold">$</span></h3>
+			{% if app.user.rola == 'ADMIN' %}
+				{% if checkoutCompleto %}
+				<form action="{{ path ('facturas_index')}}">
+					<input type="hidden" name="reserva" value="{{reserva.id}}">
+					<button class="btn btn-info btn-lg btn-block">Ver Facturas</button>
+				</form>
+				{% else %}
+				<a href="{{ path ('checkout_newAdmin' , {'id':reserva.id})}}" class="btn btn-success btn-lg btn-block">Checkout</a>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+<div class="col-md-8 ">
+	<div class="white-box">
+		<div class="panel-body">
+			<h3 class="font-bold mb-3">Personas del usuario</h3>
+			<table class="myTable">
+				<thead>
+					<tr >
+						<th>Id</th>
+						<th>Nombre</th>
+						<th>Grupo</th>
+						<th>Hospedado</th>
+						<th>fechaNacimiento</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for persona in personas %}
+					<tr class="text-center">
+						<td>{{persona.persona.id}}</td>
+						<td>{{persona.persona.nombre}}</td>
+						<td>{{persona.persona.grupo.nombre}}</td>
+						<td>{% if persona.persona.huesped %}Si {% else %}No{% endif %}</td>
+						<td>{{persona.persona.fechaNacimiento|date('d-m-Y')}}</td>
+						<td>
+							<a href="{{ path ('personas_servicios',{'id': persona.persona.id , 'reserva':reserva.id})}}" class="btn btn-sm btn-primary">Servicios</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+
+{% endblock %}

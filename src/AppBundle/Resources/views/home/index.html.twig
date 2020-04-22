@@ -1,51 +1,63 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-{% if app.user.rola == 'ADMIN' %}
-<div class="white-box bg-primary">
-<h1 class="font-bold ml-5 text-white">Bienvenido</h1>
-	
+<style>
+.card-box{
+	height: 200px;
+}
+.icon{
+		font-size: 3vw;
+	}
+
+span.counter{
+	font-size: 3vw;
+	margin-left: 15px;
+}
+</style>
+<div class="white-box ">
+	<h1 class="font-bold ml-5">Bienvenido</h1>
 </div>
-<div class="col-md-5">
+{% if app.user.rola == 'ADMIN' %}
+<div class="col-md-4">
 	<div class="row">
-		<div class="col-lg-6 col-sm-6 col-xs-12">
-			<div class="white-box">
-				<h3 class="box-title">Usuarios registrados</h3>
-				<ul class="list-inline m-t-30 p-t-10 two-part">
-					<li><i class="icon-people text-info"></i></li>
-					<li class="text-right"><span class="counter">{{users|length}}</span></li>
+		<div class="col-md-6">
+			<div class="white-box card-box">
+				<h5 class="font-bold" >Usuarios registrados</h5>
+				<ul class="list-inline m-t-30 p-t-10 ">
+					<li><i class="icon icon-people text-info"></i></li>
+					<li class="text-center"><span class="counter">{{users|length}}</span></li>
 				</ul>
 			</div>
 		</div>
-		<div class="col-lg-6 col-sm-6 col-xs-12">
-			<div class="white-box">
-				<h3 class="box-title">Reservaciones</h3>
-				<ul class="list-inline m-t-30 p-t-10 two-part">
-					<li><i class="icon-folder text-purple"></i></li>
-					<li class="text-right"><span class="counter">{{reservas|length}}</span></li>
+		<div class="col-md-6">
+			<div class="white-box card-box">
+				<h5 class="font-bold" >Reservaciones</h5>
+				<ul class="list-inline m-t-30 p-t-10 ">
+					<li><i class="icon icon-folder text-purple"></i></li>
+					<li class="text-center"><span class="counter">{{reservas|length}}</span></li>
 				</ul>
 			</div>
 		</div>
-		<div class="col-lg-6 col-sm-6 col-xs-12">
-			<div class="white-box">
-				<h3 class="box-title">Solicitudes pendientes</h3>
-				<ul class="list-inline m-t-30 p-t-10 two-part">
-					<li><i class="icon-folder-alt text-danger"></i></li>
-					<li class="text-right"><span class="">{{solicitudes|length}}</span></li>
+		<div class="col-md-6">
+			<div class="white-box card-box">
+				<h5 class="font-bold" >Solicitudes pendientes</h5>
+				<ul class="list-inline m-t-30 p-t-10 ">
+					<li><i class="icon icon-folder-alt text-danger"></i></li>
+					<li class="text-center"><span class="counter">{{solicitudes|length}}</span></li>
 				</ul>
 			</div>
 		</div>
-		<div class="col-lg-6 col-sm-6 col-xs-12">
-			<div class="white-box">
-				<h3 class="box-title">Huespedes</h3>
-				<ul class="list-inline m-t-30 p-t-10 two-part">
-					<li><i class="ti-wallet text-success"></i></li>
-					<li class="text-right"><span class="">11</span></li>
+		<div class="col-md-6">
+			<div class="white-box card-box">
+				<h5 class="font-bold" >Huespedes</h5>
+				<ul class="list-inline m-t-30 p-t-10 ">
+					<li><i class="icon ti-wallet text-success"></i></li>
+					<li class="text-center"><span class="counter">{{huespedes|length}}</span></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="col-md-7">
+<div class="col-md-8">
 	<div class="white-box">
 		<h2 class="font-bold">Solicitudes Pendientes</h2>
 		<table class="myTable">
@@ -79,14 +91,94 @@
 					</td>
 				</tr>
 				{% endfor %}
-				{% if app.user.rola == 'USER' %}
-				{% endif %}
 			</tbody>
 		</table>
 	</div>
 </div>
 
 {% endif %}
+
+{% if app.user.rola == 'USER' %}
+<div class="col-md-4">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="white-box card-box">
+				<h5 class="font-bold" >Mi grupo</h5>
+				<ul class="list-inline m-t-30 p-t-10 ">
+					<li><i class="icon icon-people text-info"></i></li>
+					<li class="text-center"><span class="counter">{{personas|length}}</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="white-box card-box">
+				<h5 class="font-bold" >Reservaciones</h5>
+				<ul class="list-inline m-t-30 p-t-10 ">
+					<li><i class="icon icon-folder text-purple"></i></li>
+					<li class="text-center"><span class="counter">{{reservasUser|length}}</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="white-box card-box">
+				<h5 class="font-bold" >Solicitudes pendientes</h5>
+				<ul class="list-inline m-t-30 p-t-10 ">
+					<li><i class="icon icon-folder-alt text-danger"></i></li>
+					<li class="text-center"><span class="counter">{{solicitudesUser|length}}</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="white-box card-box">
+				<h5 class="font-bold" >Solicitudes Aprobadas</h5>
+				<ul class="list-inline m-t-30 p-t-10 ">
+					<li><i class="icon ti-wallet text-success"></i></li>
+					<li class="text-center"><span class="counter">{{aprobadasUser|length}}</span></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col-md-8">
+	<div class="white-box">
+		<h2 class="font-bold">Solicitudes Pendientes</h2>
+		<table class="myTable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>fecha</th>
+					<th>llegada</th>
+					<th>Salida</th>
+					<th>Menores</th>
+					<th>Adultos</th>
+					<th>Status</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody style="text-align:center;">
+				{% for solicitud in solicitudesUser %}
+				<tr>
+					<td>{{solicitud.id}}</td>
+					<td>{{solicitud.fecha|date('d-m-y')}}</td>
+					<td>{{solicitud.llegada|date('d-m-y')}}</td>
+					<td>{{solicitud.salida|date('d-m-y')}}</td>
+					<td>{{solicitud.menor}}</td>
+					<td>{{solicitud.adulto}}</td>
+					<td>{{solicitud.status}}</td>
+					<td>
+						{% if solicitud.status == 'Aprobada' %}
+						<a class="btn btn-sm btn-success" href="{{ path ('reservas_new',{'id':solicitud.id})}}">Completar</a>
+						{% endif %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endif %}
+
 {% endblock %}
 
 {% block javascripts %}

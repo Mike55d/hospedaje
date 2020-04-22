@@ -42,27 +42,13 @@ class Persona
      */
     private $fechaNacimiento;
 
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="entrada", type="datetime" , nullable = true)
-     */
-    private $entrada;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="salida", type="datetime" , nullable = true)
-     */
-    private $salida;
-
     /**
      * @var string
      *
      * @ORM\Column(name="comidas", type="string" , length=255 , nullable = true)
      */
     private $comidas;
+
 
         /**
      * @var string
@@ -84,11 +70,11 @@ class Persona
     private $user;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Reserva")
-    * @ORM\JoinColumn(name="reserva", referencedColumnName="id" , nullable=true)
-    */
-    private $reserva;
-
+     * @var bool
+     *
+     * @ORM\Column(name="mayorEdad", type="boolean")
+     */
+    private $mayorEdad;
 
     /**
      * Get id
@@ -146,54 +132,6 @@ class Persona
     public function getNombre()
     {
         return $this->nombre;
-    }
-
-    /**
-     * Set entrada
-     *
-     * @param \DateTime $entrada
-     *
-     * @return Persona
-     */
-    public function setEntrada($entrada)
-    {
-        $this->entrada = $entrada;
-
-        return $this;
-    }
-
-    /**
-     * Get entrada
-     *
-     * @return \DateTime
-     */
-    public function getEntrada()
-    {
-        return $this->entrada;
-    }
-
-    /**
-     * Set salida
-     *
-     * @param \DateTime $salida
-     *
-     * @return Persona
-     */
-    public function setSalida($salida)
-    {
-        $this->salida = $salida;
-
-        return $this;
-    }
-
-    /**
-     * Get salida
-     *
-     * @return \DateTime
-     */
-    public function getSalida()
-    {
-        return $this->salida;
     }
 
     /**
@@ -315,4 +253,5 @@ class Persona
     {
         return $this->fechaNacimiento;
     }
+
 }

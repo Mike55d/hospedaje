@@ -38,7 +38,7 @@ class Servicios
     /**
      * @var int
      *
-     * @ORM\Column(name="tipo", type="integer")
+     * @ORM\Column(name="tipo", type="string" , length=255)
      */
     private $tipo;
 
@@ -101,10 +101,11 @@ class Servicios
         return $this->costo;
     }
 
+
     /**
      * Set tipo
      *
-     * @param integer $tipo
+     * @param string $tipo
      *
      * @return Servicios
      */
@@ -118,11 +119,10 @@ class Servicios
     /**
      * Get tipo
      *
-     * @return int
+     * @return string
      */
     public function getTipo()
     {
         return $this->tipo;
     }
 }
-

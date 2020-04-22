@@ -6,6 +6,7 @@
 
 <script>
 import Calendario from './components/calendario.vue'
+import storeFunctions from './components/storeFunctions';
 
 const axios = require('axios').default;
 
@@ -13,21 +14,24 @@ export default {
 	name: 'app',
 	components: {
 		Calendario
-	},
+  },
+  mixins: [
+    storeFunctions
+  ],
+  data: function() {
+
+    return {
+
+    }
+  },
 	mounted(){
 
 		let data = {
 			mes: 4,
 			año: 2020
-		}
+    }
 
-		// console.log('test');
-
-		// axios.post('http://127.0.0.1:8000/api/calendario/reservaciones', data)
-		// .then(res => {
-
-		// 	console.log(res);
-		// });
+    // this.openModal();
 	},
 	methods: {
 
@@ -37,12 +41,16 @@ export default {
 		},
 		onCreate(newCard) {
 
-			console.log(newCard);
+      // this.card = newCard;
+      // this.initialDate = this.card.initDate;
+      // this.endDate = this.card.endDate;
+      // this.openModal();
+			// console.log(newCard);
 		},
 		onExtend(extendingObject) {
 
 			console.log(extendingObject);
-		}
+    },
 	}
 }
 </script>

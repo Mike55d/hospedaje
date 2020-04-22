@@ -10,4 +10,26 @@ namespace AppBundle\Repository;
  */
 class ReservaRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function buscarSolicitudes(){
+		$em = $this->getEntityManager(); 
+		$qb = $em->createQueryBuilder();
+		$qb->select('r')
+		->from('AppBundle:Reserva', 'r')
+		->where('r.status != :reservado')
+		->setParameter('reservado','Reservado');
+		$query = $qb->getQuery();
+		return $query->getResult();
+	}
+
+	public function buscarSolicitudesUser($user){
+		$em = $this->getEntityManager(); 
+		$qb = $em->createQueryBuilder();
+		$qb->select('r')
+		->from('AppBundle:Reserva', 'r')
+		->where('r.status != :reservado AND r.user = :user')
+		->setParameter('user',$user)
+		->setParameter('reservado','Reservado');
+		$query = $qb->getQuery();
+		return $query->getResult();
+	}
 }

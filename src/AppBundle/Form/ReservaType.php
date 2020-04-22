@@ -21,17 +21,25 @@ class ReservaType extends AbstractType
         $builder
         ->add('menor',NumberType::class,[
             'label' => 'Menores de edad',
+            'required'=> true,
+            
         ])
         ->add('adulto',NumberType::class,[
             'label' => 'Mayores de edad',
+            'required'=> true,
+
         ])
         ->add('llegada', DateType::class, [
             'label' => 'Fecha de llegada',
             'widget'=> 'single_text',   
+            'required'=> true,
+
         ])
         ->add('salida', DateType::class, [
             'label' => 'Fecha de salida',
-            'widget'=> 'single_text',   
+            'widget'=> 'single_text',  
+            'required'=> true,
+
         ])
         ->add('primeraComida', ChoiceType::class,[
             'label'=>'primeraComida',
@@ -42,6 +50,7 @@ class ReservaType extends AbstractType
             'cena'=>'cena',
             ],
             'multiple'=> false,
+            'required'=> true,
         ])
         ->add('ultimaComida', ChoiceType::class,[
             'label'=>'ultimaComida',
@@ -52,6 +61,8 @@ class ReservaType extends AbstractType
             'cena'=>'cena',
             ],
             'multiple'=> false,
+            'required'=> true,
+
             
         ])
         ;

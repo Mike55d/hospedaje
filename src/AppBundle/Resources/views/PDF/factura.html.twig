@@ -1,0 +1,80 @@
+<style>
+table , th  ,td{
+  border:1px solid black;
+}
+table{
+  margin-top: 50px;
+  border-collapse: collapse;
+}
+.header{
+  text-align: center;
+}
+th{
+  text-align: center;
+  background: #D7D5D5;
+}
+td{
+  text-align: center;
+  white-space:pre ;
+}
+.tabla{
+  width: 10000px;
+}
+</style>
+<page>
+
+  <h5 class="header">{{factura.grupo.nombre}} {{factura.fecha|date('d-m-Y')}}</h5>
+  <br>
+  {#
+  <table >
+    <tr >
+      <th>Id</th>
+      <th style="width:20px">Nombre de lista</th>
+      <th style="width:100px">Tipo de lista</th>
+      <th style="width:100px">Fecha del evento</th>
+      <th style="width:100px">Cantidad de invitados</th>
+      <th style="width:100px">Pais</th>
+      <th style="width:100px">Ciudad</th>
+      <th style="width:100px">Pais retiro de fondos</th>
+      <th style="width:100px">Moneda elegida</th>
+    </tr>
+    {% for lista in listas %}
+    <tr>
+      <td>{{ lista.id}}</td>
+      <td>{{ lista.titulo}}</td>
+      <td>{{ lista.tipo.tipo}}</td>
+      <td>{{ lista.fecha|date('d-m-Y')}}</td>
+      <td>{{ lista.invitados}}</td>
+      <td>{{ lista.pais.pais}}</td>
+      <td>{{ lista.ciudad}}</td>
+      <td>{{ lista.comision.pais.pais}}</td>
+      <td>{{ lista.comision.pais.codigo}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+    #}
+  {% for datos in data %}
+  <table >
+    <tr>
+      <td>Tratamiento</td>
+      <td>{{datos.persona.tratamiento}}</td>
+      <td>Nombre</td>
+      <td>{{datos.persona.nombre}}</td>
+    </tr>
+    <tr>
+      <td >Fecha de llegada</td>
+      <td >{{datos.reservacion.fechaInicio|date('d-m-Y')}}</td>
+      <td >Fecha de salida </td>
+      <td >{{datos.reservacion.fechaFin|date('d-m-Y')}}</td>
+    </tr>
+    <tr>
+      <td >Cama</td>
+      <td >{{datos.reservacion.cama.numero}}</td>
+      <td >Cuarto</td>
+      <td >{{datos.reservacion.cama.cuarto.numero}}</td>
+    </tr>
+  </table>
+  {% endfor %}
+  <page_footer> 
+  </page_footer> 
+</page>

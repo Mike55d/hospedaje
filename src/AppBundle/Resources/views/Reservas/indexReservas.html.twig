@@ -1,0 +1,50 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Reservas{% endblock %}
+
+{% block body %}
+<div class="col-md-10 col-md-offset-1">
+	<div class="white-box">
+		<h1 class="font-bold ml-5">Reservas</h1>
+		<a href="{{ path ('solicitudes_new')}}" class="btn btn-success mb-3">Nueva Solicitud</a><br><br>
+		<table class="myTable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>usuario</th>
+					<th>fecha</th>
+					<th>llegada</th>
+					<th>Salida</th>
+					<th>Status</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody style="text-align:center;">
+				{% for reserva in reservas %}
+				<tr>
+					<td>{{reserva.id}}</td>
+					<th>{{reserva.user.username}}</th>
+					<td>{{reserva.fecha|date('d-m-y')}}</td>
+					<td>{{reserva.llegada|date('d-m-y')}}</td>
+					<td>{{reserva.salida|date('d-m-y')}}</td>
+					<td>{{reserva.status}}</td>
+					<td>
+						<a href="{{ path ('camas_index',{'id':reserva.id})}}" class="btn btn-sm btn-warning">Camas</a>
+						<a href="{{ path ('detallesReserva_admin',{'id':reserva.id})}}"  class="btn btn-sm btn-primary">Detalles</a>
+					</td>
+				</tr>
+				{% endfor %}
+				{% if app.user.rola == 'USER' %}
+				{% endif %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+{% endblock %}

@@ -1,0 +1,238 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+
+<div class="row">
+	<dov class="col-md-7 col-md-offset-1">
+		<div class="white-box">
+      <h1 class="font-bold">Checkout</h1>
+      <div class="panel">
+        <div class="panel-body">
+         <table id="table">
+          <thead>
+           <tr>
+            <th></th>
+            <th>Tratamiento</th>
+            <th>Nombre</th>
+            <th>Grupo</th>
+            <th>Fecha de nacimiento</th>
+            <th></th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+</dov>
+<dov class="col-md-3">
+  <div class="white-box">
+    <h2 class="h1 font-bold">Caja</h2>
+    <br>
+    <h5><span class="font-bold">Email de caja : </span>{{caja.emailCaja}}</h5>
+    <h5><span class="font-bold">N° : </span>{{caja.nro}}</h5>
+    <h5><span class="font-bold">Responsable : </span>{{caja.responsable}}</h5>
+    <h5><span class="font-bold">Encargado : </span>{{caja.encargado}}</h5>
+    <hr>
+    <label for="">Tipo de Pago</label><br>
+    <input class=" radioTipo " name="tipo" checked value="caja" type="radio"><span class="ml-2">Caja</span>
+    <input class=" radioTipo ml-5" name="tipo" value="efectivo" type="radio"><span class="ml-2">Efectivo</span>
+    <hr>
+    <label for="">Descuento</label>
+    <input id="descuento" class="form-control width-input" value="0" type="number"><span>%</span>
+  </div>
+
+  <div class="white-box">
+    <h4 class="font-bold">SubTotal <span id="subtotal">0.00</span> $</h4>
+    <h4 class="font-bold">Total servicios <span id="totalServicios">0.00</span> $</h4>
+    <h4 class="font-bold">Descuento <span id="desc">0.00</span> $</h4>
+    <h2 class="font-bold">Total <span id="total">0.00</span> $</h2>
+    <br>
+    <form action="{{ path ('checkout_generate')}}" id="form" method="post">
+      <input type="hidden" name="data" id="dataSeleccionados">
+      <input type="hidden" name="subtotal" id="subtotalForm">
+      <input type="hidden" name="total" id="totalForm">
+      <input type="hidden" name="descuento" id="descuentoForm">
+      <input type="hidden" name="tipoPago" value="caja" id="tipoForm">
+    </form>
+    <button id="btnForm" class="btn btn-lg btn-block btn-success">Finalizar</button>
+    
+  </div>
+</div>
+</dov>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+
+function format ( d ) {
+
+  template = '<table class="table table-bordered table-hover" cellpadding="5" cellspacing="0" border="0" >';
+  if (d.reservacion) {
+    template+=
+    `<tr class="text-left">
+    <td class="font-bold">Fecha de llegada:</td>
+    <td>${d.reservacion.fechaInicio}</td>
+    <td class="font-bold">Fecha de Salida:</td>
+    <td>${d.reservacion.fechaFin}</td>
+    </tr>
+    <tr>
+    <td  class="text-left font-bold" >Cama</td>
+    <td>${d.reservacion.cama.numero}</td>
+    <td  class="text-left font-bold" >Cuarto</td>
+    <td>${d.reservacion.cama.cuarto.numero}</td>
+    </tr>`
+  }
+  template+=
+  `<tr >
+  <td colspan="4" class="font-bold">Servicios</td>
+  </tr>`;
+
+  if (d.servicios.length) {
+    var total = 0;
+    for (var i = 0; i < d.servicios.length; i++) {
+      total+= d.servicios[i].servicio.costo;
+      template+=
+      `<tr >
+      <td class="text-left"> <span class="font-bold" >Tipo</span> : ${d.servicios[i].servicio.tipo}</td>
+      <td class="text-left"> <span class="font-bold" >Servicio</span> : ${d.servicios[i].servicio.servicio}</td>
+      <td class="text-left"> <span class="font-bold" >Fecha</span>13/04/2020</td>
+      <td class="text-left"> <span class="font-bold" >Costo</span> ${d.servicios[i].servicio.costo}</td>
+      </tr>`;
+    }
+    template+=
+    `<tr></tr>
+    <tr >
+    <td colspan="3"><span class="font-bold">Total</span></td>
+    <td class="text-left">${total}<span class="font-bold"> $</span></td>
+    </tr>`;
+  }else{
+    template+=
+    `<tr class="text-left">
+    <td> <span class="font-bold" >Sin servicios consumidos</span></td>
+    </tr>`
+  }
+  template+='</table>';
+  console.log(d.servicios.length);
+  return template;
+}
+
+var noSeleccionados = JSON.parse('{{datos|raw}}');
+var seleccionados = [];
+var aSeleccionados = [];
+var totalServicios = 0;
+var subtotal = 0;
+var descuento = 0;
+var desc = 0;
+
+console.log(noSeleccionados);
+$(document).ready(function() {
+  var table = 	$('#table').DataTable( {
+    data: noSeleccionados,
+    "columns": [
+    {
+      "className":'details-control',
+      "orderable":false,
+      "data":null,
+      "defaultContent": ''
+    },
+
+    {
+      "data": "tratamiento",
+      "className":'clickable'
+    },
+    {
+      "data": "nombre",
+      "className":'clickable'
+    },
+    {
+      "data": "grupo", 
+      "className":'clickable'
+    },
+    {
+      "data": "fecha", 
+      "className":'clickable'
+    },
+    {
+      "className":'details-control',
+      "orderable":false,
+      "data":null,
+      "defaultContent": ''
+    }
+    ],
+  } );
+
+  $('#table tbody').on('click', 'td.details-control', function () {
+    var tr = $(this).closest('tr');
+    var row = table.row( tr );
+    if ( row.child.isShown() ) {
+      row.child.hide();
+      tr.removeClass('shown');
+    }
+    else {
+      row.child( format(row.data()) ).show();
+      tr.addClass('shown');
+    }
+  });
+
+  $('.radioTipo').change(function(){
+    $('#tipoForm').val($('input[name=tipo]:checked').val())
+  });
+
+  $('#table tbody').on( 'click', 'td.clickable', function () {
+    var tr = $(this).parent();
+    var row = table.row(tr);
+    rowData = row.data()
+    console.log(rowData);  
+    index = seleccionados.findIndex(data => data.id == rowData.id);
+    if (index != -1) {
+      seleccionados.splice(index,1);
+      aSeleccionados.splice(index,1);
+      for (var i = 0; i < rowData.servicios.length; i++) {
+        totalServicios-=rowData.servicios[i].servicio.costo;
+      }
+    }else{
+      for (var i = 0; i < rowData.servicios.length; i++) {
+        totalServicios+=rowData.servicios[i].servicio.costo;
+      }
+      seleccionados.push(rowData);
+      aSeleccionados.push(rowData.reservacion.id);
+    }
+    $('#totalServicios').text(totalServicios.toFixed(2));
+    subtotal = totalServicios + (totalServicios * 10 /100);
+    if ($('#descuento').val() > 100) {
+      desc = 100;
+    }else{
+      desc = $('#descuento').val();
+    }
+
+    descuento = (subtotal * desc) /100;
+    $('#subtotal').text(subtotal.toFixed(2));
+    $('#total').text((subtotal - descuento).toFixed(2));
+    $('#desc').text(descuento.toFixed(2));
+    console.log(seleccionados);
+    console.log(aSeleccionados);
+    tr.toggleClass('selected');
+  });
+
+});
+
+$('#descuento').on('keyup',function(){
+  desc = $('#descuento').val();
+  descuento = (subtotal * desc) /100;
+  $('#desc').text(descuento.toFixed(2));
+  console.log(descuento.toFixed(2));
+  $('#total').text((subtotal - descuento).toFixed(2));
+})
+
+$('#btnForm').click(function(){
+  $('#subtotalForm').val(subtotal.toFixed(2));
+  $('#totalForm').val((subtotal - descuento).toFixed(2));
+  $('#dataSeleccionados').val(aSeleccionados);
+  $('#descuentoForm').val(desc);
+  $('#form').submit();
+});
+
+;
+</script>
+{% endblock %}

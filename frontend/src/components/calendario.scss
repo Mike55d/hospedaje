@@ -23,12 +23,23 @@
     position: absolute;
   }
 
+  .table-wrapper{
+
+    padding-top: 60px;
+  }
+
   #calendar-container{
 
     position: relative;
-    max-height: 500px;
-    padding: 50px 0 0 0;
-    overflow: auto;
+    overflow: hidden;
+  }
+
+  #calendar-container * {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
   }
 
   .controls-container{
@@ -40,22 +51,22 @@
 
     background: pink;
     width: 7px;
-    height: 7px;
+    height: 100%;
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 0px;
-    transform: translate(0, -50%);
+    cursor: col-resize;
   }
 
   .card-right-btn {
 
     background: orange;
     width: 7px;
-    height: 7px;
+    height: 100%;
     position: absolute;
-    top: 50%;
+    top: 0;
     right: 0px;
-    transform: translate(0, -50%);
+    cursor: col-resize;
   }
 
   .controls {
@@ -66,6 +77,19 @@
     top: 0px;
     transform: translate(-50%, 0);
     z-index: 99;
+    white-space: nowrap;
+  }
+
+  .modal-row {
+
+  }
+
+  .modal-row ul {
+
+    list-style: none;
+    max-height: 300px;
+    overflow: auto;
+    padding: 0;
   }
 
   .date{

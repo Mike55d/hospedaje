@@ -60,10 +60,19 @@ class UsersController extends Controller
     if($rol === 'ADMIN'){
       $per = $em->getRepository('AppBundle:Persona')->findBy(['user' => $user->getId()]);
     }
+    $personas = $em->getRepository('AppBundle:Persona')->findByUser($user->getId()); 
+    $reservacionesUser = $em->getRepository('AppBundle:Reserva')->findBy(['status' => 'pendiente', 'user'=> $user->getId()]); 
+    $reservaciones = $em->getRepository('AppBundle:Reserva')->findBy(['status' => 'Reservado']); 
+    $reservacionesUser = $em->getRepository('AppBundle:Reserva')->findBy(['status' => 'Reservado', 'user'=> $user->getId()]); 
+    $aprobadasUser = $em->getRepository('AppBundle:Reserva')->findBy(['status' => 'Aprobada', 'user'=> $user->getId()]); 
     return $this->render('AppBundle:Users:user.html.twig', array(
       'form' => $user ,  
       'personas' => $per,
-      'idU' => $user->getId()
+      'idU' => $user->getId(),
+      'reservasUser'=> $reservacionesUser,
+      'personas' => $personas,
+      'solicitudesUser' => $reservacionesUser,
+      'aprobadasUser' => $aprobadasUser,
     ));
   }
 

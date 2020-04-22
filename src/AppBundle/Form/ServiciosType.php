@@ -31,9 +31,9 @@ class ServiciosType extends AbstractType
             'attr'=>['class'=>'form-control btn btn-secondary dropdown-toggle'],
             'label' => 'Tipo',
             'choices' => [
-                'Lavanderia' => 1,
-                'Tienda' => 2,
-                'Material Roto' => 3
+                'Lavanderia' => 'lavanderia',
+                'Tienda' => 'tienda',
+                'Material Roto' => 'roto'
             ]
         ])     
         ;

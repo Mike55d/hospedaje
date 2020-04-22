@@ -17,15 +17,15 @@ class CamasController extends Controller
   */
 public function indexAction(Reserva $reserva)
 {
-	$em =$this->getDoctrine()->getManager(); 
-	$personas = $em->getRepository('AppBundle:Persona')->findByReserva($reserva); 
+	$em =$this->getDoctrine()->getManager();
+	$personas = $em->getRepository('AppBundle:ReservaPersona')->findByReserva($reserva); 
 	$camasPersonas = [];
 	foreach ($personas as $persona) {
-		$reservacion = $em->getRepository('AppBundle:Reservacion')->findOneByPersona($persona);
+		$reservacion = $em->getRepository('AppBundle:Reservacion')->findOneBy(['persona' => $persona->getPersona(),'reserva'=> $reserva]);
 		if ($reservacion) {
-			$camasPersonas[] = ['persona' => $persona,'reservacion'=> $reservacion];
+			$camasPersonas[] = ['persona' => $persona->getPersona(),'reservacion'=> $reservacion];
 		}else{
-			$camasPersonas[] = ['persona' => $persona,'reservacion'=> null];
+			$camasPersonas[] = ['persona' => $persona->getPersona(),'reservacion'=> null];
 		}
 	}
 	return $this->render('AppBundle:Camas:index.html.twig', array(

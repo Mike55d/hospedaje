@@ -30,10 +30,6 @@ class PersonaType extends AbstractType
             'label' => 'Fecha de Nacimiento',
             'widget'=> 'single_text',
             'attr' => [ "class" => "form-control"],   
-        ])
-        ->add('grupo',EntityType::class, [
-            'class' => Grupo::class,
-            'choice_label' => 'nombre',
         ]);
     }/**
      * {@inheritdoc}

@@ -86,6 +86,12 @@ class User implements AdvancedUserInterface
      */
     private $rola;
 
+     /**
+    * @ORM\ManyToOne(targetEntity="Grupo")
+    * @ORM\JoinColumn(name="grupo", referencedColumnName="id")
+    */
+    private $grupo;
+
     
 
     /**
@@ -328,5 +334,28 @@ public function isAccountNonExpired()
     }
 
    
-}
 
+    /**
+     * Set grupo
+     *
+     * @param \AppBundle\Entity\Grupo $grupo
+     *
+     * @return User
+     */
+    public function setGrupo(\AppBundle\Entity\Grupo $grupo = null)
+    {
+        $this->grupo = $grupo;
+
+        return $this;
+    }
+
+    /**
+     * Get grupo
+     *
+     * @return \AppBundle\Entity\Grupo
+     */
+    public function getGrupo()
+    {
+        return $this->grupo;
+    }
+}

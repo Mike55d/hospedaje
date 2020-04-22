@@ -1,62 +1,63 @@
 <template>
 <div class="calendario">
-	<div class="controls-container">
+
+  <div class="controls-container">
 		<controls></controls>
 	</div>
-	<div @mousemove="mouseMove" @scroll="onScroll" id="calendar-container">
-		<table class="table table-striped table-bordered">
-			<thead>
-				<tr>
-					<th>items</th>
-					<th v-for="day of date.monthDays" :key="'day-' + day">{{ day }}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr @mouseleave="itemRowMouseOut" class="item-row" v-for="(item, index) of items" :key="'item-' + index">
-					<td :style="{'white-space': 'nowrap'}">{{ item.name }}</td>
-					<td class="noselect day" v-for="(day, index) of item.days" :key="'item-day-' + index" 
-						@mousedown="dayMouseDown($event, day)"
-						@mouseenter="dayMouseEnter($event, day)"
-						:style="{
-							background: day.background,
-						}"><span style="visibility: hidden">pop</span></td>
-				</tr>
-			</tbody>
-		</table>
-		<card
-			v-for="(card, index) of cards"
-			:card="card"
-			:key="'card-' + index"></card>
-	</div>
+  <div class="table-wrapper row">
+    <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3" style="padding-right: 0">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Rooms</th>
+            <th>Beds</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="(room, roomIndex) of items">
+            <tr @mouseleave="itemRowMouseOut" class="item-row" v-for="(bed, bedIndex) of room.beds" :key="'bed-' + bedIndex + '-' + roomIndex ">
+              <td v-if="bedIndex == 0" :rowspan="room.beds.length">{{ room.number }}</td>
+              <td :style="{'white-space': 'nowrap'}">{{ bed.name }}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-9 col-sm-9 col-xs-9 col-lg-9" style="padding-left: 0; position: static">
+      <div @mousemove="mouseMove" @scroll="onScroll" id="calendar-container">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th v-for="day of date.monthDays" :key="'day-' + day" style="min-width: 60px">{{ day }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="(room, roomIndex) of items">
+              <tr @mouseleave="itemRowMouseOut" class="item-row" v-for="(bed, bedIndex) of room.beds" :key="'bed-' + bedIndex + '-' + roomIndex ">
+                <td class="noselect day" v-for="(day, dayIndex) of bed.days" :key="'item-day-' + dayIndex"
+                  @mousedown="dayMouseDown($event, day)"
+                  @mouseenter="dayMouseEnter($event, day)"
+                  :style="{
+                    background: day.background,
+                    height: '51px'
+                  }">{{ day.busy }}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <card
+          v-for="(card, index) of cards"
+          :card="card"
+          :key="'card-' + index"
+          @edit="edit(card)"></card>
+      </div>
+    </div>
+  </div>
 
-	<!-- <div class="cube" @mousedown="boxDragStart"></div> -->
+  <card-modal @edit-card="onEditCard" @cancel="cancel" :show="showCardModal" :card="editCard"></card-modal>
 
-	<div class="modal fade bs-example-modal-lg" id="my-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-		aria-hidden="true" style="display: none;">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" id="close-modal" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-					<h4 class="modal-title" id="myLargeModalLabel">Large modal</h4>
-				</div>
-				<div class="modal-body">
-					<h4>Overflowing text to show scroll behavior</h4>
-					<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-						laoreet rutrum faucibus dolor auctor.</p>
-					<p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-						consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Close</button>
-					<button @click="closeModal">Close modal</button>
-				</div>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
-
-	<button class="btn btn-default" id="open-modal" :style="{display: 'none'}" data-toggle="modal" data-target=".bs-example-modal-lg">test</button>
+  <button @click="scrollLeft">Left</button>
+  <button @click="scrollRight">Right</button>
 </div>
 </template>
 
@@ -65,7 +66,7 @@
 import storeFunctions from './storeFunctions';
 import mouseEventListeners from './mouseEventListeners';
 import $ from 'jquery';
-// import 'bootstrap';
+const axios = require('axios').default;
 
 export default {
 	mixins: [
@@ -74,7 +75,8 @@ export default {
 	],
 	components: {
 		'card': require('./card.vue').default,
-		'controls': require('./controls.vue').default
+    'controls': require('./controls.vue').default,
+    'card-modal': require('./card-modal.vue').default
 	},
 	data: function(){
 
@@ -87,7 +89,11 @@ export default {
 			endDay: null,
 			daysExtend: 0,
 			cards: [],
-			isMounted: false
+			isMounted: false,
+      scrollDays: 0,
+      scrollLimit: 0,
+      showCardModal: false,
+      editCard: null
 		}
 	},
 	beforeMount(){
@@ -107,10 +113,9 @@ export default {
 	},
 	mounted(){
 
-		console.log('mounted');
-		this.openModal();
-
-		this.setContainer(document.getElementById('calendar-container'));
+    this.setContainer(document.getElementById('calendar-container'));
+    this.container.scroll(0, 0);
+    this.scrollLimit = this.container.scrollWidth - this.container.clientWidth;
 
 		this.setScrollPos({
 			x: this.container.scrollLeft,
@@ -129,44 +134,144 @@ export default {
 		document.addEventListener('mouseleave', (e) => {
 
 			this.setDragingObject(null);
-		});
+    });
 
-		this.initItemDays();
+    let data = {
+      mes: this.date.month + 1,
+      año: this.date.year
+    }
+
+    let cards = [];
+
+    // axios.post('http://127.0.0.1:8000/api/calendario/reservaciones', data)
+		// .then(res => {
+
+    //   console.log(res);
+    //   let items = [];
+    //   res.data.forEach((item, indexItem) => {
+
+    //     let beds = [];
+
+    //     item.camas.forEach((bedReserv, indexBedREserv) => {
+
+    //       beds.push({
+    //         id: bedReserv.cama.id,
+    //         name:bedReserv.cama.numero,
+    //         days: [],
+    //         reservations: bedReserv.reservaciones
+    //       });
+    //     });
+
+    //     items.push({
+    //       id: item.id,
+    //       number: item.cuarto.numero,
+    //       beds
+    //     });
+    //   });
+
+    //   this.setItems(items);
+    //   this.setItemDays();
+    //   this.initItemDays();
+    //   this.drawCards();
+		// });
+
 		this.isMounted = true;
 
 	},
 	methods: {
 
-		openModal(){
+    edit(card){
 
-			let btnModal = document.getElementById('open-modal');
-			btnModal.click();
-		},
+      this.editCard = card;
+      this.showCardModal = !this.showCardModal;
+    },
+    onEditCard(oldCard, newCard){
 
-		closeModal(){
+      let index = this.cards.indexOf(oldCard);
+      this.cards.splice(index, 1, newCard);
+    },
+    cancel(){
 
-			let btnModal = document.getElementById('close-modal');
-			btnModal.click();
-		},
+      // this.cards.pop();
+    },
+    scrollRight(){
+
+      let scroll = this.scrollDays + 300 > this.scrollLimit ? this.scrollLimit : this.scrollDays + 300;
+      this.scrollDays = scroll;
+      console.log(scroll);
+      this.container.scroll({
+        left: scroll,
+        behavior: 'smooth'
+      });
+    },
+    scrollLeft(){
+
+      let scroll = this.scrollDays - 300 < 0 ? 0 : this.scrollDays - 300;
+      this.scrollDays = scroll;
+      this.container.scroll({
+        left: scroll,
+        behavior: 'smooth'
+      });
+    },
+    drawCards(){
+
+      let cards = [];
+
+      this.items.forEach((room, roomIndex) => {
+
+        room.beds.forEach((bed, bedIndex) => {
+
+          bed.reservations.forEach((reserv, reservIndex) => {
+
+            let initDate = new Date(reserv.fechaInicio);
+            let endDate = new Date(reserv.fechaFin);
+            let lengthCard = endDate.getDate() - initDate.getDate();
+            let left = bed.days[initDate.getDate() -1].left;
+
+            cards.push({
+              name: 'Card x' + this.cards.length,
+              lengthCard,
+              background: 'blue',
+              width: this.cardDimentions.width * lengthCard,
+              left,
+              top: bed.top,
+              opacity: 1,
+              roomIndex: roomIndex,
+              bedIndex: bedIndex,
+              initDate: reserv.fechaInicio,
+              endDay: reserv.fechaInicio
+            });
+          });
+        });
+      });
+
+      this.cards = cards;
+    },
 		setItemDays(){
 
-			this.items.forEach((item, index) => {
+      this.items.forEach((room, roomIndex) => {
 
-				let days = [];
+        room.beds.forEach((bed, bedIndex) => {
 
-				for(let i=0; i<this.date.monthDays; i++){
+          let days = [];
 
-					days.push({
-						day: i+1,
-						itemIndex: index,
-						background: 'auto',
-						selected: false,
-						left: 0,
-						extend: true
-					});
-				}
-				item.days = days;
-			});
+          for(let i=0; i<this.date.monthDays; i++){
+
+            days.push({
+              day: i+1,
+              bedIndex,
+              roomIndex,
+              background: 'auto',
+              selected: false,
+              left: 0,
+              extend: true,
+              busy: null
+            });
+          }
+
+          bed.days = days;
+        });
+      });
 		},
 		initItemDays(){
 
@@ -177,17 +282,25 @@ export default {
 				height: daysObjects[0].offsetHeight
 			}
 
-			this.setCardDimentions(cardDimentions);
+      this.setCardDimentions(cardDimentions);
 
-			let itemRows = [...document.getElementsByClassName('item-row')];
-			itemRows.forEach((itemRow, index) => {
+      let itemRows = document.getElementsByClassName('item-row');
 
-				this.items[index].top = (itemRow.getBoundingClientRect().top - this.container.offsetTop) + this.scrollPos.y + window.scrollY;
-				this.items[index].days.forEach((day, index) => {
+      let bedsBefore = 0;
 
-					day.left = (daysObjects[index].getBoundingClientRect().left + this.scrollPos.x) - this.container.offsetLeft;
-				});
-			});
+      this.items.forEach((room, roomIndex) => {
+
+        room.beds.forEach((bed, bedIndex) => {
+
+          bed.top = (itemRows[bedIndex + bedsBefore].getBoundingClientRect().top - this.container.offsetTop) + this.scrollPos.y + window.scrollY;
+
+          bed.days.forEach((day, indexDay) => {
+
+            day.left = (daysObjects[indexDay].getBoundingClientRect().left + this.scrollPos.x) - this.container.offsetLeft;
+          });
+        });
+        bedsBefore += room.beds.length;
+      });
 		},
 		onScroll(event){
 
@@ -203,7 +316,7 @@ export default {
 				x: (event.pageX - this.container.offsetLeft) + this.scrollPos.x,
 				y: (event.pageY - this.container.offsetTop) + this.scrollPos.y
 			});
-		},
+    },
 		dayMouseDown(e, day){
 
 			this.lengthCard = 1;
@@ -221,16 +334,16 @@ export default {
 		},
 		dayMouseEnter(e, day){
 
-			if(this.mouseDown && this.startDay != null && this.startDay.day.itemIndex == day.itemIndex){
+			if(this.mouseDown && this.startDay != null && this.startDay.day.bedIndex == day.bedIndex){
 
 				if(day.selected){
 
-					let item = this.items[day.itemIndex];
-					let dayIndex = item.days.indexOf(day);
-					let startDayIndex = item.days.indexOf(this.startDay.day);
-					let endDayIndex = item.days.indexOf(this.endDay.day);
+					let bed = this.items[day.roomIndex].beds[day.bedIndex];
+					let dayIndex = bed.days.indexOf(day);
+					let startDayIndex = bed.days.indexOf(this.startDay.day);
+					let endDayIndex = bed.days.indexOf(this.endDay.day);
 					let nextDay = startDayIndex > endDayIndex
-						? item.days[dayIndex - 1] : item.days[dayIndex + 1];
+						? bed.days[dayIndex - 1] : bed.days[dayIndex + 1];
 
 					nextDay.background = 'none';
 					nextDay.selected = false;
@@ -256,7 +369,7 @@ export default {
 		},
 		itemRowMouseOut(e){
 
-			if(this.dragingObject == null && this.extendingObject == null){
+			if(this.dragingObject == null && this.extendingObject.object == null){
 
 				this.setMouseDown(false);
 			}
@@ -271,7 +384,7 @@ export default {
 				this.setItemDays();
 				this.initItemDays();
 			}
-		}
+    }
 	}
 }
 </script>

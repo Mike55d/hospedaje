@@ -32,8 +32,14 @@ class ServiciosUs
     * @ORM\ManyToOne(targetEntity="Servicios")
     * @ORM\JoinColumn(name="servicio", referencedColumnName="id")
     */
-
     private $servicio;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Reserva")
+    * @ORM\JoinColumn(name="reserva", referencedColumnName="id")
+    */
+    private $reserva;
+
 
 
     /**
@@ -47,5 +53,52 @@ class ServiciosUs
     }
 
    
-}
 
+    /**
+     * Set persona
+     *
+     * @param \AppBundle\Entity\Persona $persona
+     *
+     * @return ServiciosUs
+     */
+    public function setPersona(\AppBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \AppBundle\Entity\Persona
+     */
+    public function getPersona()
+    {
+        return $this->persona;
+    }
+
+    /**
+     * Set servicio
+     *
+     * @param \AppBundle\Entity\Servicios $servicio
+     *
+     * @return ServiciosUs
+     */
+    public function setServicio(\AppBundle\Entity\Servicios $servicio = null)
+    {
+        $this->servicio = $servicio;
+
+        return $this;
+    }
+
+    /**
+     * Get servicio
+     *
+     * @return \AppBundle\Entity\Servicios
+     */
+    public function getServicio()
+    {
+        return $this->servicio;
+    }
+}

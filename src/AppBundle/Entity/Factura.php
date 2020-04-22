@@ -1,0 +1,280 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Factura
+ *
+ * @ORM\Table(name="factura")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FacturaRepository")
+ */
+class Factura
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="datetime")
+     */
+    private $fecha;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="subtotal", type="integer")
+     */
+    private $subtotal;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="descuento", type="integer")
+     */
+    private $descuento;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="total", type="integer")
+     */
+    private $total;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipoPago", type="string", length=255)
+     */
+    private $tipoPago;
+
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Caja")
+    * @ORM\JoinColumn(name="caja", referencedColumnName="id" , nullable=true)
+    */
+    private $caja;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Grupo")
+    * @ORM\JoinColumn(name="grupo", referencedColumnName="id" , nullable=true)
+    */
+    private $grupo;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Reserva")
+    * @ORM\JoinColumn(name="reserva", referencedColumnName="id")
+    */
+    private $reserva;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return Factura
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set subtotal
+     *
+     * @param integer $subtotal
+     *
+     * @return Factura
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
+    /**
+     * Get subtotal
+     *
+     * @return int
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
+     * Set descuento
+     *
+     * @param integer $descuento
+     *
+     * @return Factura
+     */
+    public function setDescuento($descuento)
+    {
+        $this->descuento = $descuento;
+
+        return $this;
+    }
+
+    /**
+     * Get descuento
+     *
+     * @return int
+     */
+    public function getDescuento()
+    {
+        return $this->descuento;
+    }
+
+    /**
+     * Set total
+     *
+     * @param integer $total
+     *
+     * @return Factura
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+
+        return $this;
+    }
+
+    /**
+     * Get total
+     *
+     * @return int
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * Set tipoPago
+     *
+     * @param string $tipoPago
+     *
+     * @return Factura
+     */
+    public function setTipoPago($tipoPago)
+    {
+        $this->tipoPago = $tipoPago;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoPago
+     *
+     * @return string
+     */
+    public function getTipoPago()
+    {
+        return $this->tipoPago;
+    }
+
+    /**
+     * Set caja
+     *
+     * @param \AppBundle\Entity\Caja $caja
+     *
+     * @return Factura
+     */
+    public function setCaja(\AppBundle\Entity\Caja $caja = null)
+    {
+        $this->caja = $caja;
+
+        return $this;
+    }
+
+    /**
+     * Get caja
+     *
+     * @return \AppBundle\Entity\Caja
+     */
+    public function getCaja()
+    {
+        return $this->caja;
+    }
+
+    /**
+     * Set grupo
+     *
+     * @param \AppBundle\Entity\Grupo $grupo
+     *
+     * @return Factura
+     */
+    public function setGrupo(\AppBundle\Entity\Grupo $grupo = null)
+    {
+        $this->grupo = $grupo;
+
+        return $this;
+    }
+
+    /**
+     * Get grupo
+     *
+     * @return \AppBundle\Entity\Grupo
+     */
+    public function getGrupo()
+    {
+        return $this->grupo;
+    }
+
+    /**
+     * Set reserva
+     *
+     * @param \AppBundle\Entity\Reserva $reserva
+     *
+     * @return Factura
+     */
+    public function setReserva(\AppBundle\Entity\Reserva $reserva = null)
+    {
+        $this->reserva = $reserva;
+
+        return $this;
+    }
+
+    /**
+     * Get reserva
+     *
+     * @return \AppBundle\Entity\Reserva
+     */
+    public function getReserva()
+    {
+        return $this->reserva;
+    }
+}

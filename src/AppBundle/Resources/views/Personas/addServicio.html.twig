@@ -1,27 +1,42 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
 <div class="col-md-4">
 	<div class="white-box">
 		<div class="panel-body">
-			<h2>Tratamiento : <span class="font-bold">{{persona.tratamiento}}</span></h2>
-			<h2>Nombre : <span class="font-bold">{{persona.nombre}}</span></h2>
-			<h2>Usuario : <span class="font-bold">{{persona.user.name}}</span></h2>
+			<h5>Tratamiento : <span class="font-bold">{{persona.tratamiento}}</span></h5>
+			<h5>Nombre : <span class="font-bold">{{persona.nombre}}</span></h5>
+			<h5>Usuario : <span class="font-bold">{{persona.user.name}}</span></h5>
+			<hr>
+			<h5>Servicios lavanderia :<span class="font-bold" id="countLav">0</span></h5>
+			<h5>Total lavanderia :<span class="font-bold" id="totalLav">0</span><span class="font-bold">$</span></h5>
+			<hr>
+			<h5>Servicios tienda :<span class="font-bold" id="countTienda">0</span></h5>
+			<h5>Total Tienda :<span class="font-bold" id="totalTienda">0</span><span class="font-bold">$</span></h5>
+			<hr>
+			<h5>Servicios material roto :<span class="font-bold" id="countRoto">0</span></h5>
+			<h5>Total material roto :<span class="font-bold" id="totalRoto">0</span><span class="font-bold">$</span></h5>
+			<hr>
+			<h3>Total Servicios : <span class="font-bold" id="totalServicios">0</span><span class="font-bold">$</span></h3>
 		</div>
 	</div>
 </div>
 
 <div class="col-md-8 ">
-	<div class="white-box">
+	<div class="white-box panel">
+		<a class="btn btn-info right mb-3" href="{{ path ('detallesReserva_admin',{'id':reserva.id} )}}">Atras</a>
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">
 				<h2 class="font-bold">Servicios</h2>
+
+				{% if app.user.rola == 'ADMIN' %}
 				<label for="">Tipo</label>
 				<select id="menu" class="form-control form-control-sm">
 					<option value="">Seleccione un tipo de servicio</option>
-					<option value="1">Lavanderia</option>
-					<option value="2">Tienda</option>
-					<option value="3">Materia Roto</option>
+					<option value="lavanderia">Lavanderia</option>
+					<option value="tienda">Tienda</option>
+					<option value="roto">Materia Roto</option>
 				</select>
 				<br>
 				<label for="">Servicio</label>
@@ -30,22 +45,23 @@
 				<br>
 				<a class="btn btn-info" id="vamonos" disabled="true">Agregar</a>
 				<hr>
+				{% endif %}
+
 				<table class="myTable">
 					<thead>
 						<tr>
+							<th>Tipo</th>
 							<th>Servicio</th>
 							<th>Costo</th>
+							{% if app.user.rola == 'ADMIN' %}
+							<th>Acciones</th>
+							{% endif %}
 						</tr>
 					</thead>
-					<tbody id="table">
-						{% for servicio in servicios %}
-						<tr>
-							<td>{{servicio.servicio.servicio}}</td>
-							<td>{{servicio.servicio.costo}}</td>
-						</tr>
-						{% endfor %}
+					<tbody >
 					</tbody>
 				</table>
+
 			</div>
 		</div>
 	</div>    
@@ -53,16 +69,49 @@
 {% endblock %}
 
 {% block javascripts %}
+<script src="{{ asset ('ample/bower_components/blockUI/jquery.blockUI.js')}}"></script>
+
 <script >
 
 var tabla = $('.myTable').DataTable({
 	"ajax":{
 		"url": '/api/getServicios',
 		"type": "POST",
-		"data": "{{persona.id}}"
+		"data": {
+			persona:"{{persona.id}}",
+			reserva:"{{reserva.id}}"
+		}
 	},
 	'ordering':false,
 });
+tabla.on( 'xhr', function () {
+	var json = tabla.ajax.json();
+	console.log(json);
+	var t =json.cantidades
+	$('#countLav').text(t.cantidadLavanderia)
+	$('#totalLav').text(t.totalLavanderia)
+	$('#countTienda').text(t.cantidadTienda)
+	$('#totalTienda').text(t.totalTienda)
+	$('#countRoto').text(t.cantidadRoto)
+	$('#totalRoto').text(t.totalRoto)
+	$('#totalServicios').text(t.totalServicios)
+	$('div.panel').unblock();
+});
+
+
+$('#blockbtn2').click(function() {
+	$('div.panel').block({
+		message: '<h3>Please Wait...</h3>',
+		css: {
+			border: '1px solid #fff'
+		}
+	});
+});
+
+$('#unblockbtn2').click(function() {
+	$('div.panel').unblock();
+});
+
 
 var btnV = document.getElementById('vamonos');
 $('#menu').change(function(){
@@ -87,12 +136,19 @@ $('#menu').change(function(){
 });
 
 btnV.addEventListener('click', event =>{
+	$('div.panel').block({
+		message: '<h3>Agregando Servicio...</h3>',
+		css: {
+			border: '1px solid #fff'
+		}
+	});
 
 	$.ajax({
 		type:'POST',
 		data:JSON.stringify({
 			'idUsuario' : '{{persona.id}}',
-			'idServicio': $('#servicio').val()
+			'idServicio': $('#servicio').val(),
+			'idReserva' : '{{reserva.id}}'
 		}),
 		url: '/api/serviciosUs/nuevo',
 		success:function(data){
@@ -102,5 +158,27 @@ btnV.addEventListener('click', event =>{
 
 	});	
 });
+
+function deleteItem(item){
+	$('div.panel').block({
+		message: '<h3>Eliminando Servicio...</h3>',
+		css: {
+			border: '1px solid #fff'
+		}
+	});
+	datos = "id="+item
+	$.ajax({
+		type:"POST",
+		url:"{{path ('serviciosUsDelete')}}",
+		data:datos,
+		success:function(r){
+			tabla.ajax.reload(null,false);
+		}
+
+	});
+}
+
+
+;
 </script>
 {% endblock %}

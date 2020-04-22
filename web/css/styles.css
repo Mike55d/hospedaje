@@ -32,3 +32,50 @@ td{
 .ml-5{
 	margin-left: 15px;
 }
+
+.ml-2{
+	margin-left: 8px;
+}
+
+.ml-5{
+	margin-left: 20px !important;
+}
+
+td.details-control {
+    background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+}
+
+.noPadding{
+	padding: 0 !important;
+	margin-bottom: 15px;
+	margin-top:15px;
+}
+
+.padding-alert{
+	padding:0 !important;
+}
+
+ tr.text-left td{
+	text-align: left !important;
+}
+
+tr td.text-left{
+	text-align: left !important;
+}
+
+.width-input{
+	width: 70px;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

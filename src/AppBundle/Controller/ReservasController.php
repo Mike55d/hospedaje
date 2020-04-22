@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Reserva;
 use AppBundle\Form\ReservaType;
+use AppBundle\Entity\ReservaPersona;
 
 
 /**
@@ -24,9 +25,76 @@ class ReservasController extends Controller
     ->getToken()->getUser();
     $reservas = $em->getRepository('AppBundle:Reserva')
     ->findBy(['user' => $user,'status' => 'Reservado']); 
-    return $this->render('AppBundle:Reservas:index.html.twig', array(
+    return $this->render('AppBundle:Reservas:indexReservas.html.twig', array(
      'reservas' => $reservas
    ));
+  }
+
+  /**
+  * @Route("/reservasAdmin" , name= "reservas_admin")
+  */
+  public function indexAdminAction()
+  {
+    $em =$this->getDoctrine()->getManager(); 
+    $user = $this->get('security.token_storage')
+    ->getToken()->getUser();
+    $reservas = $em->getRepository('AppBundle:Reserva')
+    ->findBy(['status' => 'Reservado']); 
+    return $this->render('AppBundle:Reservas:indexReservas.html.twig', array(
+     'reservas' => $reservas
+   ));
+  }
+
+
+  /**
+  * @Route("/{id}/detallesReserva" , name= "detallesReserva_admin")
+  */
+  public function detallesReservaAction(Reserva $reserva )
+  {
+    $em =$this->getDoctrine()->getManager();
+    $personas = $em->getRepository('AppBundle:ReservaPersona')->findByReserva($reserva);
+    $mayores = 0;
+    $menores = 0;
+    $totalLavanderia = 0;
+    $totalRoto= 0;
+    $totalTienda = 0;
+    $serviciosLavanderia = $em->getRepository('AppBundle:ServiciosUs')->buscarReserva('lavanderia',$reserva->getId());
+    $checkoutCompleto = true;
+    
+    foreach ($serviciosLavanderia as $servicio) {
+      $totalLavanderia += $servicio->getServicio()->getCosto();
+    }
+    $serviciosRoto = $em->getRepository('AppBundle:ServiciosUs')->buscarReserva('roto',$reserva->getId());
+    foreach ($serviciosRoto as $servicio) {
+      $totalRoto += $servicio->getServicio()->getCosto();
+    } 
+    $serviciosTienda = $em->getRepository('AppBundle:ServiciosUs')->buscarReserva('tienda',$reserva->getId());
+    foreach ($serviciosTienda as $servicio) {
+      $totalTienda += $servicio->getServicio()->getCosto();
+    } 
+
+    foreach ($personas as $persona) {
+      $reservacion = $em->getRepository('AppBundle:Reservacion')->findOneByPersona($persona->getPersona()); 
+        if (!$reservacion->getFactura()) {
+          $checkoutCompleto = false;
+        }
+      if ($persona->getPersona()->getMayorEdad()) {
+        $mayores++;
+      }else{
+        $menores++;
+      }
+    }
+    return $this->render('AppBundle:Reservas:detallesReserva.html.twig', array(
+      'reserva' => $reserva,
+      'user'=> $reserva->getUser(),
+      'personas' => $personas,
+      'mayores' => $mayores,
+      'menores'=> $menores,
+      'totalLavanderia' => $totalLavanderia,
+      'totalRoto' => $totalRoto,
+      'totalTienda' => $totalTienda,
+      'checkoutCompleto' => $checkoutCompleto
+    ));
   }
 
   /**
@@ -37,16 +105,18 @@ class ReservasController extends Controller
     $em =$this->getDoctrine()->getManager(); 
     $user = $this->get('security.token_storage')
     ->getToken()->getUser(); 
-    $personas = $em->getRepository('AppBundle:Persona')
-    ->findBy(['user' => $user , 'reserva' => null]); 
+    $miGrupo = $em->getRepository('AppBundle:Persona')->findByUser($user); 
     if ($reserva->getStatus() == 'Aprobada') {
       if ($request->get('data')) {
         $personas = json_decode($request->get('data'),true);
         foreach ($personas as $persona) {
           $Persona = $em->getRepository('AppBundle:Persona')->find($persona['id']);
-          $Persona->setReserva($reserva);
-          $Persona->setEntrada($reserva->getLlegada());
-          $Persona->setSalida(new \Datetime($persona['fecha']));
+          $reservaPersona = new ReservaPersona;
+          $reservaPersona->setReserva($reserva);
+          $reservaPersona->setEntrada($reserva->getLlegada());
+          $reservaPersona->setSalida(new \Datetime($persona['fecha']));
+          $reservaPersona->setPersona($Persona);
+          $em->persist($reservaPersona);
           $em->flush();
         }
         $reserva->setStatus('Reservado');
@@ -58,7 +128,7 @@ class ReservasController extends Controller
         return $this->redirectToRoute('reservas_misReservas');
       }
       return $this->render('AppBundle:Reservas:new.html.twig', array(
-        'personas'=>$personas,
+        'personas'=>$miGrupo,
         'reserva' => $reserva,
       ));
     }else{

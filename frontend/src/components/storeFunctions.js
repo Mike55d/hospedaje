@@ -4,6 +4,7 @@ export default {
   methods: {
 
     ...mapMutations([
+      'setItems',
       'setDate',
       'setContainer',
       'setMouseDown',
@@ -14,6 +15,7 @@ export default {
       'setDragingObject',
       'setExtendingObject',
       'setMouseBox',
+      'setOrigin',
       'setDestiny',
       'moveDragingObject',
       'moveShadowDragingObject',
@@ -34,6 +36,7 @@ export default {
       'cardDimentions',
       'dragingObject',
       'extendingObject',
+      'origin',
       'destiny',
       'mouseBox'
     ])

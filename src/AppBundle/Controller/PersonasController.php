@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Persona;
+use AppBundle\Entity\Reserva;
 use AppBundle\Form\PersonaType;
 
 /**
@@ -20,7 +21,7 @@ class PersonasController extends Controller
   {
     $em =$this->getDoctrine()->getManager(); 
     $user = $this->get('security.token_storage')
-    ->getToken()->getUser(); 
+    ->getToken()->getUser();
     $personas = $em->getRepository('AppBundle:Persona')->findByUser($user); 
     return $this->render('AppBundle:Personas:index.html.twig', array(
       'personas' => $personas
@@ -39,6 +40,15 @@ class PersonasController extends Controller
     $form = $this->createForm(PersonaType::class, $persona);
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()) {
+      $cumpleanos = $persona->getFechaNacimiento();
+      $persona->setGrupo($user->getGrupo());
+      $hoy = new \DateTime();
+      $annos = $hoy->diff($cumpleanos);
+      if ($annos->y >= 18) {
+        $persona->setMayorEdad(1);
+      }else{
+        $persona->setMayorEdad(0);
+      }
       $persona->setUser($user);
       $em->persist($persona);
       $em->flush();
@@ -125,15 +135,16 @@ class PersonasController extends Controller
   }
 
   /**
-  * @Route("/{id}/personasServicios" , name="personas_servicios")
+  * @Route("/{id}/{reserva}/personasServicios" , name="personas_servicios")
   */
-  public function personasServiciosAction(Persona $persona)
+  public function personasServiciosAction(Persona $persona , Reserva $reserva)
   {
     $em =$this->getDoctrine()->getManager();
-    $servicios = $em->getRepository('AppBundle:ServiciosUs')->findByPersona($persona); 
+    $servicios = $em->getRepository('AppBundle:ServiciosUs')->findByPersona($persona);
     return $this->render('AppBundle:Personas:addServicio.html.twig', array(
       'servicios' => $servicios,
-      'persona' => $persona
+      'persona' => $persona,
+      'reserva' => $reserva,
     ));
   }
 

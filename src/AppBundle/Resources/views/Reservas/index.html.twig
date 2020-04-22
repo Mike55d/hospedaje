@@ -5,12 +5,13 @@
 {% block body %}
 <div class="col-md-10 col-md-offset-1">
 	<div class="white-box">
-	<h1 class="font-bold ml-5">Solicitudes</h1>
+	<h1 class="font-bold ml-5">Mis Solicitudes</h1>
 		<a href="{{ path ('solicitudes_new')}}" class="btn btn-success mb-3">Nueva Solicitud</a><br><br>
 		<table class="myTable">
 			<thead>
 				<tr>
 					<th>Id</th>
+					<th>User</th>
 					<th>fecha</th>
 					<th>llegada</th>
 					<th>Salida</th>
@@ -24,6 +25,7 @@
 				{% for reserva in reservas %}
 				<tr>
 					<td>{{reserva.id}}</td>
+					<th>{{reserva.user.username}}</th>
 					<td>{{reserva.fecha|date('d-m-y')}}</td>
 					<td>{{reserva.llegada|date('d-m-y')}}</td>
 					<td>{{reserva.salida|date('d-m-y')}}</td>
@@ -37,9 +39,6 @@
 						{% endif %}
 						{% if app.user.rola == 'USER' and reserva.status == 'Aprobada' %}
 						<a class="btn btn-sm btn-success" href="{{ path ('reservas_new',{'id':reserva.id})}}">Completar</a>
-						{% endif %}
-						{% if reserva.status == 'Reservado' %}
-						<a href="{{ path ('camas_index',{'id':reserva.id})}}" class="btn btn-sm btn-warning">Camas</a>
 						{% endif %}
 					</td>
 				</tr>

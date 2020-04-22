@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row">
+	<div class="col-md-4 col-md-offset-4">
+		<div class="white-box">
+			<h1 class="font-bold">Editar Caja</h1>
+			<form method="post">
+				<label for="">Nro</label>
+				<input type="text" required name="nro" value="{{caja.nro}}" class="form-control">
+				<label for="">Responsable</label>
+				<input type="text" required name="responsable" value="{{caja.responsable}}" class="form-control">
+				<label for="">Email de caja</label>
+				<input type="text" required name="emailCaja" value="{{caja.emailCaja}}" class="form-control">
+				<label for="">Encargado</label>
+				<input type="text" required name="encargado" value="{{caja.encargado}}" class="form-control">
+				<label for="">Email del encargado</label>
+				<input type="text" required name="emailEncargado" value="{{caja.emailEncargado}}" class="form-control">
+				<label for="">Grupo</label>
+				<select class="form-control" name="grupo" id="">
+					{% for grupo in grupos %}
+					<option {% if caja.grupo.id == grupo.id %}selected{% endif %} value="{{grupo.id}}">{{grupo.nombre}}</option>
+					{% endfor %}
+				</select>
+				<br>
+				<button class="btn btn-success">Editar</button>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

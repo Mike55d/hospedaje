@@ -19,8 +19,6 @@ class ApiCalendarioController extends AbstractFOSRestController
 	public function reservacionesAction(Request $request)
 	{
 		$em =$this->getDoctrine()->getManager(); 
-		// $data = json_decode($request->getContent(),true);
-		// $camas = $em->getRepository('AppBundle:Cama')->findAll();
 		$cuartos = $em->getRepository('AppBundle:Cuarto')->findAll();
 		$cuartoCamasReservas = [];
 		foreach ($cuartos as $cuarto) {
@@ -36,19 +34,31 @@ class ApiCalendarioController extends AbstractFOSRestController
 		$view = $this->view($cuartoCamasReservas,200);
 		return $this->handleView($view);
 	}
+
 	/**
 	* @Route("/datosFiltro")
 	*/
 	public function datosFiltroAction(Request $request)
 	{
 		$em =$this->getDoctrine()->getManager(); 
-		// $data = json_decode($request->getContent(),true);
-		// $camas = $em->getRepository('AppBundle:Cama')->findAll();
 		$grupos = $em->getRepository('AppBundle:Grupo')->findAll(); 
 		$users = $em->getRepository('AppBundle:User')->findAll(); 
-		$reservaciones = $em->getRepository('AppBundle:Reserva')->findByStatus('Reservado'); 
-		$datos = ['grupos'=> $grupos,'users' => $users ,'reservaciones'=>$reservaciones];
-		$view = $this->view($datos,200);
+		$reservas = $em->getRepository('AppBundle:Reserva')->findByStatus('Reservado'); 
+		$view = $this->view($reservas,200);
 		return $this->handleView($view);
 	}
+
+	/**
+	* @Route("/getFechaReserva")
+	*/
+	public function getFechaReserva(Request $request)
+	{
+		$em =$this->getDoctrine()->getManager(); 
+		$reservaPersona = $em->getRepository('AppBundle:ReservaPersona')
+		->findBy([$request->get('reserva'),$request->get('persona')]);
+		$view = $this->view($reservaPersona,200);
+		return $this->handleView($view);
+	}
+
+
 }

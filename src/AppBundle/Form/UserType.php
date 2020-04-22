@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
 class UserType extends AbstractType
@@ -25,6 +26,11 @@ class UserType extends AbstractType
         ->add('name' , TextType::class , [
             'attr'=>['class'=>'form-control'],
             'label' => 'nombre'
+        ])
+        ->add('grupo', EntityType::class, [
+            'class' => 'AppBundle:Grupo',
+            'choice_label' => 'nombre',
+            'attr' => ['class'=>'form-control'],
         ])
         ->add('plainPassword', RepeatedType::class, [
             'type' => PasswordType::class,

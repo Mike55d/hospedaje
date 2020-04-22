@@ -92,7 +92,13 @@
 
                     <li> <a href="{{ path ('solicitudes_indexAdmin',{'status':'todas'})}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Solicitudes</span></a> </li>
 
-                    <li> <a href="/servicios" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Servicios</span></a> </li>
+                    <li> <a href="{{ path ('reservas_admin')}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Reservaciones</span></a> </li>
+
+                    <li> <a href="/servicios/" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Servicios</span></a> </li>
+
+                    <li> <a href="/cajas/" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Cajas</span></a> </li>
+
+                    <li> <a href="/facturas/" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Facturas</span></a> </li>
 
                      <!-- <li> <a href="{{ path ('solicitudes_indexAdmin',{'status':'todas'})}}" class="waves-effect"><i class="mdi mdi-google-maps fa-fw"></i><span class="hide-menu">Reservas</span></a> </li> -->
                      
@@ -109,16 +115,18 @@
                 <div class="row bg-title">
                 </div>
                 <div class="row">
+                    <div class="col-md-10 col-md-offset-1">
                     {% for flash_message in app.session.flashbag.get('notice') %}
-                        <div class="alert alert-success" role="alert">
+                        <div class="alert alert-success padding-alert text-center" role="alert">
                         <h2 class=" text-white font-bold">{{ flash_message }}</h2>
                         </div>
                     {% endfor %}
                     {% for flash_message in app.session.flashbag.get('error') %}
-                        <div class="alert alert-danger" role="alert">
+                        <div class="alert alert-danger padding-alert text-center" role="alert">
                         <h2 class=" text-white font-bold">{{ flash_message }}</h2>
                         </div>
                     {% endfor %}
+                    </div>
                     {% block body %}{% endblock %}
                 </div>
                 <div class="right-sidebar">

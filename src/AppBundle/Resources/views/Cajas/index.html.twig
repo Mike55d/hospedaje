@@ -1,0 +1,47 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+<div class="col-md-10 col-md-offset-1">
+	<div class="white-box">
+		<h1 class="font-bold ml-5">Cajas</h1>
+		<a class="btn btn-success mb-3" href="{{ path ('cajas_new')}}">Nueva caja</a><br><br>
+		<table class="myTable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>N°</th>
+					<th>grupo</th>
+					<th>Responsable</th>
+					<th>Email de caja</th>
+					<th>Encargado</th>
+					<th>Email de encargado</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for caja in cajas %}
+				<tr>
+					<td>{{caja.id}}</td>
+					<td>{{caja.nro}}</td>
+					<td>{{caja.grupo.nombre}}</td>
+					<td>{{caja.responsable}}</td>
+					<td>{{caja.emailCaja}}</td>
+					<td>{{caja.encargado}}</td>
+					<td>{{caja.emailEncargado}}</td>
+					<td>
+						<a href="{{ path ('cajas_edit',{'id':caja.id})}}" class="btn btn-warning btn-sm">Editar</a>
+					</td>
+				</tr>
+				{% endfor %}	
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.myTable').DataTable();
+</script>
+{% endblock %}
+

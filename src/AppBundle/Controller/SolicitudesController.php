@@ -21,13 +21,7 @@ class SolicitudesController extends Controller
     $em =$this->getDoctrine()->getManager(); 
     $user = $this->get('security.token_storage')
     ->getToken()->getUser();
-    if ($status != 'todas') {
-      $reservas = $em->getRepository('AppBundle:Reserva')
-      ->findBy(['user'=>$user,'status' => $status]);
-    }else{
-     $reservas = $em->getRepository('AppBundle:Reserva')
-     ->findBy(['user'=>$user]); 
-   }
+    $reservas = $em->getRepository('AppBundle:Reserva')->buscarSolicitudesUser($user->getId()); 
    return $this->render('AppBundle:Reservas:index.html.twig', array(
      'reservas' => $reservas,
      'statusRedirect' => $status,
@@ -48,7 +42,7 @@ class SolicitudesController extends Controller
         ->findBy(['status' => $status]); 
       }else{
         $reservas = $em->getRepository('AppBundle:Reserva')
-        ->findAll(); 
+        ->buscarSolicitudes();
       }
     }
     return $this->render('AppBundle:Reservas:index.html.twig', array(
