@@ -6,7 +6,8 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" id="close-modal" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <button type="button" id="close-modal" data-dismiss="modal" style="display: none">x</button>
+          <button type="button" class="close" @click="cancel" aria-hidden="true">×</button>
           <h4 class="modal-title" id="myLargeModalLabel">Large modal</h4>
         </div>
         <div class="modal-body">
@@ -41,8 +42,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button @click="cancel">Cancel</button>
-          <button @click="editCard">Accept</button>
+          <button class="btn btn-default" @click="cancel">Cancel</button>
+          <button class="btn btn-default" @click="editCard">Accept</button>
+          <button class="btn btn-danger" @click="remove">Delete</button>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -50,7 +52,7 @@
     <!-- /.modal-dialog -->
   </div>
 
-  <button class="btn btn-default" id="open-modal" :style="{display: 'none'}" data-toggle="modal"
+  <button id="open-modal" :style="{display: 'none'}" data-toggle="modal" data-backdrop="static"
     data-target=".bs-example-modal-lg">test</button>
 </div>
 </template>
@@ -106,9 +108,28 @@ export default {
   },
   methods: {
 
+    remove(){
+
+      let monthFirstDate = new Date(this.date.year, this.date.month, 1);
+      let monthLastDate = new Date(this.date.year, this.date.month + 1, 0);
+      let initDateSplit = this.card.initDate.split('-');
+      let initDate = new Date(initDateSplit[0], initDateSplit[1] - 1, initDateSplit[2]);
+      let endDateSplit = this.card.endDate.split('-');
+      let endDate = new Date(endDateSplit[0], endDateSplit[1] - 1, endDateSplit[2]);
+      let initMonthDay = initDate.getTime() < monthFirstDate.getTime() ? monthFirstDate.getDate() : initDate.getDate();
+      let endMonthDay = endDate.getTime() > monthLastDate.getTime() ? monthLastDate.getDate() : endDate.getDate();
+      let bed = this.items[this.card.roomIndex].beds[this.card.bedIndex];
+      for(let i = initMonthDay -1; (i < endMonthDay); i++){
+
+        bed.days[i].busy = null;
+      }
+      this.$emit('remove', this.card);
+      this.closeModal();
+    },
     cancel(){
 
       this.$emit('cancel');
+      this.setDestiny(null);
       this.closeModal();
     },
     openModal(){
@@ -123,85 +144,90 @@ export default {
     },
     editCard(){
 
-      const MS_OF_THE_DAY = (1000 * 3600 * 24);
-      let initDateSplit = this.initialDate.split('-');
-      let initDate = new Date(initDateSplit[0], initDateSplit[1] - 1, initDateSplit[2]);
-      let endDateSplit = this.endDate.split('-');
-      let endDate = new Date(endDateSplit[0], endDateSplit[1] - 1, endDateSplit[2]);
+      if(this.card.initDate != this.initialDate || this.card.endDate != this.endDate){
 
-      if(initDate.getTime() <= endDate.getTime()){
+        const MS_OF_THE_DAY = (1000 * 3600 * 24);
+        let initDateSplit = this.initialDate.split('-');
+        let initDate = new Date(initDateSplit[0], initDateSplit[1] - 1, initDateSplit[2]);
+        let endDateSplit = this.endDate.split('-');
+        let endDate = new Date(endDateSplit[0], endDateSplit[1] - 1, endDateSplit[2]);
 
-        let lengthCard = ((endDate.getTime() - initDate.getTime()) / MS_OF_THE_DAY) + 1;
-        let monthFirstDate = new Date(this.date.year, this.date.month, 1);
-        let monthLastDate = new Date(this.date.year, this.date.month + 1, 0);
-        let initDay;
-        let bed = this.items[this.card.roomIndex].beds[this.card.bedIndex];
-        let daysInMonth;
-        let initMonthDay = initDate.getTime() < monthFirstDate.getTime() ? monthFirstDate.getDate() : initDate.getDate();
-        let endMonthDay = endDate.getTime() > monthLastDate.getTime() ? monthLastDate.getDate() : endDate.getDate();
+        if(initDate.getTime() <= endDate.getTime()){
 
-        let lastInitDateSplit = this.card.initDate.split('-');
-        let lastInitDate = new Date(lastInitDateSplit[0], lastInitDateSplit[1] - 1, lastInitDateSplit[2]);
-        let lastEndDateSplit = this.card.endDate.split('-');
-        let lastEndtDate = new Date(lastEndDateSplit[0], lastEndDateSplit[1] - 1, lastEndDateSplit[2]);
-        let lastInitMonthDay = lastInitDate.getTime() < monthFirstDate.getTime() ? monthFirstDate.getDate() : lastInitDate.getDate();
-        let lastEndMonthDay = lastEndtDate.getTime() < monthLastDate.getTime() ? monthLastDate.getDate() : lastEndtDate.getDate();
+          let lengthCard = ((endDate.getTime() - initDate.getTime()) / MS_OF_THE_DAY) + 1;
+          let monthFirstDate = new Date(this.date.year, this.date.month, 1);
+          let monthLastDate = new Date(this.date.year, this.date.month + 1, 0);
+          let initDay;
+          let bed = this.items[this.card.roomIndex].beds[this.card.bedIndex];
+          let daysInMonth;
+          let initMonthDay = initDate.getTime() < monthFirstDate.getTime() ? monthFirstDate.getDate() : initDate.getDate();
+          let endMonthDay = endDate.getTime() > monthLastDate.getTime() ? monthLastDate.getDate() : endDate.getDate();
 
-        if(initDate.getTime() >= monthFirstDate.getTime() && initDate.getTime() <= monthLastDate.getTime()){
+          let lastInitDateSplit = this.card.initDate.split('-');
+          let lastInitDate = new Date(lastInitDateSplit[0], lastInitDateSplit[1] - 1, lastInitDateSplit[2]);
+          let lastEndDateSplit = this.card.endDate.split('-');
+          let lastEndtDate = new Date(lastEndDateSplit[0], lastEndDateSplit[1] - 1, lastEndDateSplit[2]);
+          let lastInitMonthDay = lastInitDate.getTime() < monthFirstDate.getTime() ? monthFirstDate.getDate() : lastInitDate.getDate();
+          let lastEndMonthDay = lastEndtDate.getTime() < monthLastDate.getTime() ? monthLastDate.getDate() : lastEndtDate.getDate();
 
-          initDay = bed.days[initDate.getDate() - 1];
-          this.localCard.lengthCard = lengthCard;
-          this.localCard.width = this.cardDimentions.width * lengthCard;
-          this.localCard.left = initDay.left;
-          this.localCard.initDay = initDay;
-          this.localCard.initDate = `${initDate.getFullYear()}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(initDate.getMonth() + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(initDate.getDate())}`;
-          this.localCard.endDate = `${endDate.getFullYear()}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(endDate.getMonth() + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(endDate.getDate())}`;
-        }
+          if(initDate.getTime() >= monthFirstDate.getTime() && initDate.getTime() <= monthLastDate.getTime()){
 
-        if(initDate.getTime() < monthFirstDate.getTime() && endDate.getTime() >= monthFirstDate.getTime()){
-
-          initDay = bed.days[0];
-          let daysLeft = ((monthFirstDate.getTime() - initDate.getTime()) / MS_OF_THE_DAY);
-          let margin = ((daysLeft * this.cardDimentions.width) + 10) + 'px';
-          this.localCard.lengthCard = lengthCard;
-          this.localCard.width = this.cardDimentions.width * lengthCard;
-          this.localCard.left = initDay.left - (daysLeft * this.cardDimentions.width);
-          this.localCard.infoMargin = margin;
-          this.localCard.initDay = initDay;
-          this.localCard.initDate = `${initDate.getFullYear()}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(initDate.getMonth() + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(initDate.getDate())}`;
-          this.localCard.endDate = `${endDate.getFullYear()}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(endDate.getMonth() + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(endDate.getDate())}`;
-        }
-
-        let busy = false;
-
-        for(let i = initMonthDay -1; (i < endMonthDay); i++){
-
-          if(bed.days[i].busy != null && bed.days[i].busy != this.card.id){
-
-            busy = true;
+            initDay = bed.days[initDate.getDate() - 1];
+            this.localCard.lengthCard = lengthCard;
+            this.localCard.width = this.cardDimentions.width * lengthCard;
+            this.localCard.left = initDay.left;
+            this.localCard.initDay = initDay;
+            this.localCard.initDate = `${initDate.getFullYear()}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(initDate.getMonth() + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(initDate.getDate())}`;
+            this.localCard.endDate = `${endDate.getFullYear()}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(endDate.getMonth() + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(endDate.getDate())}`;
           }
-        }
 
-        if(!busy){
+          if(initDate.getTime() < monthFirstDate.getTime() && endDate.getTime() >= monthFirstDate.getTime()){
 
-          console.log(lastInitMonthDay, lastEndMonthDay);
-          for(let i = lastInitMonthDay -1; (i < lastEndMonthDay); i++){
-
-            bed.days[i].busy = null;
+            initDay = bed.days[0];
+            let daysLeft = ((monthFirstDate.getTime() - initDate.getTime()) / MS_OF_THE_DAY);
+            let margin = ((daysLeft * this.cardDimentions.width) + 10) + 'px';
+            this.localCard.lengthCard = lengthCard;
+            this.localCard.width = this.cardDimentions.width * lengthCard;
+            this.localCard.left = initDay.left - (daysLeft * this.cardDimentions.width);
+            this.localCard.infoMargin = margin;
+            this.localCard.initDay = initDay;
+            this.localCard.initDate = `${initDate.getFullYear()}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(initDate.getMonth() + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(initDate.getDate())}`;
+            this.localCard.endDate = `${endDate.getFullYear()}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(endDate.getMonth() + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(endDate.getDate())}`;
           }
+
+          let busy = false;
 
           for(let i = initMonthDay -1; (i < endMonthDay); i++){
 
-            if(bed.days[i].busy == null){
+            if(bed.days[i].busy != null && bed.days[i].busy != this.card.id){
 
-              bed.days[i].busy = this.localCard.id;
+              busy = true;
             }
           }
 
-          this.$emit('edit-card', this.card, this.localCard);
-          this.setDestiny(null);
-          this.closeModal();
+          if(!busy){
+
+            for(let i = lastInitMonthDay -1; (i < lastEndMonthDay); i++){
+
+              bed.days[i].busy = null;
+            }
+
+            for(let i = initMonthDay -1; (i < endMonthDay); i++){
+
+              if(bed.days[i].busy == null){
+
+                bed.days[i].busy = this.localCard.id;
+              }
+            }
+
+            this.$emit('edit-card', this.card, this.localCard);
+            this.setDestiny(null);
+            this.closeModal();
+          }
         }
+      }else{
+
+        this.closeModal();
       }
     }
   },

@@ -29,7 +29,7 @@ class Reservacion
 
     /**
     * @ORM\ManyToOne(targetEntity="Reserva")
-    * @ORM\JoinColumn(name="reserva", referencedColumnName="id")
+    * @ORM\JoinColumn(name="reserva", referencedColumnName="id" , nullable=true)
     */
     private $reserva;
 

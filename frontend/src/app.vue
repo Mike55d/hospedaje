@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<calendario @move="onMove" @create="onCreate" @extend="onExtend"/>
+		<calendario @move="onMove" @create="onCreate" @extend="onExtend" @remove="onRemove" @edit="onEdit"/>
 	</div>
 </template>
 
@@ -35,17 +35,26 @@ export default {
 	},
 	methods: {
 
+    onEdit(card){
+
+      console.log(card);
+    },
+    onRemove(card){
+
+      axios.post('http://127.0.0.1:8000/calendario/delReserva', {reserva: card.id})
+      .then(res => {
+
+        console.log(res);
+      });
+      console.log(card);
+    },
 		onMove(dragingObject) {
 
 			console.log(dragingObject);
 		},
 		onCreate(newCard) {
 
-      // this.card = newCard;
-      // this.initialDate = this.card.initDate;
-      // this.endDate = this.card.endDate;
-      // this.openModal();
-			// console.log(newCard);
+			console.log(newCard);
 		},
 		onExtend(extendingObject) {
 

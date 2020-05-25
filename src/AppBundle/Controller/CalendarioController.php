@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Reservacion;
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+
 /**
 * @Route("calendario")
 */
@@ -30,16 +34,17 @@ class CalendarioController extends Controller
 	/**
 	* @Route("/newReserva", name="calendario_newReserva")
 	*/
-	public function newAction()
+	public function newAction(Request $request)
 	{
 		$em =$this->getDoctrine()->getManager();
 		$reservacion = new Reservacion;
 		$cama = $em->getRepository('AppBundle:Cama')->find($request->get('cama')); 
 		$persona = $em->getRepository('AppBundle:Persona')->find($request->get('persona')); 
-		$reservacion->setFechaInicio($request->get('fechaInicio'));
-		$reservacion->setFechaFin($request->get('fechaFin'));
+		$reservacion->setFechaInicio(new \Datetime($request->get('fechaInicio')));
+		$reservacion->setFechaFin(new \Datetime($request->get('fechaFin')));
 		$reservacion->setCama($cama);
-		$reservacion->setReserva($persona->getReserva());
+		$reservacion->setReserva(null);
+		$reservacion->setStatus('pendiente');
 		$reservacion->setPersona($persona);
 		$em->persist($reservacion);
 		$em->flush();
@@ -49,16 +54,15 @@ class CalendarioController extends Controller
 	/**
 	* @Route("/editReserva", name="calendario_editReserva")
 	*/
-	public function editAction()
+	public function editAction(Request $request)
 	{
 		$em =$this->getDoctrine()->getManager();
 		$reservacion = $em->getRepository('AppBundle:Reservacion')->find($request->get('reservacion')); 
 		$cama = $em->getRepository('AppBundle:Cama')->find($request->get('cama')); 
 		$persona = $em->getRepository('AppBundle:Persona')->find($request->get('persona')); 
-		$reservacion->setFechaInicio($request->get('fechaInicio'));
-		$reservacion->setFechaFin($request->get('fechaFin'));
+		$reservacion->setFechaInicio(new \Datetime($request->get('fechaInicio')));
+		$reservacion->setFechaFin(new \Datetime($request->get('fechaFin')));
 		$reservacion->setCama($cama);
-		$reservacion->setReserva($persona->getReserva());
 		$reservacion->setPersona($persona);
 		$em->flush();
 		return new JsonResponse('ok');
@@ -67,7 +71,7 @@ class CalendarioController extends Controller
 	/**
 	* @Route("/delReserva" , name="calendario_delReserva")
 	*/
-	public function delAction()
+	public function delAction(Request $request)
 	{
 		$em =$this->getDoctrine()->getManager(); 
 		$reservacion = $em->getRepository('AppBundle:Reservacion')->find($request->get('reservacion')); 

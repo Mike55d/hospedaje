@@ -12,8 +12,10 @@
     @dblclick="test">
     <span class="info-card noselect" :style="{
       'margin-left': card.infoMargin,
-      display: 'block'
-    }">{{card.initDate}}<br>{{ card.endDate }}</span>
+      'font-size': '9px',
+      display: 'block',
+      color: 'white'
+    }">{{card.initDate}}<br>{{ card.endDate }} <br>Sr mike</span>
     <div @mousedown.stop="boxExtendRight($event, card)" class="card-right-btn"></div>
     <div @mousedown.stop="boxExtendLeft($event, card)" class="card-left-btn"></div>
   </div>
@@ -47,8 +49,6 @@ export default {
         bedIndex: card.bedIndex,
         day: card.initDay
       });
-
-      console.log(card.left);
 
       this.setLastMousePos(this.mousePos);
       let dragingObject = card;

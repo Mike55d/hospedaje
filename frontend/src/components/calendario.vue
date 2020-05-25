@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <card-modal @edit-card="onEditCard" @cancel="cancel" :show="showCardModal" :card="editCard"></card-modal>
+  <card-modal @edit-card="onEditCard" @remove="remove" :show="showCardModal" :card="editCard"></card-modal>
 
   <button @click="scrollLeft">Left</button>
   <button @click="scrollRight">Right</button>
@@ -143,43 +143,49 @@ export default {
 
     let cards = [];
 
-    // axios.post('http://127.0.0.1:8000/api/calendario/reservaciones', data)
-		// .then(res => {
+    axios.post('http://127.0.0.1:8000/api/calendario/reservaciones', data)
+		.then(res => {
 
-    //   console.log(res);
-    //   let items = [];
-    //   res.data.forEach((item, indexItem) => {
+      console.log(res);
+      let items = [];
+      res.data.forEach((item, indexItem) => {
 
-    //     let beds = [];
+        let beds = [];
 
-    //     item.camas.forEach((bedReserv, indexBedREserv) => {
+        item.camas.forEach((bedReserv, indexBedREserv) => {
 
-    //       beds.push({
-    //         id: bedReserv.cama.id,
-    //         name:bedReserv.cama.numero,
-    //         days: [],
-    //         reservations: bedReserv.reservaciones
-    //       });
-    //     });
+          beds.push({
+            id: bedReserv.cama.id,
+            name:bedReserv.cama.numero,
+            days: [],
+            reservations: bedReserv.reservaciones
+          });
+        });
 
-    //     items.push({
-    //       id: item.id,
-    //       number: item.cuarto.numero,
-    //       beds
-    //     });
-    //   });
+        items.push({
+          id: item.id,
+          number: item.cuarto.numero,
+          beds
+        });
+      });
 
-    //   this.setItems(items);
-    //   this.setItemDays();
-    //   this.initItemDays();
-    //   this.drawCards();
-		// });
+      this.setItems(items);
+      this.setItemDays();
+      this.initItemDays();
+      this.drawCards();
+		});
 
 		this.isMounted = true;
 
 	},
 	methods: {
 
+    remove(card){
+
+      let index = this.cards.indexOf(card);
+      this.$emit('remove', card);
+      this.cards.splice(index, 1);
+    },
     edit(card){
 
       this.editCard = card;
@@ -189,16 +195,12 @@ export default {
 
       let index = this.cards.indexOf(oldCard);
       this.cards.splice(index, 1, newCard);
-    },
-    cancel(){
-
-      // this.cards.pop();
+      this.$emit('edit', newCard);
     },
     scrollRight(){
 
       let scroll = this.scrollDays + 300 > this.scrollLimit ? this.scrollLimit : this.scrollDays + 300;
       this.scrollDays = scroll;
-      console.log(scroll);
       this.container.scroll({
         left: scroll,
         behavior: 'smooth'
@@ -216,6 +218,7 @@ export default {
     drawCards(){
 
       let cards = [];
+      const MS_OF_THE_DAY = (1000 * 3600 * 24);
 
       this.items.forEach((room, roomIndex) => {
 
@@ -223,12 +226,20 @@ export default {
 
           bed.reservations.forEach((reserv, reservIndex) => {
 
-            let initDate = new Date(reserv.fechaInicio);
-            let endDate = new Date(reserv.fechaFin);
-            let lengthCard = endDate.getDate() - initDate.getDate();
-            let left = bed.days[initDate.getDate() -1].left;
+            let initDateSplit = reserv.fechaInicio.substring(0, 10).split('-');
+            let initDate = new Date(initDateSplit[0], initDateSplit[1] -1, initDateSplit[2]);
+            let endDateSplit = reserv.fechaFin.substring(0, 10).split('-');
+            let endDate = new Date(endDateSplit[0], endDateSplit[1] -1, endDateSplit[2]);
+            let lengthCard = ((endDate.getTime() - initDate.getTime()) / MS_OF_THE_DAY) + 1;
+            let monthFirstDate = new Date(this.date.year, this.date.month, 1);
+            let monthLastDate = new Date(this.date.year, this.date.month + 1, 0);
+            let initDay = initDate.getTime() >= monthFirstDate.getTime() ? bed.days[initDate.getDate() -1] : bed.days[monthFirstDate.getDate() -1];
+            let initMonthDay = initDate.getTime() < monthFirstDate.getTime() ? monthFirstDate.getDate() : initDate.getDate();
+            let endMonthDay = endDate.getTime() > monthLastDate.getTime() ? monthLastDate.getDate() : endDate.getDate();
+            let left = initDay.left;
 
             cards.push({
+              id: reserv.id,
               name: 'Card x' + this.cards.length,
               lengthCard,
               background: 'blue',
@@ -238,9 +249,15 @@ export default {
               opacity: 1,
               roomIndex: roomIndex,
               bedIndex: bedIndex,
-              initDate: reserv.fechaInicio,
-              endDay: reserv.fechaInicio
+              initDate: reserv.fechaInicio.substring(0, 10),
+              endDate: reserv.fechaFin.substring(0, 10),
+              initDay
             });
+
+            for(let i = initMonthDay -1; (i < endMonthDay); i++){
+
+              bed.days[i].busy = reserv.id;
+            }
           });
         });
       });

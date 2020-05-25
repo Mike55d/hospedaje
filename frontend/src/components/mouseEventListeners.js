@@ -1,3 +1,5 @@
+const axios = require('axios').default;
+
 export default {
 
   methods: {
@@ -37,6 +39,7 @@ export default {
               for(let i = this.destiny.day.day -1; i < this.destiny.day.day + daysInMonth -1; i++){
                 bed.days[i].background = 'none';
               }
+              this.setDestiny(null);
             }
           }else{
             this.moveDragingObject({
@@ -46,9 +49,10 @@ export default {
               roomIndex: this.destiny.roomIndex,
               initDay: this.destiny.day
             });
-          }
 
-          this.$emit('move', dragingObject);
+            this.setDestiny(null);
+            this.$emit('move', dragingObject);
+          }
         }
 
         //Extend
@@ -157,6 +161,17 @@ export default {
 
         this.cards.push(newCard);
         this.openModal();
+        this.$emit('create', newCard);
+        axios.post('http://127.0.0.1:8000/calendario/newReserva', {
+          cama: this.items[newCard.roomIndex].beds[newCard.bedIndex].id,
+          persona: 1,
+          fechaInicio: newCard.initDate,
+          fechaFin: newCard.endDate
+        }).then(res => {
+
+          console.log(res);
+        });
+        this.setDestiny(null);
         this.lengthCard = 0;
         this.startDay = null;
         this.endDay = null;
