@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-
+use Spipu\Html2Pdf\Html2Pdf;
 
 class DefaultController extends Controller
 {
@@ -44,5 +44,29 @@ class DefaultController extends Controller
   public function dashboardAction(Request $request)
   {
     return $this->redirectToRoute('homepage');
+  }
+
+  /**
+  * @Route("/test", name="test")
+  */
+  public function test(Request $request)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $reservaciones = [1,3,4,5];
+    $data =[];
+    foreach ($reservaciones as $id) {
+      $reservacion = $em->getRepository('AppBundle:Reservacion')->find($id); 
+      $servicios = $em->getRepository('AppBundle:ServiciosUs')
+      ->findBy(['persona'=>$reservacion->getPersona(),'reserva'=> $reservacion->getReserva()]); 
+      $data[]= [
+        'reservacion' => $reservacion ,
+        'persona' => $reservacion->getPersona(),
+        'servicios' => $servicios,
+      ];
+    }
+    $html2pdf = new Html2Pdf();
+    $html2pdf->writeHTML($this->renderView('AppBundle:PDF:factura.html.twig',['data'=>$data]));
+    $html2pdf->output('my_doc.pdf','D');
+    // return $this->render('AppBundle:PDF:factura.html.twig',['data'=>$data]);
   }
 }

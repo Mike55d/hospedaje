@@ -34,7 +34,7 @@
 						<td>{{factura.fecha|date('d-m-Y')}}</td>
 						<td>
 							<a href="" class="btn btn-sm btn-primary">detalles</a>
-							{% if factura.tipoPago == 'caja' %}<a href="" class="btn btn-sm btn-info">Reenviar</a>{% endif %}
+							{% if factura.tipoPago == 'caja' %}<a href="{{ path ('facturas_reenviar', {'id': factura.id})}}" class="btn btn-sm btn-info">Reenviar</a>{% endif %}
 						</td>
 					</tr>
 					{% endfor %}

@@ -74,7 +74,7 @@ class CalendarioController extends Controller
 	public function delAction(Request $request)
 	{
 		$em =$this->getDoctrine()->getManager(); 
-		$reservacion = $em->getRepository('AppBundle:Reservacion')->find($request->get('reservacion')); 
+		$reservacion = $em->getRepository('AppBundle:Reservacion')->find($request->get('reserva')); 
 		$em->remove($reservacion);
 		$em->flush();
 		return new JsonResponse('ok');

@@ -91,7 +91,7 @@ class CheckoutController extends Controller
     $fileName = md5(uniqid());
     $html2pdf->output($this->getParameter('pdfs').'/'.$fileName.'.pdf', 'F');
     $message = (new \Swift_Message('Notificacion'))
-    ->setSubject('Felicidades creaste tu lista de regalos')
+    ->setSubject('Factura pendiente')
     ->setFrom('info@financeirocheznous.org')
     ->setTo('mike.gonzalez55d@gmail.com')
     ->setBody(
