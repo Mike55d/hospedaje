@@ -32,4 +32,16 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
 		$query = $qb->getQuery();
 		return $query->getResult();
 	}
+
+	public function buscarGrupo($grupo){
+		$em = $this->getEntityManager(); 
+		$qb = $em->createQueryBuilder();
+		$qb->select('r')
+		->from('AppBundle:Reserva', 'r')
+		->join('r.user' ,'u')
+		->where('u.grupo = :grupo')
+		->setParameter('grupo','grupo');
+		$query = $qb->getQuery();
+		return $query->getResult();
+	}
 }

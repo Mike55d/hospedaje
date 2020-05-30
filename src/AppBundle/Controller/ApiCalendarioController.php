@@ -48,6 +48,52 @@ class ApiCalendarioController extends AbstractFOSRestController
 		return $this->handleView($view);
 	}
 
+
+	/**
+	* @Route("/grupos")
+	*/
+	public function grupos(Request $request)
+	{
+		$em =$this->getDoctrine()->getManager(); 
+		$grupos = $em->getRepository('AppBundle:Grupo')->findAll(); 
+		// $users = $em->getRepository('AppBundle:User')->findAll(); 
+		// $reservas = $em->getRepository('AppBundle:Reserva')->findByStatus('Reservado'); 
+		$view = $this->view($grupos,200);
+		return $this->handleView($view);
+	}
+
+	/**
+	* @Route("/solicitudesAprobadas")
+	*/
+	public function solicitudesAprobadas(Request $request)
+	{
+		$em =$this->getDoctrine()->getManager();
+		$aprobadas = $em->getRepository('AppBundle:Reserva')->buscarGrupo($request->get('grupo'));
+		// $grupos = $em->getRepository('AppBundle:Grupo')->findAll();
+		// $users = $em->getRepository('AppBundle:User')->findAll(); 
+		// $reservas = $em->getRepository('AppBundle:Reserva')->findByStatus('Reservado'); 
+		$view = $this->view($aprobadas,200);
+		return $this->handleView($view);
+	}
+
+	/**
+	* @Route("/personas")
+	*/
+	public function personas(Request $request)
+	{
+		$em =$this->getDoctrine()->getManager();
+		$personasReservas = $em->getRepository('AppBundle:ReservaPersona')->findByReserva($request->get('solicitud'));
+		$personas = [];
+		foreach ($personasReservas as $personasReserva) {
+			$personas[]= $personasReserva->getPersona();
+		}
+		// $grupos = $em->getRepository('AppBundle:Grupo')->findAll();
+		// $users = $em->getRepository('AppBundle:User')->findAll(); 
+		// $reservas = $em->getRepository('AppBundle:Reserva')->findByStatus('Reservado'); 
+		$view = $this->view($personas,200);
+		return $this->handleView($view);
+	}
+
 	/**
 	* @Route("/getFechaReserva")
 	*/
