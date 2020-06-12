@@ -75,13 +75,15 @@ class ReservasController extends Controller
 
     foreach ($personas as $persona) {
       $reservacion = $em->getRepository('AppBundle:Reservacion')->findOneByPersona($persona->getPersona()); 
+      if($reservacion){
         if (!$reservacion->getFactura()) {
           $checkoutCompleto = false;
         }
-      if ($persona->getPersona()->getMayorEdad()) {
-        $mayores++;
-      }else{
-        $menores++;
+        if ($persona->getPersona()->getMayorEdad()) {
+          $mayores++;
+        }else{
+          $menores++;
+        }
       }
     }
     return $this->render('AppBundle:Reservas:detallesReserva.html.twig', array(

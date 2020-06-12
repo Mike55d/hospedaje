@@ -1,4 +1,18 @@
 
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 4px;
+  background-color: darkslategray;
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: orchid;
+}
+
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
@@ -18,9 +32,23 @@
     top: 10px;
   }
 
-  .cards{
+  .pendiente{
+    background-color:#dd2c00;
+  }
 
+  .hospedado{
+    background-color: #0779e4;
+  }
+  .salida{
+    background-color: #2b580c;
+  }
+
+  .cards{
     position: absolute;
+  }
+
+  .info-card{
+    overflow: auto;
   }
 
   .table-wrapper{
@@ -80,12 +108,6 @@
     white-space: nowrap;
   }
 
-  .date{
-
-    display: inline;
-    padding: 0 10px;
-  }
-
   .modal-row {
 
   }
@@ -93,7 +115,22 @@
   .modal-row ul {
 
     list-style: none;
-    max-height: 300px;
+    max-height: 400px;
     overflow: auto;
     padding: 0;
+  }
+
+  .hover:hover{
+    background-color: gray;
+    cursor: pointer;
+  }
+
+  .active{
+    background-color: #40bad5;
+  }
+
+  .date{
+
+    display: inline;
+    padding: 0 10px;
   }

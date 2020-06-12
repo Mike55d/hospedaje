@@ -38,10 +38,22 @@ export default {
     onEdit(card){
 
       console.log(card);
+      axios.post('http://localhost:8000/calendario/editReserva', {
+        reservacion: card.id,
+        cama: this.items[card.roomIndex].beds[card.bedIndex].id,
+        persona: 1,
+        fechaInicio: card.initDate,
+        fechaFin: card.endDate
+      })
+      .then(res => {
+
+        console.log('edit');
+        console.log(res);
+      });
     },
     onRemove(card){
 
-      axios.post('http://127.0.0.1:8000/calendario/delReserva', {reserva: card.id})
+      axios.post('http://localhost:8000/calendario/delReserva', {reserva: card.id})
       .then(res => {
 
         console.log(res);
@@ -50,15 +62,46 @@ export default {
     },
 		onMove(dragingObject) {
 
-			console.log(dragingObject);
+      axios.post('http://localhost:8000/calendario/editReserva', {
+        reservacion: dragingObject.id,
+        cama: this.items[dragingObject.roomIndex].beds[dragingObject.bedIndex].id,
+        persona: 1,
+        fechaInicio: dragingObject.initDate,
+        fechaFin: dragingObject.endDate
+      })
+      .then(res => {
+
+        console.log(res);
+      });
 		},
 		onCreate(newCard) {
+      console.log('newCard',newCard);
+			axios.post('http://localhost:8000/calendario/newReserva', {
+        cama: this.items[newCard.roomIndex].beds[newCard.bedIndex].id,
+        persona: newCard.persona.id,
+        reserva: newCard.reserva.id,
+        fechaInicio: newCard.initDate,
+        fechaFin: newCard.endDate
+      }).then(res => {
 
-			console.log(newCard);
+        console.log(res);
+      });
 		},
 		onExtend(extendingObject) {
 
-			console.log(extendingObject);
+      console.log(extendingObject);
+      axios.post('http://localhost:8000/calendario/editReserva', {
+        reservacion: extendingObject.id,
+        cama: this.items[extendingObject.roomIndex].beds[extendingObject.bedIndex].id,
+        persona: 1,
+        fechaInicio: extendingObject.initDate,
+        fechaFin: extendingObject.endDate
+      })
+      .then(res => {
+
+        console.log('edit');
+        console.log(res);
+      });
     },
 	}
 }

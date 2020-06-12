@@ -34,74 +34,75 @@ export default new Vuex.Store({
     },
     origin: null,
     destiny: null,
-    items: [
-      {
-        id: 1,
-        number: 1,
-        beds: [
-          {
-            id: 1,
-            name: '1',
-            days: [],
-            top: 0
-          },
-          {
-            id: 2,
-            name: '2',
-            days: [],
-            top: 0
-          },
-          {
-            id: 3,
-            name: '3',
-            days: [],
-            top: 0
-          },
-        ]
-      },
-      {
-        id: 2,
-        number: 2,
-        beds: [
-          {
-            id: 4,
-            name: '4',
-            days: [],
-            top: 0
-          },
-          {
-            id: 5,
-            name: '5',
-            days: [],
-            top: 0
-          },
-          {
-            id: 6,
-            name: '6',
-            days: [],
-            top: 0
-          },
-        ]
-      },
-      {
-        id: 3,
-        number: 3,
-        beds: [
-          {
-            id: 7,
-            name: '7',
-            days: [],
-            top: 0
-          },
-          {
-            id: 8,
-            name: '8',
-            days: [],
-            top: 0
-          }
-        ]
-      }
-    ]
+    // items: [
+    //   {
+    //     id: 1,
+    //     number: 1,
+    //     beds: [
+    //       {
+    //         id: 1,
+    //         name: '1',
+    //         days: [],
+    //         top: 0
+    //       },
+    //       {
+    //         id: 2,
+    //         name: '2',
+    //         days: [],
+    //         top: 0
+    //       },
+    //       {
+    //         id: 3,
+    //         name: '3',
+    //         days: [],
+    //         top: 0
+    //       },
+    //     ]
+    //   },
+    //   {
+    //     id: 2,
+    //     number: 2,
+    //     beds: [
+    //       {
+    //         id: 4,
+    //         name: '4',
+    //         days: [],
+    //         top: 0
+    //       },
+    //       {
+    //         id: 5,
+    //         name: '5',
+    //         days: [],
+    //         top: 0
+    //       },
+    //       {
+    //         id: 6,
+    //         name: '6',
+    //         days: [],
+    //         top: 0
+    //       },
+    //     ]
+    //   },
+    //   {
+    //     id: 3,
+    //     number: 3,
+    //     beds: [
+    //       {
+    //         id: 7,
+    //         name: '7',
+    //         days: [],
+    //         top: 0
+    //       },
+    //       {
+    //         id: 8,
+    //         name: '8',
+    //         days: [],
+    //         top: 0
+    //       }
+    //     ]
+    //   }
+    // ]
+    items: []
   },
   mutations: {
 
@@ -140,8 +141,11 @@ export default new Vuex.Store({
     },
     setDragingObject(state, newDragingObject){
 
-      state.dragingObject = newDragingObject;
-      state.dragingObject.opacity = .3;
+      if(newDragingObject != null){
+
+        state.dragingObject = newDragingObject;
+        state.dragingObject.opacity = .3;
+      }
     },
     setExtendingObject(state, newExtendingObject){
 

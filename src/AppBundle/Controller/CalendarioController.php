@@ -8,10 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Reservacion;
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
-
 /**
 * @Route("calendario")
 */
@@ -40,15 +36,16 @@ class CalendarioController extends Controller
 		$reservacion = new Reservacion;
 		$cama = $em->getRepository('AppBundle:Cama')->find($request->get('cama')); 
 		$persona = $em->getRepository('AppBundle:Persona')->find($request->get('persona')); 
+		$reserva = $em->getRepository('AppBundle:Reserva')->find($request->get('reserva'));
 		$reservacion->setFechaInicio(new \Datetime($request->get('fechaInicio')));
 		$reservacion->setFechaFin(new \Datetime($request->get('fechaFin')));
 		$reservacion->setCama($cama);
-		$reservacion->setReserva(null);
+		$reservacion->setReserva($reserva);
 		$reservacion->setStatus('pendiente');
 		$reservacion->setPersona($persona);
 		$em->persist($reservacion);
 		$em->flush();
-		return new JsonResponse('ok');
+		return new JsonResponse(['id' =>$reservacion->getId()]);
 	}
 
 	/**

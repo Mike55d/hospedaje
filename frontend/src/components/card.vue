@@ -1,21 +1,25 @@
 <template>
-  <div class="cards"
+  <div v-bind:class="[card.status ? card.status : 'pendiente']" class="cards"
     :style="{
-    background: card.background,
     width: card.width + 'px',
     height: cardDimentions.height + 'px',
     top: card.top + 'px',
     left: card.left + 'px',
-    opacity: card.opacity
     }"
     @mousedown="boxDragStart(card)"
     @dblclick="test">
-    <span class="info-card noselect" :style="{
+    <div class="info-card noselect" :style="{
       'margin-left': card.infoMargin,
-      'font-size': '9px',
       display: 'block',
-      color: 'white'
-    }">{{card.initDate}}<br>{{ card.endDate }} <br>Sr mike</span>
+      color: 'white',
+      'font-size': '11px',
+      'padding': '5px',
+      'font-weight': 'bold'
+    }">
+    <div v-if="card.persona" style="height:38px;width:200px">
+      {{card.initDate}} | {{ card.endDate }}<br>{{card.persona.tratamiento}}. {{card.persona.nombre}} | {{card.persona.grupo.nombre}}
+    </div>
+    </div>
     <div @mousedown.stop="boxExtendRight($event, card)" class="card-right-btn"></div>
     <div @mousedown.stop="boxExtendLeft($event, card)" class="card-left-btn"></div>
   </div>

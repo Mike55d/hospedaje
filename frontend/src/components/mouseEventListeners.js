@@ -156,21 +156,22 @@ export default {
           initDate: `${this.date.year}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(this.date.month + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(dayRef.day.day)}`,
           endDate: `${this.date.year}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(this.date.month + 1)}-${new Intl.NumberFormat("en-IN", {minimumIntegerDigits: 2}).format(dayRef.day.day + this.lengthCard -1)}`,
           initDay: dayRef.day,
-          infoMargin: '10px'
+          infoMargin: '10px',
+          user: null
         };
 
         this.cards.push(newCard);
         this.openModal();
-        this.$emit('create', newCard);
-        axios.post('http://127.0.0.1:8000/calendario/newReserva', {
-          cama: this.items[newCard.roomIndex].beds[newCard.bedIndex].id,
-          persona: 1,
-          fechaInicio: newCard.initDate,
-          fechaFin: newCard.endDate
-        }).then(res => {
+        // this.$emit('create', newCard);
+        // axios.post('http://127.0.0.1:8000/calendario/newReserva', {
+        //   cama: this.items[newCard.roomIndex].beds[newCard.bedIndex].id,
+        //   persona: 1,
+        //   fechaInicio: newCard.initDate,
+        //   fechaFin: newCard.endDate
+        // }).then(res => {
 
-          console.log(res);
-        });
+        //   console.log(res);
+        // });
         this.setDestiny(null);
         this.lengthCard = 0;
         this.startDay = null;
@@ -179,224 +180,227 @@ export default {
     },
     mousePos(){
 
-      const EXTEND_BTN_WIDTH = 7;
+      if(this.items.length > 0){
 
-      let midHeightCard = this.cardDimentions.height / 2;
-      let midWidthCard = this.cardDimentions.width / 2;
-      let mousePos = this.mousePos;
+        const EXTEND_BTN_WIDTH = 7;
 
-      //Move
-      if(this.dragingObject != null){
+        let midHeightCard = this.cardDimentions.height / 2;
+        let midWidthCard = this.cardDimentions.width / 2;
+        let mousePos = this.mousePos;
 
-        let dragingObject = this.dragingObject;
+        //Move
+        if(this.dragingObject != null){
 
-        this.moveShadowDragingObject({
-          top: dragingObject.top + ((this.lastMousePos.y - mousePos.y) * -1),
-          left: dragingObject.left + ((this.lastMousePos.x - mousePos.x) * -1)
-        });
+          let dragingObject = this.dragingObject;
 
-        this.setLastMousePos(mousePos);
-        let mouseBoxPosTop = mousePos.y - this.mouseBox.top;
-        let mouseBoxPosBottom = mousePos.y + this.mouseBox.bottom;
-        let mouseBoxPosLeft = mousePos.x - this.mouseBox.left;
-        let mouseBoxPosRight = mousePos.x + this.mouseBox.right;
-        let destinyDays = [];
-        let busy = false;
-        let destiny = {
-          left: null,
-          top: null,
-          roomIndex: null,
-          bedIndex: null,
-          day: null
-        };
+          this.moveShadowDragingObject({
+            top: dragingObject.top + ((this.lastMousePos.y - mousePos.y) * -1),
+            left: dragingObject.left + ((this.lastMousePos.x - mousePos.x) * -1)
+          });
 
-        this.items.forEach((room, roomIndex) => {
+          this.setLastMousePos(mousePos);
+          let mouseBoxPosTop = mousePos.y - this.mouseBox.top;
+          let mouseBoxPosBottom = mousePos.y + this.mouseBox.bottom;
+          let mouseBoxPosLeft = mousePos.x - this.mouseBox.left;
+          let mouseBoxPosRight = mousePos.x + this.mouseBox.right;
+          let destinyDays = [];
+          let busy = false;
+          let destiny = {
+            left: null,
+            top: null,
+            roomIndex: null,
+            bedIndex: null,
+            day: null
+          };
 
-          room.beds.forEach((bed, bedIndex) => {
+          this.items.forEach((room, roomIndex) => {
 
-            if((
-              (mouseBoxPosTop <= (bed.top + midHeightCard)) &&
-              (mouseBoxPosBottom >= (bed.top + this.cardDimentions.height)) ||
-              ((mouseBoxPosBottom >= (bed.top + midHeightCard)) &&
-              mouseBoxPosTop <= bed.top))){
+            room.beds.forEach((bed, bedIndex) => {
 
-              destiny.top = bed.top;
-              destiny.roomIndex = roomIndex;
-              destiny.bedIndex = bedIndex;
+              if((
+                (mouseBoxPosTop <= (bed.top + midHeightCard)) &&
+                (mouseBoxPosBottom >= (bed.top + this.cardDimentions.height)) ||
+                ((mouseBoxPosBottom >= (bed.top + midHeightCard)) &&
+                mouseBoxPosTop <= bed.top))){
+
+                destiny.top = bed.top;
+                destiny.roomIndex = roomIndex;
+                destiny.bedIndex = bedIndex;
+
+                bed.days.forEach((day, dayIndex) => {
+
+                  day.background = 'none';
+
+                  if(
+                    mouseBoxPosLeft <= (day.left + midWidthCard -1) &&
+                    mouseBoxPosRight >= (day.left + midWidthCard +1)){
+
+                    day.background = 'red';
+                    destinyDays.push(day);
+                    if(day.busy != null && day.busy != dragingObject.id){
+
+                      busy = true;
+                    }
+                  }
+                });
+
+                if(destinyDays.length > 0) {
+
+                  if(mouseBoxPosLeft < bed.days[0].left) {
+
+                    let outDays = Math.round((bed.days[0].left - mouseBoxPosLeft) / this.cardDimentions.width);
+                    destiny.left = bed.days[0].left - (outDays * this.cardDimentions.width);
+                  }else{
+
+                    destiny.left = destinyDays[0].left;
+                  }
+
+                  destiny.day = destinyDays[0];
+                  destinyDays = [];
+                  return;
+                }
+              }
+
+              bed.days.forEach((day, index) => {
+
+                day.background = 'none';
+              });
+
+              return;
+
+            });
+          });
+
+          this.setDestiny({
+            left: destiny.left,
+            top: destiny.top,
+            roomIndex: destiny.roomIndex,
+            bedIndex: destiny.bedIndex,
+            day: destiny.day,
+            busy
+          });
+        }
+
+        //Extend
+        if(this.extendingObject.object != null){
+
+          let extendingObject = this.extendingObject.object;
+          let bed = this.items[extendingObject.roomIndex].beds[extendingObject.bedIndex];
+          let mouseBoxPos = (extendingObject.left + extendingObject.width);
+          let daysExtend = 0;
+          let initDayIndex = null;
+          let extendingObjectRight = extendingObject.left + (extendingObject.lengthCard * this.cardDimentions.width);
+          let extendingObjectLeft = extendingObject.initDay.left;
+          let busy = false;
+
+          switch(this.extendingObject.direction){
+
+            case 'right':
+
+              extendingObject.width += ((this.lastMousePos.x - mousePos.x) * -1);
+              bed.days.forEach((day, dayIndex) => {
+
+                day.background = 'none';
+
+                //extend
+                if(mousePos.x > extendingObjectRight){
+                  if(
+                    day.left >= extendingObjectRight &&
+                    (mousePos.x >= ((day.left + midWidthCard) - (EXTEND_BTN_WIDTH)))){
+
+                    day.background = 'yellow';
+                    if(day.busy != null){
+
+                      busy = true;
+                    }
+                    daysExtend++;
+                  }
+                // Shorten
+                } else {
+
+                  if(
+                    day.left < extendingObjectRight &&
+                    day.left >= extendingObject.left &&
+                    (day.left + midWidthCard) > mousePos.x &&
+                    (day.left + this.cardDimentions.width) > mousePos.x) {
+
+                      if((extendingObject.lengthCard + daysExtend) > 1){
+
+                        daysExtend--;
+                      }
+                  }
+                }
+
+              });
+              this.setLastMousePos(mousePos);
+              break;
+
+            case 'left':
+
+              var movement = (this.lastMousePos.x - mousePos.x);
+
+              if(movement < 0){
+
+                if(extendingObject.left <= (extendingObject.initDay.left + ((extendingObject.lengthCard -1) * this.cardDimentions.width))){
+
+                  extendingObject.width += movement;
+                  extendingObject.left -= movement;
+                }
+              }else{
+
+                if(mousePos.x < extendingObject.left){
+
+                  extendingObject.width += movement;
+                  extendingObject.left -= movement;
+                }
+              }
 
               bed.days.forEach((day, dayIndex) => {
 
                 day.background = 'none';
 
-                if(
-                  mouseBoxPosLeft <= (day.left + midWidthCard -1) &&
-                  mouseBoxPosRight >= (day.left + midWidthCard +1)){
+                // Extend
+                if(mousePos.x < extendingObjectLeft){
 
-                  day.background = 'red';
-                  destinyDays.push(day);
-                  if(day.busy != null && day.busy != dragingObject.id){
+                  if(
+                    (day.left + midWidthCard + EXTEND_BTN_WIDTH) > mousePos.x &&
+                    day.left < extendingObjectLeft ) {
 
-                    busy = true;
+                    day.background = 'yellow';
+                    daysExtend++;
+                    if(day.busy != null){
+
+                      busy = true;
+                    }
+                    if(initDayIndex == null) {
+
+                      initDayIndex = dayIndex;
+                    }
                   }
-                }
-              });
-
-              if(destinyDays.length > 0) {
-
-                if(mouseBoxPosLeft < bed.days[0].left) {
-
-                  let outDays = Math.round((bed.days[0].left - mouseBoxPosLeft) / this.cardDimentions.width);
-                  destiny.left = bed.days[0].left - (outDays * this.cardDimentions.width);
+                //Shorten
                 }else{
 
-                  destiny.left = destinyDays[0].left;
-                }
-
-                destiny.day = destinyDays[0];
-                destinyDays = [];
-                return;
-              }
-            }
-
-            bed.days.forEach((day, index) => {
-
-              day.background = 'none';
-            });
-
-            return;
-
-          });
-        });
-
-        this.setDestiny({
-          left: destiny.left,
-          top: destiny.top,
-          roomIndex: destiny.roomIndex,
-          bedIndex: destiny.bedIndex,
-          day: destiny.day,
-          busy
-        });
-      }
-
-      //Extend
-      if(this.extendingObject.object != null){
-
-        let extendingObject = this.extendingObject.object;
-        let bed = this.items[extendingObject.roomIndex].beds[extendingObject.bedIndex];
-        let mouseBoxPos = (extendingObject.left + extendingObject.width);
-        let daysExtend = 0;
-        let initDayIndex = null;
-        let extendingObjectRight = extendingObject.left + (extendingObject.lengthCard * this.cardDimentions.width);
-        let extendingObjectLeft = extendingObject.initDay.left;
-        let busy = false;
-
-        switch(this.extendingObject.direction){
-
-          case 'right':
-
-            extendingObject.width += ((this.lastMousePos.x - mousePos.x) * -1);
-            bed.days.forEach((day, dayIndex) => {
-
-              day.background = 'none';
-
-              //extend
-              if(mousePos.x > extendingObjectRight){
-                if(
-                  day.left >= extendingObjectRight &&
-                  (mousePos.x >= ((day.left + midWidthCard) - (EXTEND_BTN_WIDTH)))){
-
-                  day.background = 'yellow';
-                  if(day.busy != null){
-
-                    busy = true;
-                  }
-                  daysExtend++;
-                }
-              // Shorten
-              } else {
-
-                if(
-                  day.left < extendingObjectRight &&
-                  day.left >= extendingObject.left &&
-                  (day.left + midWidthCard) > mousePos.x &&
-                  (day.left + this.cardDimentions.width) > mousePos.x) {
+                  if(
+                    (day.left + midWidthCard) < mousePos.x &&
+                    day.left >= extendingObjectLeft) {
 
                     if((extendingObject.lengthCard + daysExtend) > 1){
 
                       daysExtend--;
+                      initDayIndex = dayIndex +1;
                     }
-                }
-              }
-
-            });
-            this.setLastMousePos(mousePos);
-            break;
-
-          case 'left':
-
-            var movement = (this.lastMousePos.x - mousePos.x);
-
-            if(movement < 0){
-
-              if(extendingObject.left <= (extendingObject.initDay.left + ((extendingObject.lengthCard -1) * this.cardDimentions.width))){
-
-                extendingObject.width += movement;
-                extendingObject.left -= movement;
-              }
-            }else{
-
-              if(mousePos.x < extendingObject.left){
-
-                extendingObject.width += movement;
-                extendingObject.left -= movement;
-              }
-            }
-
-            bed.days.forEach((day, dayIndex) => {
-
-              day.background = 'none';
-
-              // Extend
-              if(mousePos.x < extendingObjectLeft){
-
-                if(
-                  (day.left + midWidthCard + EXTEND_BTN_WIDTH) > mousePos.x &&
-                  day.left < extendingObjectLeft ) {
-
-                  day.background = 'yellow';
-                  daysExtend++;
-                  if(day.busy != null){
-
-                    busy = true;
-                  }
-                  if(initDayIndex == null) {
-
-                    initDayIndex = dayIndex;
                   }
                 }
-              //Shorten
-              }else{
+              });
+              this.setLastMousePos(mousePos);
+              break;
+          }
 
-                if(
-                  (day.left + midWidthCard) < mousePos.x &&
-                  day.left >= extendingObjectLeft) {
+          if(!busy){
 
-                  if((extendingObject.lengthCard + daysExtend) > 1){
-
-                    daysExtend--;
-                    initDayIndex = dayIndex +1;
-                  }
-                }
-              }
-            });
-            this.setLastMousePos(mousePos);
-            break;
-        }
-
-        if(!busy){
-
-          this.daysExtend = daysExtend;
-          this.extendingObject.initDay = initDayIndex != null && initDayIndex != this.date.monthDays ? bed.days[initDayIndex] : this.extendingObject.object.initDay;
+            this.daysExtend = daysExtend;
+            this.extendingObject.initDay = initDayIndex != null && initDayIndex != this.date.monthDays ? bed.days[initDayIndex] : this.extendingObject.object.initDay;
+          }
         }
       }
     }

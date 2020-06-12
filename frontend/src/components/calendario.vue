@@ -2,15 +2,15 @@
 <div class="calendario">
 
   <div class="controls-container">
-		<controls></controls>
+		<controls @change-date="changeDate"></controls>
 	</div>
   <div class="table-wrapper row">
-    <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3" style="padding-right: 0">
-      <table class="table table-bordered">
+    <div class="col-md-2 col-sm-2 col-xs-2 col-lg-1" style="padding-right: 0">
+      <table class="table table-bordered table-condensed">
         <thead>
           <tr>
-            <th>Rooms</th>
-            <th>Beds</th>
+            <th>CU</th>
+            <th>CA</th>
           </tr>
         </thead>
         <tbody>
@@ -23,7 +23,7 @@
         </tbody>
       </table>
     </div>
-    <div class="col-md-9 col-sm-9 col-xs-9 col-lg-9" style="padding-left: 0; position: static">
+    <div class="col-md-10 col-sm-10 col-xs-10 col-lg-11" style="padding-left: 0; position: static">
       <div @mousemove="mouseMove" @scroll="onScroll" id="calendar-container">
         <table class="table table-bordered">
           <thead>
@@ -54,10 +54,12 @@
     </div>
   </div>
 
-  <card-modal @edit-card="onEditCard" @remove="remove" :show="showCardModal" :card="editCard"></card-modal>
+  <card-modal @edit-card="onEditCard" @cancel="cancel" @remove="remove" :show="showCardModal" :card="editCard"></card-modal>
 
-  <button @click="scrollLeft">Left</button>
-  <button @click="scrollRight">Right</button>
+  <div class="col-md-12">
+    <button class="btn btn-info float-left" @click="scrollLeft">&lt;</button>
+    <button class="btn btn-info" style="float:right;" @click="scrollRight">&gt;</button>
+  </div>
 </div>
 </template>
 
@@ -109,7 +111,7 @@ export default {
 			year
 		});
 
-		this.setItemDays();
+		// this.setItemDays();
 	},
 	mounted(){
 
@@ -136,50 +138,66 @@ export default {
 			this.setDragingObject(null);
     });
 
-    let data = {
-      mes: this.date.month + 1,
-      año: this.date.year
-    }
-
-    let cards = [];
-
-    axios.post('http://127.0.0.1:8000/api/calendario/reservaciones', data)
-		.then(res => {
-
-      console.log(res);
-      let items = [];
-      res.data.forEach((item, indexItem) => {
-
-        let beds = [];
-
-        item.camas.forEach((bedReserv, indexBedREserv) => {
-
-          beds.push({
-            id: bedReserv.cama.id,
-            name:bedReserv.cama.numero,
-            days: [],
-            reservations: bedReserv.reservaciones
-          });
-        });
-
-        items.push({
-          id: item.id,
-          number: item.cuarto.numero,
-          beds
-        });
-      });
-
-      this.setItems(items);
-      this.setItemDays();
-      this.initItemDays();
-      this.drawCards();
-		});
-
+    this.changeDate();
 		this.isMounted = true;
 
 	},
 	methods: {
 
+    changeDate(){
+
+      let data = {
+        mes: this.date.month + 1,
+        año: this.date.year
+      }
+
+      let cards = [];
+
+      axios.post('http://localhost:8000/api/calendario/reservaciones', data)
+      .then(res => {
+        console.log(res);
+        let items = [];
+        res.data.forEach((item, indexItem) => {
+
+          let beds = [];
+
+          item.camas.forEach((bedReserv, indexBedREserv) => {
+
+            beds.push({
+              id: bedReserv.cama.id,
+              name:bedReserv.cama.numero,
+              days: [],
+              reservations: bedReserv.reservaciones
+            });
+          });
+
+          items.push({
+            id: item.id,
+            number: item.cuarto.numero,
+            beds
+          });
+        });
+
+        this.setItems(items);
+        this.setItemDays();
+        setTimeout(() => {
+
+          this.initItemDays();
+          this.drawCards();
+        }, 1000);
+      })
+      .catch(e => {
+
+        console.log(e);
+      });
+    },
+    cancel(card){
+
+      if(card.user == null){
+
+        this.cards.pop();
+      }
+    },
     remove(card){
 
       let index = this.cards.indexOf(card);
@@ -195,7 +213,13 @@ export default {
 
       let index = this.cards.indexOf(oldCard);
       this.cards.splice(index, 1, newCard);
-      this.$emit('edit', newCard);
+      if(oldCard.user != null){
+
+        this.$emit('edit', newCard);
+      }else{
+
+        this.$emit('create', newCard)
+      }
     },
     scrollRight(){
 
@@ -236,22 +260,41 @@ export default {
             let initDay = initDate.getTime() >= monthFirstDate.getTime() ? bed.days[initDate.getDate() -1] : bed.days[monthFirstDate.getDate() -1];
             let initMonthDay = initDate.getTime() < monthFirstDate.getTime() ? monthFirstDate.getDate() : initDate.getDate();
             let endMonthDay = endDate.getTime() > monthLastDate.getTime() ? monthLastDate.getDate() : endDate.getDate();
+            let daysOutMonth = 0;
+            let infoMargin = 10;
             let left = initDay.left;
+
+            if(initDate.getTime() < monthFirstDate.getTime()){
+
+              daysOutMonth = (monthFirstDate.getTime() - initDate.getTime()) / MS_OF_THE_DAY;
+              infoMargin += daysOutMonth * this.cardDimentions.width;
+            }
+
+            if(daysOutMonth > 0){
+
+              left = initDay.left - (daysOutMonth * this.cardDimentions.width);
+            }
+
+            console.log(daysOutMonth);
 
             cards.push({
               id: reserv.id,
+              persona:reserv.persona,
+              grupo:reserv.persona.grupo,
               name: 'Card x' + this.cards.length,
               lengthCard,
-              background: 'blue',
+              status:reserv.status,
               width: this.cardDimentions.width * lengthCard,
               left,
               top: bed.top,
-              opacity: 1,
+              opacity: .7,
               roomIndex: roomIndex,
               bedIndex: bedIndex,
               initDate: reserv.fechaInicio.substring(0, 10),
               endDate: reserv.fechaFin.substring(0, 10),
-              initDay
+              initDay,
+              infoMargin: infoMargin + 'px',
+              user: 1
             });
 
             for(let i = initMonthDay -1; (i < endMonthDay); i++){
@@ -292,12 +335,16 @@ export default {
 		},
 		initItemDays(){
 
-			let daysObjects = [...document.getElementsByClassName('day')].slice(0, this.date.monthDays);
-
+      console.log('initItemDays');
+      let daysObjects = [...document.getElementsByClassName('day')].slice(0, this.date.monthDays);
+      
+      console.log(daysObjects);
 			let cardDimentions = {
 				width: daysObjects[0].offsetWidth,
 				height: daysObjects[0].offsetHeight
-			}
+      }
+      
+      console.log(cardDimentions);
 
       this.setCardDimentions(cardDimentions);
 
@@ -394,14 +441,14 @@ export default {
 	},
 	watch:{
 
-		date(){
+		// date(){
 
-			if(this.isMounted){
+		// 	if(this.isMounted){
 
-				this.setItemDays();
-				this.initItemDays();
-			}
-    }
+		// 		this.setItemDays();
+		// 		this.initItemDays();
+		// 	}
+    // }
 	}
 }
 </script>

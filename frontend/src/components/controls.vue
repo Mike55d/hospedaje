@@ -37,6 +37,8 @@ export default {
         month,
         monthDays
       });
+
+      this.$emit('change-date');
     },
     nextMonth() {
 
@@ -59,6 +61,8 @@ export default {
         month,
         monthDays
       });
+
+      this.$emit('change-date');
     }
   }
 }
