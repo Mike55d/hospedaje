@@ -1,22 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    {% block stylesheets %}{% endblock %}
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset ('ample/images/favicon.png')}}">
-    <link href="{{ asset ('ample/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
-    <!-- animation CSS -->
-    <link href="{{ asset ('ample/css/animate.css')}}" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{{ asset ('ample/css/style.css')}}" rel="stylesheet">
-    <!-- color CSS -->
-    <link href="{{ asset ('ample/css/colors/blue.css')}}" id="theme"  rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset ('css/styles.css')}}">
-    
+<meta charset="UTF-8" />
+<title>{% block title %}Welcome!{% endblock %}</title>
+{% block stylesheets %}{% endblock %}
+<link rel="icon" type="image/png" sizes="16x16" href="{{ asset ('ample/images/favicon.png')}}">
+<link href="{{ asset ('ample/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+<!-- animation CSS -->
+<link href="{{ asset ('ample/css/animate.css')}}" rel="stylesheet">
+<!-- Custom CSS -->
+<link href="{{ asset ('ample/css/style.css')}}" rel="stylesheet">
+<!-- color CSS -->
+<link href="{{ asset ('ample/css/colors/blue.css')}}" id="theme"  rel="stylesheet">
+<link rel="stylesheet" href="{{ asset ('css/styles.css')}}">
 </head>
 <body>
-    {% block body %}{% endblock %}
+<section id="wrapper" class="login-register">
+	<div class="login-box login-sidebar">
+		<div class="white-box">
+        {% for flash_message in app.session.flashbag.get('notice') %}
+<div class="alert alert-success text-center noPadding" role="alert">
+    <h6 class=" text-white font-bold">{{ flash_message }}</h6>
+</div>
+{% endfor %}
+{% for flash_message in app.session.flashbag.get('error') %}
+<div class="alert alert-danger text-center noPadding" role="alert">
+    <h6 class=" text-white font-bold">{{ flash_message }}</h6>
+</div>
+{% endfor %}
+            {% block body %}{% endblock %}
+		</div>
+	</div>
+</section>
     <!-- jQuery -->
     <script src="{{ asset ('ample/bower_components/jquery/dist/jquery.min.js')}}"></script>
     <!-- Bootstrap Core JavaScript -->

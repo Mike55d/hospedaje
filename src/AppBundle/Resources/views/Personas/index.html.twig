@@ -1,13 +1,6 @@
 {% extends "::base.html.twig" %}
 {% block title %}Mi Grupo{% endblock %}
 
-{% block body %}
-{% for flash_message in app.session.flashbag.get('notice') %}
-    <div class="flash-notice">
-        {{ flash_message }}
-    </div>
-{% endfor %}
-
 	<div class="white-box">
 		<a href="{{ path ('personas_new')}}" class="btn btn-success">Nuevo</a>
 		<div class="panel-body">

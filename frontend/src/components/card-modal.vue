@@ -3,58 +3,95 @@
 <div>
   <div class="modal fade bs-example-modal-lg" id="my-modal" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div v-bind:class="[(card && card.persona) ? 'modal-md':'modal-size']" class="modal-dialog ">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" id="close-modal" data-dismiss="modal" style="display: none">x</button>
           <button type="button" class="close" @click="cancel" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="myLargeModalLabel">Large modal</h4>
+          <h4 v-if="card && !card.persona" class="modal-title text-center" id="myLargeModalLabel">Solicitudes Aprobadas</h4>
+          <h4 v-else class="modal-title text-center" id="myLargeModalLabel">Editar Reservacion</h4>
         </div>
         <div class="modal-body">
-          <div class="row modal-row">
-            <div class="col-md-3 col-sm-3">
-              <h2>Grupos</h2>
-              <ul class="filters">
-                <li v-bind:class="[grupo.id == grupoS.id ? 'active':'']" class="hover" @click="getSolicitudes(grupo)" v-for="(grupo, index) of grupos" :key="'grupo-' + index">{{ grupo.nombre }}</li>
-              </ul>
+          <div  class="row modal-row">
+            <div v-if="card && !card.persona" class="col-md-3 col-sm-3">
+              <div  class="well well-sm card-modal">
+                  <h2 class="font-bold text-center">Grupos</h2>
+                  <ul class="filters font-bold">
+                    <li v-bind:class="[grupo.id == grupoS.id ? 'selected':'']" class="hover" @click="getSolicitudes(grupo)" v-for="(grupo, index) of grupos" :key="'grupo-' + index">{{ grupo.nombre }}</li>
+                  </ul>
+              </div>
             </div>
-            <div class="col-md-3 col-sm-3">
-              <h2>Solicitudes</h2>
-              <ul class="solicitudes">
-                <li v-bind:class="[solicitud.id == solicitudS.id ? 'active':'']" class="hover" @click="getPersonas(solicitud)" v-for="(solicitud, index) of solicitudesAprovadas" :key="'solicitud-' + index"> id: {{ solicitud.id }} fecha: {{ solicitud.fecha |formatDate}}</li>
-              </ul>
+            <div v-if="card && !card.persona" class="col-md-3 col-sm-3">
+              <div  class="well well-sm card-modal">
+              <h2 class="text-center font-bold">Solicitudes</h2>
+                <h3 v-if="solicitudesAprovadas && solicitudesAprovadas.length == 0 ">No hay solicitudes</h3>
+                <ul v-if="solicitudesAprovadas && solicitudesAprovadas.length" class="solicitudes font-bold">
+                  <li  v-bind:class="[solicitud.id == solicitudS.id ? 'selected':'']" class="hover" @click="getPersonas(solicitud)" v-for="(solicitud, index) of solicitudesAprovadas" :key="'solicitud-' + index"> id: {{ solicitud.id }} fecha: {{ solicitud.fecha |formatDate}}</li>
+                </ul>
+              </div>
             </div>
-            <div class="col-md-3 col-sm-3">
-              <h2>Personas</h2>
-              <ul class="users">
-                <li v-bind:class="[persona.id == personaS.id ? 'active':'']" class="hover" @click="selectPersona(persona)" v-for="(persona, index) of personas" :key="'persona-' + index">{{ persona.id }} {{persona.tratamiento}}. {{ persona.nombre }}</li>
+            <div v-if="card && !card.persona" class="col-md-3 col-sm-3">
+              <div  class="well well-sm card-modal">
+              <h2 class="text-center font-bold">Personas</h2>
+              <h3 v-if="personas && personas.length == 0 ">No hay personas por asignar</h3>
+              <ul v-if="personas && personas.length" class="users font-bold">
+                <li v-bind:class="[persona.id == personaS.id ? 'selected':'']" class="hover" @click="selectPersona(persona)" v-for="(persona, index) of personas" :key="'persona-' + index">{{ persona.id }} {{persona.tratamiento}}. {{ persona.nombre }}</li>
               </ul>
+              </div>
             </div>
-            <div class="col-md-3 col-sm-3">
-              <h2>User Data</h2>
+            <div v-bind:class="[(card && card.persona) ? 'col-md-12':'col-md-3 ']">
+              <div class="well well-sm card-datos">
+              <h2 class="font-bold">Datos</h2>
               <ul v-if="personaS" class="user-data">
-                <li>ID: {{personaS.id}}</li>
-                <li>TRATAMIENTO: {{personaS.tratamiento}}</li>
-                <li>NOMBRE: {{personaS.nombre}}</li>
-                <li>USER: {{personaS.user.username}}</li>
-                <li>GRUPO: {{personaS.grupo.nombre}}</li>
+                <li class="font-bold">ID: {{personaS.id}}</li>
+                <li class="font-bold">TRATAMIENTO: {{personaS.tratamiento}}</li>
+                <li class="font-bold">NOMBRE: {{personaS.nombre}}</li>
+                <li class="font-bold">USER: {{personaS.user.username}}</li>
+                <li class="font-bold">GRUPO: {{personaS.grupo.nombre}}</li>
               </ul>
-              <h2>Dates</h2>
+              <ul v-else-if="card && card.persona" class="user-data">
+                <li class="font-bold">ID: {{card.persona.id}}</li>
+                <li class="font-bold">TRATAMIENTO: {{card.persona.tratamiento}}</li>
+                <li class="font-bold">NOMBRE: {{card.persona.nombre}}</li>
+                <li class="font-bold">USER: {{card.persona.user.username}}</li>
+                <li class="font-bold">GRUPO: {{card.persona.grupo.nombre}}</li>
+              </ul>
+              </div>
+              <div class="well well-sm card-datos">
+              <h2 class="font-bold">Fechas</h2>
               <div class="form-group">
-                <label>Initial date</label>
+                <label>Facha de llegada</label>
                 <input class="form-control" v-model="initialDate" type="date">
               </div>
               <div class="form-group">
-                <label>Final date</label>
+                <label>Fecha de salida</label>
                 <input class="form-control" v-model="endDate" type="date">
               </div>
+              </div>
+            </div>
+            <div v-if="card && card.persona" class="well weel-sm col-md-12">
+              <select @change="onChangeStatus" v-model="card.status" class="form-control" name="" id="">
+                <option value="pendiente">Pendiente</option>
+                <option value="hospedado">Hospedado</option>
+              </select>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-default" @click="cancel">Cancel</button>
-          <button class="btn btn-default" @click="editCard">Accept</button>
-          <button class="btn btn-danger" @click="remove">Delete</button>
+          <div v-bind:class="[(card && card.persona) ? 'col-md-12':'col-md-4 col-md-offset-8']" class="row">
+            <div class="col-md-2">
+              <button class="btn btn-danger btn-sm center-block mt-5" @click="remove">Borrar</button>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-info btn-sm center-block mt-5" @click="cancel">Cancelar</button>
+            </div>
+            <div class="col-md-6">
+              <button v-bind:class="[(card && card.persona)?'btn-warning':'btn-success']" class="btn  btn-block center-block " @click="editCard">
+                <span v-if="card && !card.persona">Crear</span>
+                <span v-else>Editar</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -71,6 +108,11 @@
 
 import storeFunctions from './storeFunctions';
 import moment from 'moment';
+import $ from 'jquery'
+import '../../js/jquery.blockUI';
+import {rutaApi} from './rutas';
+
+
 const axios = require('axios').default;
 
 export default {
@@ -87,21 +129,23 @@ export default {
         {id: 1, nombre:'Groups'},
         {id: 2, nombre: 'Users'}
       ],
-      personas: [],
+      personas:null,
       localCard: null,
       initialDate: null,
       endDate: null,
       user: null,
       grupoS:0,
       solicitudS:0,
-      solicitudesAprovadas:[],
+      solicitudesAprovadas:null,
       personaS:0,
-      persona:0,
+      oldStatus:null,
+      statusChange:false,
     }
   },
   mounted(){
-
-    axios.get('http://localhost:8000/api/calendario/grupos')
+    moment.locale('es'); // 'en'
+    console.log(moment().month(0).format('MMMM'))
+    axios.get(rutaApi+'api/calendario/grupos')
       .then(res => {
 
         this.grupos = res.data;
@@ -110,8 +154,8 @@ export default {
   methods: {
 
     cancel(){
-
       console.log('thiscard', this.card);
+      this.card.status = this.oldStatus;
       if(this.card.user == null){
 
         console.log('test');
@@ -121,8 +165,18 @@ export default {
 
       this.closeModal();
     },
-    
-
+    showLoader(){
+      $('.modal-size').block({
+        message:'Cargando',
+        css:{
+          border: 'none',
+          padding: '15px'
+        }
+      })
+    },
+    onChangeStatus(){
+      this.statusChange = true;
+    },
     clearSpace(){
 
       let monthFirstDate = new Date(this.date.year, this.date.month, 1);
@@ -140,28 +194,34 @@ export default {
       }
     },
     getSolicitudes(grupo){
+      this.showLoader();
+      this.personas = null;
       this.grupoS = grupo;
-      axios.get(`http://localhost:8000/api/calendario/solicitudesAprobadas`, 
+      axios.get(rutaApi+`api/calendario/solicitudesAprobadas`, 
       {params:{grupo: grupo.id}}
       )
         .then(res => {
+          $('.modal-size').unblock();
           console.log(res);
           // this.grupos = res.data;
           this.solicitudesAprovadas = res.data;
         }).catch(e => {
+          $('.modal-size').unblock();
           console.log(e);
         });
     },
     getPersonas(solicitud){
+      this.showLoader();
       this.solicitudS = solicitud;
-      axios.get(`http://localhost:8000/api/calendario/personas`,
+      axios.get(rutaApi+`api/calendario/personas`,
       {params:{solicitud: solicitud.id}}
       )
         .then(res => {
+          $('.modal-size').unblock();
           console.log(res);
           this.personas = res.data;
         }).catch(e => {
-
+          $('.modal-size').unblock();
           console.log(e);
         });
     },
@@ -182,20 +242,27 @@ export default {
 
       this.closeModal();
     },
+    clearModal(){
+    this.personas= 0;
+    this.personaS=0;
+    this.solicitudS= 0;
+    this.solicitudesAprovadas= 0;
+    this.grupoS= 0;
+    this.statusChange = false;
+    },
     openModal(){
-
 			let btnModal = document.getElementById('open-modal');
 			btnModal.click();
 		},
 		closeModal(){
-
 			let btnModal = document.getElementById('close-modal');
-			btnModal.click();
+      btnModal.click();
+      this.clearModal();
     },
     editCard(){
       this.localCard.persona = this.personaS;
       this.localCard.reserva = this.solicitudS;
-      if(this.card.initDate != this.initialDate || this.card.endDate != this.endDate){
+      if(this.card.initDate != this.initialDate || this.card.endDate != this.endDate || this.statusChange ){
 
         const MS_OF_THE_DAY = (1000 * 3600 * 24);
         let initDateSplit = this.initialDate.split('-');
@@ -277,15 +344,6 @@ export default {
       }else{
         if(this.card.user == null){
           this.localCard.user = 1;
-          // axios.post('http://localhost:8000/calendario/newReserva', {
-          //   cama: this.items[this.localCard.roomIndex].beds[this.localCard.bedIndex].id,
-          //   persona: 1,
-          //   fechaInicio: this.localCard.initDate,
-          //   fechaFin: this.localCard.endDate
-          // }).then(res => {
-
-          //   console.log(res);
-          // });
           this.$emit('edit-card', this.card, this.localCard);
           this.closeModal();
         }
@@ -295,10 +353,10 @@ export default {
   watch: {
 
     show(){
-
       this.localCard = {...this.card};
       this.initialDate = this.card.initDate;
       this.endDate = this.card.endDate;
+      this.oldStatus = (this.card && this.card.status) ? this.card.status : null;
       this.openModal();
     }
   },

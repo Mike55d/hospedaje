@@ -1,30 +1,21 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}Editar Pregunta{% endblock %}
-
 {% block body %}
-    <a href="/faqs">Atras</a>
-<h1>Faq</h1>
-    <div class="tab-container">
+<a class="btn btn-info" href="/faqs">Atras</a>
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <div class="white-box">
+      <div class="panel-body">
+        <h1 class="font-bold text-center">Editar FAQ</h1><br>
         {{form_start(form)}}
-            <div>
-                <div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            {{form_row(form.pregunta,{'value':datos.pregunta})}}
-                            <!--input type="text" class="form-control" id="name" placeholder="Name"-->
-                        </div>
-                        <div class="form-group col-md-6">
-                            <!--input type="email" class="form-control" id="email" placeholder="Email"-->
-                            {{form_row(form.respuesta,{'value':datos.respuesta})}}
-                        </div>
-                    </div>
-                    <hr>
-                </div>
-                <div class="form-group col-md-12">
-                    <button class="btn btn-info waves-effect waves-light">Editar</button>
-                </div>
-            </div>
+        {{form_row(form.pregunta)}}
+        <br>
+        {{form_row(form.respuesta)}}
+        <br>
+        <button class="btn btn-info waves-effect waves-light">Editar</button>
         {{form_end(form)}}
       </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

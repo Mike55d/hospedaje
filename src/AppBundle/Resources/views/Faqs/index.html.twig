@@ -1,42 +1,68 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}Faqs{% endblock %}
 {% block body %}
-<h1>Faqs</h1>
-
-    <div class="white-box">
-        <a href="{{ path ('faqs')}}" class="btn btn-success">Nueva</a>
-        <div class="panel-body">
-            <table class="myTable">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Pregunta</th>
-                        <th>Respuesta</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for fq in faqs %}
-                    <tr>
-                        <td>{{fq.id}}</td>
-                        <td>{{fq.pregunta}}</td>
-                        <td>{{fq.respuesta}}</td>
-                        <td>
-                            <a href="{{ path ('edita_Faq',{'id': fq.id})}}" class="btn btn-warning">Editar</a>
-                            <a href="{{ path ('elimina_faq',{'id': fq.id})}}" class="btn btn-danger">Eliminar</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
+	<div class="row">
+  <div class="col-md-12">
+  <div class="white-box">
+    <h1 class="font-bold">Preguntas frecuentes</h1>
+		<a href="{{ path ('faqs_new')}}" class="btn btn-success">Nuevo</a>
+		<div class="panel-body">
+			<table class="myTable">
+				<thead>
+					<tr>
+						<th>id</th>
+						<th>Pregunta</th>
+						<th>Respuesta</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for faq in faqs %}
+					<tr>
+						<td>{{faq.id}}</td>
+						<td>{{faq.pregunta}}</td>
+						<td>{{faq.respuesta}}</td>
+						<td>
+							<a href="{{ path ('faqs_edit',{'id': faq.id})}}" class="btn btn-sm btn-warning">Editar</a>
+							<a onclick="eliminar({{faq.id}})" class="btn btn-sm btn-danger">Eliminar</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div></div>
+  </div>
+<div class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Eliminar registro</h4>
+      </div>
+      <div class="modal-body">
+        <p>Sguro que desea eliminar este registro ?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      	<a href="" id="ruta" type="button" class="btn btn-danger">Eliminar</a>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% endblock %}
 
 {% block javascripts %}
 <script>
 $('.myTable').DataTable();
+
+function eliminar(id){
+	var ruta = `${id}/del`
+	$('#ruta').attr('href',ruta);
+	$('.modal').modal('toggle');
+}
+
+
+;
 </script>
 {% endblock %}

@@ -1,6 +1,9 @@
 <template>
 <div class="calendario">
-
+  <div v-bind:class="[!cargando ?'hide':'' ]" class="loader">
+    <div class="screen"></div>
+    <h4 class="message">Cargando...</h4>
+  </div>
   <div class="controls-container">
 		<controls @change-date="changeDate"></controls>
 	</div>
@@ -67,7 +70,9 @@
 
 import storeFunctions from './storeFunctions';
 import mouseEventListeners from './mouseEventListeners';
+import {rutaApi} from './rutas'
 import $ from 'jquery';
+
 const axios = require('axios').default;
 
 export default {
@@ -95,7 +100,8 @@ export default {
       scrollDays: 0,
       scrollLimit: 0,
       showCardModal: false,
-      editCard: null
+      editCard: null,
+      cargando:false,
 		}
 	},
 	beforeMount(){
@@ -114,7 +120,7 @@ export default {
 		// this.setItemDays();
 	},
 	mounted(){
-
+    // this.showModal();
     this.setContainer(document.getElementById('calendar-container'));
     this.container.scroll(0, 0);
     this.scrollLimit = this.container.scrollWidth - this.container.clientWidth;
@@ -137,23 +143,20 @@ export default {
 
 			this.setDragingObject(null);
     });
-
     this.changeDate();
 		this.isMounted = true;
 
 	},
 	methods: {
-
     changeDate(){
-
+      this.cargando = true;
       let data = {
         mes: this.date.month + 1,
         año: this.date.year
       }
 
       let cards = [];
-
-      axios.post('http://localhost:8000/api/calendario/reservaciones', data)
+      axios.post(rutaApi+'api/calendario/reservaciones', data)
       .then(res => {
         console.log(res);
         let items = [];
@@ -181,15 +184,24 @@ export default {
         this.setItems(items);
         this.setItemDays();
         setTimeout(() => {
-
           this.initItemDays();
           this.drawCards();
+          this.cargando = false;
         }, 1000);
       })
       .catch(e => {
-
+        this.cargando = false;
         console.log(e);
       });
+    },
+    showModal(){
+      $('.calendario').block({
+        message:'Cargando',
+        css:{
+          border: 'none',
+          padding: '15px'
+        }
+      })
     },
     cancel(card){
 
@@ -198,6 +210,7 @@ export default {
         this.cards.pop();
       }
     },
+    
     remove(card){
 
       let index = this.cards.indexOf(card);
@@ -205,16 +218,17 @@ export default {
       this.cards.splice(index, 1);
     },
     edit(card){
-
+      console.log('edit card',card)
       this.editCard = card;
       this.showCardModal = !this.showCardModal;
     },
     onEditCard(oldCard, newCard){
-
       let index = this.cards.indexOf(oldCard);
       this.cards.splice(index, 1, newCard);
       if(oldCard.user != null){
-
+      newCard.persona = oldCard.persona;
+      newCard.status = oldCard.status;
+      newCard.reserva = oldCard.reserva;
         this.$emit('edit', newCard);
       }else{
 

@@ -1,7 +1,7 @@
 <template>
   <div class="controls">
     <button class="btn btn-primary btn-prev-month" type="button" @click="previusMonth">&lt;</button>
-    <h3 class="date">Year {{ date.year }}, Month {{ date.month }}, MonthDays {{ date.monthDays }}</h3>
+    <h3 class="date">{{ date.month |formatMonth }} de {{ date.year }} ({{ date.monthDays }} dias)  </h3>
     <button class="btn btn-primary btn-next-month" type="button" @click="nextMonth">&gt;</button>
   </div>
 </template>
@@ -9,6 +9,8 @@
 <script>
 
 import storeFunctions from './storeFunctions';
+import moment from 'moment';
+
 
 export default {
   mixins: [
@@ -63,6 +65,14 @@ export default {
       });
 
       this.$emit('change-date');
+    }
+  },
+  filters:{
+    formatMonth: function(value){
+      moment.locale('es');
+      if (value) {
+        return moment().month(value).format('MMMM').toUpperCase();
+      }
     }
   }
 }

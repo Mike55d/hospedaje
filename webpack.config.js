@@ -5,7 +5,7 @@ module.exports = {
   entry: './frontend/src/index.js',
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'web/calendario'),
+    path: path.resolve(__dirname, 'web/calendar'),
   },
   module: {
     rules: [

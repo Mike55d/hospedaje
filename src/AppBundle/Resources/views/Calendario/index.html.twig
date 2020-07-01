@@ -1,10 +1,18 @@
 {% extends "::base.html.twig" %}
 
 {% block body %}
+<div class="row">
+<div class="col-md-12">
+  <h3 class="font-bold">Leyenda:</h3>
+  <span class="box-pendiente"></span><span>Pendiente por llegar</span><br>
+  <span class="box-hospedado"></span><span>Hospedado</span><br>
+  <span class="box-salida"></span><span>Salida</span><br>
+</div>
+</div>
 <div id="app"></div>
 
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ asset ('calendario/main.js')}}"></script>
+<script src="{{ asset ('calendar/main.js')}}"></script>
 {% endblock %}

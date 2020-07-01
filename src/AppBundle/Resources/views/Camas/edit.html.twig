@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <div class="white-box">
+      <div class="panel-body">
+        <h1 class="font-bold text-center">Editar cama</h1>
+        <form method="post">
+        <label for="">N°</label>
+        <input name="numero" value="{{cama.numero}}" class="form-control" type="number">
+        <br>
+        <select class="form-control" name="cuarto" id="">
+          {% for cuarto in cuartos %}
+            <option {% if cuarto.id == cama.cuarto.id %}selected{% endif %} value="{{cuarto.id}}">{{cuarto.numero}}</option>
+          {% endfor %}
+        </select>
+        <br>
+        <button class="btn btn-warning">Editar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

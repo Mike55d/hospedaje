@@ -32,15 +32,19 @@ html {
     top: 10px;
   }
 
-  .pendiente{
-    background-color:#dd2c00;
+  .card-modal{
+    min-height: 350px;
+    border-radius: 5px;
   }
 
+  .pendiente{
+    background-color:#e7305b;
+  }
   .hospedado{
     background-color: #0779e4;
   }
   .salida{
-    background-color: #2b580c;
+    background-color: #26c926;
   }
 
   .cards{
@@ -108,8 +112,47 @@ html {
     white-space: nowrap;
   }
 
-  .modal-row {
+  // .blockUI {
+  //   display:none !important;
+  // }
 
+  // .blockMsg {
+  //   display: none !important;
+  // }
+
+  .card{
+    height: 150px;
+    background-color: red;
+  }
+
+  .screen{
+    position: absolute;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    z-index: 300;
+    background-color: gray;
+    height: 60%;
+    width: 100%;
+    // cursor: wait;
+    opacity: 0.5;
+  }
+
+  .hide{
+    display: none;
+  }
+
+  .message{
+    display: inline-block;
+    position: fixed;
+    margin-top: 10%;
+    margin-left: 40%;
+    z-index: 302;
+    padding: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    background-color: white;
   }
 
   .modal-row ul {
@@ -120,13 +163,33 @@ html {
     padding: 0;
   }
 
+  .hover{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .hover:hover{
     background-color: gray;
+    color: white;
     cursor: pointer;
   }
 
-  .active{
-    background-color: #40bad5;
+  // .float-right{
+  //   float: right;
+  // }
+
+
+  .mt-5{
+    margin-top: 2px;
+  }
+
+  .modal-size{
+    width: 70%;
+  }
+
+  .selected{
+    background-color: #585858;
+    color: white;
   }
 
   .date{

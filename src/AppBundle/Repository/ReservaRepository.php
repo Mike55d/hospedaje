@@ -15,7 +15,9 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
 		$qb = $em->createQueryBuilder();
 		$qb->select('r')
 		->from('AppBundle:Reserva', 'r')
-		->where('r.status != Reservado');
+		->where('r.status != :reservado')
+		->setParameter('reservado','Reservado');
+		;
 		$query = $qb->getQuery();
 		return $query->getResult();
 	}
@@ -25,8 +27,9 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
 		$qb = $em->createQueryBuilder();
 		$qb->select('r')
 		->from('AppBundle:Reserva', 'r')
-		->where('r.status != Reservado AND r.user = :user')
-		->setParameter('user',$user);
+		->where('r.status != :reservado AND r.user = :user')
+		->setParameter('user',$user)
+		->setParameter('reservado','Reservado');
 		$query = $qb->getQuery();
 		return $query->getResult();
 	}
@@ -37,8 +40,9 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
 		$qb->select('r')
 		->from('AppBundle:Reserva', 'r')
 		->join('r.user' ,'u')
-		->where('u.grupo = :grupo')
-		->setParameter('grupo',$grupo);
+		->where('u.grupo = :grupo AND r.status = :reservado')
+		->setParameter('grupo',$grupo)
+		->setParameter('reservado','Reservado');
 		$query = $qb->getQuery();
 		return $query->getResult();
 	}

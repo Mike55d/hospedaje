@@ -10,6 +10,8 @@ use Spipu\Html2Pdf\Html2Pdf;
 use AppBundle\Entity\Reserva;
 use AppBundle\Entity\Factura;
 
+date_default_timezone_set('America/Caracas');
+
 /**
 * @Route("/checkout")
 */
@@ -27,12 +29,12 @@ class CheckoutController extends Controller
     foreach ($personas as $persona) {
       $reservacion = $em->getRepository('AppBundle:Reservacion')->findOneBy(['reserva'=> $reserva,'persona'=> $persona->getPersona()]);
       $servicios = $em->getRepository('AppBundle:ServiciosUs')->findBy(['reserva'=> $reserva,'persona'=> $persona->getPersona()]);
-      if ($reservacion && $reservacion->getStatus() == 'hospedado') {
+      if ($reservacion && $reservacion->getStatus() != 'salida') {
         $data[]= [
           'id' =>$persona->getPersona()->getId(),
           'nombre' =>$persona->getPersona()->getNombre(),
           'tratamiento' =>$persona->getPersona()->getTratamiento(),
-          'fecha' =>$persona->getPersona()->getFechaNacimiento(),
+          'fecha' =>$persona->getPersona()->getFechaNacimiento()->format('d-m-Y'),
           'grupo' =>$persona->getPersona()->getGrupo()->getNombre(),
           'servicios'=> $servicios,
           'reservacion'=> $reservacion

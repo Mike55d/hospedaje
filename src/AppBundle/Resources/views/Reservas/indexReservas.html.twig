@@ -29,7 +29,7 @@
 					<td>{{reserva.salida|date('d-m-y')}}</td>
 					<td>{{reserva.status}}</td>
 					<td>
-						<a href="{{ path ('camas_index',{'id':reserva.id})}}" class="btn btn-sm btn-warning">Camas</a>
+						<a href="{{ path ('camas_asignadas',{'id':reserva.id})}}" class="btn btn-sm btn-warning">Camas</a>
 						<a href="{{ path ('detallesReserva_admin',{'id':reserva.id})}}"  class="btn btn-sm btn-primary">Detalles</a>
 					</td>
 				</tr>

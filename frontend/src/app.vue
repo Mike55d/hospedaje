@@ -7,6 +7,8 @@
 <script>
 import Calendario from './components/calendario.vue'
 import storeFunctions from './components/storeFunctions';
+import {rutaApi} from './components/rutas'
+
 
 const axios = require('axios').default;
 
@@ -36,24 +38,22 @@ export default {
 	methods: {
 
     onEdit(card){
-
-      console.log(card);
-      axios.post('http://localhost:8000/calendario/editReserva', {
+      console.log('root edit', card)
+      axios.post(rutaApi+'api/calendario/editReserva', {
         reservacion: card.id,
         cama: this.items[card.roomIndex].beds[card.bedIndex].id,
         persona: 1,
         fechaInicio: card.initDate,
-        fechaFin: card.endDate
+        fechaFin: card.endDate,
+        status:card.status
       })
       .then(res => {
-
-        console.log('edit');
         console.log(res);
       });
     },
     onRemove(card){
 
-      axios.post('http://localhost:8000/calendario/delReserva', {reserva: card.id})
+      axios.post(rutaApi+'api/calendario/delReserva', {reserva: card.id})
       .then(res => {
 
         console.log(res);
@@ -62,7 +62,7 @@ export default {
     },
 		onMove(dragingObject) {
 
-      axios.post('http://localhost:8000/calendario/editReserva', {
+      axios.post(rutaApi+'api/calendario/editReserva', {
         reservacion: dragingObject.id,
         cama: this.items[dragingObject.roomIndex].beds[dragingObject.bedIndex].id,
         persona: 1,
@@ -76,7 +76,7 @@ export default {
 		},
 		onCreate(newCard) {
       console.log('newCard',newCard);
-			axios.post('http://localhost:8000/calendario/newReserva', {
+			axios.post(rutaApi+'api/calendario/newReserva', {
         cama: this.items[newCard.roomIndex].beds[newCard.bedIndex].id,
         persona: newCard.persona.id,
         reserva: newCard.reserva.id,
@@ -90,7 +90,7 @@ export default {
 		onExtend(extendingObject) {
 
       console.log(extendingObject);
-      axios.post('http://localhost:8000/calendario/editReserva', {
+      axios.post(rutaApi+'api/calendario/editReserva', {
         reservacion: extendingObject.id,
         cama: this.items[extendingObject.roomIndex].beds[extendingObject.bedIndex].id,
         persona: 1,

@@ -10,11 +10,13 @@ use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Form\ServiciosType;
 use AppBundle\Entity\Servicios;
 
-
+/**
+  * @Route("servicios")
+  */
 class ServiciosController extends Controller
 {
   /**
-  * @Route("/servicios", name="index")
+  * @Route("/", name="servicios_index")
   */
   public function indexAction()
   {
@@ -28,7 +30,7 @@ class ServiciosController extends Controller
    ));
   }
   /**
-  * @Route("/servicios/nuevo", name="servicios")
+  * @Route("/nuevo", name="servicios_new")
   */
   public function nuevoAction(Request $request )
   {
@@ -54,7 +56,7 @@ class ServiciosController extends Controller
   }
 
   /**
-  * @Route("/servicios/edita/{id}", name="edita_servicio")
+  * @Route("/edita/{id}", name="edita_servicio")
   */
   public function editaAction(Request $request )
   {
@@ -83,7 +85,7 @@ class ServiciosController extends Controller
   }
 
   /**
-  * @Route("/servicios/elimina/{id}", name="elimina_servicio")
+  * @Route("/elimina/{id}", name="elimina_servicio")
   */
   public function eliminaAction(Request $request )
   {
@@ -102,7 +104,7 @@ class ServiciosController extends Controller
   }
 
   /**
-  * @Route("/servicios/ver/{tipo}", name="serviciosVer")
+  * @Route("/ver/{tipo}", name="serviciosVer")
   */
   public function verAction($tipo )
   {

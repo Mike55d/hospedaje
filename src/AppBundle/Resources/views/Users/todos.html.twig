@@ -12,6 +12,7 @@
 					<th>Nombre</th>
 					<th>Usuario</th>
 					<th>Telefono</th>
+					<th>Status</th>
 					<th>Acciones</th>
 				</tr>
 			</thead>
@@ -22,6 +23,7 @@
 					<td>{{user.name}}</td>
 					<td>{{user.username}}</td>
 					<td>{{user.phone}}</td>
+					<td><input onchange="change({{user.id}})" type="checkbox" {% if user.active %}checked{% endif %} class="js-switch" data-color="#13dafe" /></td>
 					<td>
 						<a href="{{ path ('users_edit',{'id': user.id})}}" class="btn btn-info btn-sm">Ver </a>
 					</td>
@@ -37,5 +39,15 @@
 {% block javascripts %}
 <script>
 $('.myTable').DataTable();
+function change(id){
+	datos = 'id='+ id
+	$.ajax({
+		type:"POST",
+		url:"{{path ('users_changeStatus')}}",
+		data:datos,
+		success:function(r){
+		}
+	});
+}
 </script>
 {% endblock %}

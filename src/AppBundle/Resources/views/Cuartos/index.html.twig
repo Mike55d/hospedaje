@@ -4,27 +4,23 @@
 	<div class="row">
   <div class="col-md-12">
   <div class="white-box">
-    <h1 class="font-bold">Camas</h1>
-		<a href="{{ path ('camas_new')}}" class="btn btn-success">Nuevo</a>
+    <h1 class="font-bold">Cuartos</h1>
+		<a href="{{ path ('cuartos_new')}}" class="btn btn-success">Nuevo</a>
 		<div class="panel-body">
 			<table class="myTable">
 				<thead>
 					<tr>
-						<th>id</th>
 						<th>Numero</th>
-						<th>Cuarto</th>
 						<th>Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
-					{% for cama in camas %}
+					{% for cuarto in cuartos %}
 					<tr>
-						<td>{{cama.id}}</td>
-						<td>{{cama.numero}}</td>
-						<td>{{cama.cuarto.numero}}</td>
+						<td>{{cuarto.numero}}</td>
 						<td>
-							<a href="{{ path ('camas_edit',{'id': cama.id})}}" class="btn btn-sm btn-warning">Editar</a>
-							<a onclick="eliminar({{cama.id}})" class="btn btn-sm btn-danger">Eliminar</a>
+							<a href="{{ path ('cuartos_edit',{'id': cuarto.id})}}" class="btn btn-sm btn-warning">Editar</a>
+							<a onclick="eliminar({{cuarto.id}})" class="btn btn-sm btn-danger">Eliminar</a>
 						</td>
 					</tr>
 					{% endfor %}

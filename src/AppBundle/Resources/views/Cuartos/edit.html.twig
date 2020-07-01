@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <div class="white-box">
+      <div class="panel-body">
+        <h1 class="font-bold text-center">Nuevo cuarto</h1>
+        <form method="post">
+        <label for="">N°</label>
+        <input name="numero" value="{{cuarto.numero}}" class="form-control" type="number">
+        <br>
+        <br>
+        <button class="btn btn-success">Crear</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,6 +1,10 @@
 {% extends "::base.html.twig" %}
 
 {% block body %}
+<div class="row">
+  <div class="col-md-12">
+  </div>
+</div>
 
 <div class="row">
 	<dov class="col-md-7 col-md-offset-1">
@@ -63,18 +67,19 @@
 {% endblock %}
 
 {% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
 <script>
 
 function format ( d ) {
-
+  moment.locale('es')
   template = '<table class="table table-bordered table-hover" cellpadding="5" cellspacing="0" border="0" >';
   if (d.reservacion) {
     template+=
     `<tr class="text-left">
     <td class="font-bold">Fecha de llegada:</td>
-    <td>${d.reservacion.fechaInicio}</td>
+    <td>${moment(d.reservacion.fechaInicio).utc(0).format('DD-MM-YYYY')}</td>
     <td class="font-bold">Fecha de Salida:</td>
-    <td>${d.reservacion.fechaFin}</td>
+    <td>${moment(d.reservacion.fechaFin).zone(0).format('DD-MM-YYYY')}</td>
     </tr>
     <tr>
     <td  class="text-left font-bold" >Cama</td>

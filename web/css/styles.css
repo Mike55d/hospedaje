@@ -79,3 +79,30 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.box-pendiente{
+	background-color: #e7305b !important;
+	display: inline-block;
+	height: 13px;
+	width: 13px;
+	margin-right: 5px;
+	
+}
+
+.box-hospedado{
+	background-color: #0779e4 !important;
+	display: inline-block;
+	height: 13px;
+	width: 13px;
+	margin-right: 5px;
+	
+}
+
+.box-salida{
+	background-color: #26c926 !important;
+	display: inline-block;
+	height: 13px;
+	width: 13px;
+	margin-right: 5px;
+	
+}

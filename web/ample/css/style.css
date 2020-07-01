@@ -4644,14 +4644,14 @@ table.focus-on tbody tr.focused th {
 }
 
 .login-register {
-    background: url(../images/login-register.jpg) center center/cover no-repeat!important;
+    background: url(../../images/fondo.jpg) #fecb89  top left / contain no-repeat!important;
     height: 100%;
     position: fixed
 }
 
 .login-box {
     background: #fff;
-    width: 400px;
+    width: 480px;
     margin: 10% auto 0
 }
 
@@ -4676,7 +4676,7 @@ table.focus-on tbody tr.focused th {
 }
 
 .new-login-register .lg-info-panel {
-    background: url(../images/login-register.jpg) center center/cover no-repeat!important;
+    background: url(../../images/fondo.jpg) center center/cover no-repeat!important;
     width: 500px;
     height: 100%;
     position: fixed

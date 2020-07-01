@@ -21,15 +21,16 @@ class UserType extends AbstractType
         $builder
         ->add('username' , TextType::class , [
             'attr'=>['class'=>'form-control'],
-            'label' => 'username'
+            'label' => 'Usuario'
         ])
         ->add('name' , TextType::class , [
             'attr'=>['class'=>'form-control'],
-            'label' => 'nombre'
+            'label' => 'Nombre'
         ])
         ->add('grupo', EntityType::class, [
             'class' => 'AppBundle:Grupo',
             'choice_label' => 'nombre',
+            'label' => 'Grupo',
             'attr' => ['class'=>'form-control'],
         ])
         ->add('plainPassword', RepeatedType::class, [
@@ -37,12 +38,12 @@ class UserType extends AbstractType
             'invalid_message' => 'The password fields must match.',
             'options' => ['attr' => ['class' => 'password-field form-control']],
             'required' => true,
-            'first_options'  => ['label' => 'Password'],
-            'second_options' => ['label' => 'Repeat Password'],
+            'first_options'  => ['label' => 'Contraseña'],
+            'second_options' => ['label' => 'Repetir Contraseña'],
         ])
         ->add('phone' , TextType::class , [
             'attr'=>['class'=>'form-control'],
-            'label' => 'telefono'
+            'label' => 'Telefono'
         ]);
     }/**
      * {@inheritdoc}

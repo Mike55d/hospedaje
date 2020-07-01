@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\UserType;
 use AppBundle\Entity\User;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UsersController extends Controller
 {
@@ -79,11 +80,20 @@ class UsersController extends Controller
   /**
    * @Route("/users/del" , name="users_del")
    */
-  public function delAction()
+  public function delAction(Request $request)
   {
-    return $this->render('AppBundle:Users:del.html.twig', array(
-          // ...
-    ));
+  }
+
+  /**
+   * @Route("/users/changeStatus" , name="users_changeStatus")
+   */
+  public function changeStatus(Request $request)
+  {
+    $em =$this->getDoctrine()->getManager();
+    $user = $em->getRepository('AppBundle:User')->find($request->get('id'));
+    $user->setActive(!$user->getActive());
+    $em->flush();
+    return new JsonResponse('ok');
   }
 
    /**
